@@ -1,6 +1,5 @@
 package br.com.sysaba.modules.usuario;
 
-import br.com.sysaba.core.enums.TipoAssinaturaEnum;
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.assinatura.Assinatura;
 import br.com.sysaba.modules.assinatura.AssinaturaService;
@@ -8,8 +7,6 @@ import br.com.sysaba.modules.usuario.dtos.UsuarioDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @CrossOrigin("*")
 @RestController
@@ -25,7 +22,7 @@ public class UsuarioController {
     }
 
     @Transactional
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping
     public void salvar(@RequestBody UsuarioDTO usuarioDTO) throws RuntimeException {
         Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
