@@ -24,15 +24,11 @@ public class Treinamento extends BaseEntity {
     @Column(name = "descricao", nullable = false, length = 500)
     private String descricao;
 
-    @Column(name = "ativo", nullable = false)
-    private boolean ativo;
-
     public Treinamento(LocalDateTime createdAt, String treinamento, String protocolo, String descricao, boolean ativo) {
         super(createdAt);
         this.treinamento = treinamento;
         this.protocolo = protocolo;
         this.descricao = descricao;
-        this.ativo = ativo;
     }
 
     public UUID getTreinamentoId() {
@@ -65,13 +61,5 @@ public class Treinamento extends BaseEntity {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
     }
 }

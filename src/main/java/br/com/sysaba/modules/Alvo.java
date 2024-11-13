@@ -36,10 +36,7 @@ public class Alvo extends BaseEntity {
     @Column(name = "identificador", nullable = false)
     private String identificador;
 
-    @Column(name = "ativo", nullable = false)
-    private boolean ativo;
-
-    public Alvo(LocalDateTime createdAt, String nomeAlvo, String pergunta, String descricaoAlvo, int repetir, String treinamentoUuidFk, boolean sync, String identificador, boolean ativo) {
+    public Alvo(LocalDateTime createdAt, String nomeAlvo, String pergunta, String descricaoAlvo, int repetir, String treinamentoUuidFk, boolean sync, String identificador) {
         super(createdAt);
         this.nomeAlvo = nomeAlvo;
         this.pergunta = pergunta;
@@ -48,7 +45,6 @@ public class Alvo extends BaseEntity {
         this.treinamentoUuidFk = treinamentoUuidFk;
         this.sync = sync;
         this.identificador = identificador;
-        this.ativo = ativo;
     }
 
     public UUID getAlvoId() {
@@ -113,13 +109,5 @@ public class Alvo extends BaseEntity {
 
     public void setIdentificador(String identificador) {
         this.identificador = identificador;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
     }
 }
