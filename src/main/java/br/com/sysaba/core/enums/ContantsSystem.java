@@ -1,4 +1,4 @@
-package br.com.sysaba.enums;
+package br.com.sysaba.core.enums;
 
 public class ContantsSystem {
     public static final String TENANT_FILTER_NAME = "tenantFilter";

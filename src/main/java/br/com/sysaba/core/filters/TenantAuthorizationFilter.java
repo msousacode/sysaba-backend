@@ -1,4 +1,4 @@
-package br.com.sysaba.filters;
+package br.com.sysaba.core.filters;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

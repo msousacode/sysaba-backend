@@ -1,7 +1,7 @@
 package br.com.sysaba.modules.assinatura;
 
-import br.com.sysaba.commons.BaseEntity;
-import br.com.sysaba.enums.TipoAssinaturaEnum;
+import br.com.sysaba.core.commons.BaseEntity;
+import br.com.sysaba.core.enums.TipoAssinaturaEnum;
 import br.com.sysaba.modules.usuario.Usuario;
 import jakarta.persistence.*;
 

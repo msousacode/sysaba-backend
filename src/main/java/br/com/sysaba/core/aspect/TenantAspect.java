@@ -1,6 +1,6 @@
-package br.com.sysaba.aspect;
+package br.com.sysaba.core.aspect;
 
-import br.com.sysaba.enums.ContantsSystem;
+import br.com.sysaba.core.enums.ContantsSystem;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.aspectj.lang.JoinPoint;

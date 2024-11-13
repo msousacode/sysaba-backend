@@ -1,4 +1,4 @@
-package br.com.sysaba.exception;
+package br.com.sysaba.core.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

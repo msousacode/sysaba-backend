@@ -1,0 +1,105 @@
+package br.com.sysaba.modules.vbmapp;
+
+import br.com.sysaba.core.commons.BaseEntity;
+import br.com.sysaba.modules.aprendiz.Aprendiz;
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Entity
+@Table(name = "vbmapp_coletas")
+public class VbMappColetas extends BaseEntity {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "vbmapp_coleta_id")
+    private UUID vbmappColetaId;
+
+    @Column(name = "nivel_coleta", nullable = false)
+    private int nivelColeta;
+
+    @Column(name = "tipo", nullable = false)
+    private int tipo;//TODO criar um enum depois para isso aqui.
+
+    @Column(name = "pontuacao", nullable = false)
+    private Double pontuacao;
+
+    @Column(name = "data_coleta", nullable = false)
+    private LocalDateTime dataColeta;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vbmapp_id", nullable = false)
+    private VbMapp vbMapp;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "aprendiz_id", nullable = false)
+    private Aprendiz aprendiz;
+
+    public VbMappColetas(LocalDateTime createdAt, UUID vbmappColetaId, int nivelColeta, int tipo, Double pontuacao, LocalDateTime dataColeta, VbMapp vbMapp, Aprendiz aprendiz) {
+        super(createdAt);
+        this.vbmappColetaId = vbmappColetaId;
+        this.nivelColeta = nivelColeta;
+        this.tipo = tipo;
+        this.pontuacao = pontuacao;
+        this.dataColeta = dataColeta;
+        this.vbMapp = vbMapp;
+        this.aprendiz = aprendiz;
+    }
+
+    public UUID getVbmappColetaId() {
+        return vbmappColetaId;
+    }
+
+    public void setVbmappColetaId(UUID vbmappColetaId) {
+        this.vbmappColetaId = vbmappColetaId;
+    }
+
+    public int getNivelColeta() {
+        return nivelColeta;
+    }
+
+    public void setNivelColeta(int nivelColeta) {
+        this.nivelColeta = nivelColeta;
+    }
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+
+    public Double getPontuacao() {
+        return pontuacao;
+    }
+
+    public void setPontuacao(Double pontuacao) {
+        this.pontuacao = pontuacao;
+    }
+
+    public LocalDateTime getDataColeta() {
+        return dataColeta;
+    }
+
+    public void setDataColeta(LocalDateTime dataColeta) {
+        this.dataColeta = dataColeta;
+    }
+
+    public VbMapp getVbMapp() {
+        return vbMapp;
+    }
+
+    public void setVbMapp(VbMapp vbMapp) {
+        this.vbMapp = vbMapp;
+    }
+
+    public Aprendiz getAprendiz() {
+        return aprendiz;
+    }
+
+    public void setAprendiz(Aprendiz aprendiz) {
+        this.aprendiz = aprendiz;
+    }
+}

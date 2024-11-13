@@ -1,6 +1,6 @@
-package br.com.sysaba.commons;
+package br.com.sysaba.core.commons;
 
-import br.com.sysaba.enums.ContantsSystem;
+import br.com.sysaba.core.enums.ContantsSystem;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

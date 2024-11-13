@@ -1,6 +1,7 @@
-package br.com.sysaba.modules;
+package br.com.sysaba.modules.alvo;
 
-import br.com.sysaba.commons.BaseEntity;
+import br.com.sysaba.core.commons.BaseEntity;
+import br.com.sysaba.modules.treinamento.Treinamento;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -25,26 +26,20 @@ public class Alvo extends BaseEntity {
     private String descricaoAlvo;
 
     @Column(name = "repetir", nullable = false)
-    private int repetir;
+    private Integer repetir;
 
-    @Column(name = "treinamento_uuid_fk", nullable = false)
-    private String treinamentoUuidFk;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "treinamento_id", nullable = false)
+    private Treinamento treinamento;
 
-    @Column(name = "sync", nullable = false)
-    private boolean sync;
-
-    @Column(name = "identificador", nullable = false)
-    private String identificador;
-
-    public Alvo(LocalDateTime createdAt, String nomeAlvo, String pergunta, String descricaoAlvo, int repetir, String treinamentoUuidFk, boolean sync, String identificador) {
+    public Alvo(LocalDateTime createdAt, UUID alvoId, String nomeAlvo, String pergunta, String descricaoAlvo, Integer repetir, Treinamento treinamento) {
         super(createdAt);
+        this.alvoId = alvoId;
         this.nomeAlvo = nomeAlvo;
         this.pergunta = pergunta;
         this.descricaoAlvo = descricaoAlvo;
         this.repetir = repetir;
-        this.treinamentoUuidFk = treinamentoUuidFk;
-        this.sync = sync;
-        this.identificador = identificador;
+        this.treinamento = treinamento;
     }
 
     public UUID getAlvoId() {
@@ -79,35 +74,19 @@ public class Alvo extends BaseEntity {
         this.descricaoAlvo = descricaoAlvo;
     }
 
-    public int getRepetir() {
+    public Integer getRepetir() {
         return repetir;
     }
 
-    public void setRepetir(int repetir) {
+    public void setRepetir(Integer repetir) {
         this.repetir = repetir;
     }
 
-    public String getTreinamentoUuidFk() {
-        return treinamentoUuidFk;
+    public Treinamento getTreinamento() {
+        return treinamento;
     }
 
-    public void setTreinamentoUuidFk(String treinamentoUuidFk) {
-        this.treinamentoUuidFk = treinamentoUuidFk;
-    }
-
-    public boolean isSync() {
-        return sync;
-    }
-
-    public void setSync(boolean sync) {
-        this.sync = sync;
-    }
-
-    public String getIdentificador() {
-        return identificador;
-    }
-
-    public void setIdentificador(String identificador) {
-        this.identificador = identificador;
+    public void setTreinamento(Treinamento treinamento) {
+        this.treinamento = treinamento;
     }
 }

@@ -1,4 +1,4 @@
-package br.com.sysaba.aspect;
+package br.com.sysaba.core.aspect;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

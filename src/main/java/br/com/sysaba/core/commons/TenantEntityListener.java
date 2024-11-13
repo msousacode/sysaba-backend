@@ -1,6 +1,6 @@
-package br.com.sysaba.commons;
+package br.com.sysaba.core.commons;
 
-import br.com.sysaba.aspect.TenantContext;
+import br.com.sysaba.core.aspect.TenantContext;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;

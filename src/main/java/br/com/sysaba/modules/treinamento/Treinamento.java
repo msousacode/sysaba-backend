@@ -1,6 +1,6 @@
 package br.com.sysaba.modules.treinamento;
 
-import br.com.sysaba.commons.BaseEntity;
+import br.com.sysaba.core.commons.BaseEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
