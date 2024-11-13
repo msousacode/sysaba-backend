@@ -1,4 +1,4 @@
-package br.com.sysaba.usuario;
+package br.com.sysaba.modules.usuario;
 
 import br.com.sysaba.commons.BaseEntity;
 import jakarta.persistence.*;

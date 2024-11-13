@@ -1,10 +1,9 @@
-package br.com.sysaba.assinatura;
+package br.com.sysaba.modules.assinatura;
 
 import br.com.sysaba.commons.BaseEntity;
 import br.com.sysaba.enums.TipoAssinaturaEnum;
-import br.com.sysaba.usuario.Usuario;
+import br.com.sysaba.modules.usuario.Usuario;
 import jakarta.persistence.*;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
