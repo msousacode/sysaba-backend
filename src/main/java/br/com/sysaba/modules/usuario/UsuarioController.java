@@ -2,10 +2,12 @@ package br.com.sysaba.modules.usuario;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.usuario.dtos.UsuarioDTO;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/usuarios")
+@CrossOrigin("*")
+@RestController
+@RequestMapping(path = "/api/usuarios")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -14,8 +16,9 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void salvar(UsuarioDTO usuarioDTO) throws RuntimeException {
+    public void salvar(@RequestBody UsuarioDTO usuarioDTO) throws RuntimeException {
         Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
         usuarioService.save(usuario);
     }

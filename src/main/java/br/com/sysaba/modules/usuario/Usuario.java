@@ -41,7 +41,11 @@ public class Usuario extends BaseEntity {
         this.fullName = fullName;
         this.avatarUrl = avatarUrl;
         this.demonstracaoRestore = demonstracaoRestore;
-        this.primeiroAcessoRealizado = primeiroAcessoRealizado;
+        this.primeiroAcessoRealizado = Boolean.FALSE;
+    }
+
+    public Usuario() {
+        super(LocalDateTime.now());
     }
 
     public UUID getUsuarioId() {
