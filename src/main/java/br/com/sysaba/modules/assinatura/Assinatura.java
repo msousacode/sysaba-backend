@@ -103,4 +103,19 @@ public class Assinatura extends BaseEntity {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+
+    public static Assinatura getInstance(Usuario usuario) {
+        //@formatter:off
+        return new Assinatura(
+                LocalDateTime.now(),
+                null,
+                null,
+                TipoAssinaturaEnum.FREE,
+                null,
+                null,
+                LocalDateTime.now(),
+                usuario
+        );
+        //@formatter:off
+    }
 }
