@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({RuntimeException.class})
+    @ExceptionHandler({RuntimeException.class, DataBaseException.class})
     public ResponseEntity<Object> internalServerError(RuntimeException ex) {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
