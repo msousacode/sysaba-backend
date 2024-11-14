@@ -7,12 +7,13 @@ import br.com.sysaba.modules.assinatura.AssinaturaService;
 import br.com.sysaba.modules.usuario.dtos.UsuarioDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping(path = "/api/auth/usuarios")
 public class UsuarioController {
@@ -29,7 +30,7 @@ public class UsuarioController {
 
     @Transactional
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity salvar(@RequestBody UsuarioDTO usuarioDTO) {
         try {
             Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
             var result = usuarioService.save(usuario);

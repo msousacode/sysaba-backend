@@ -47,23 +47,18 @@ public class SecurityConfiguration {
         return new ProviderManager(authProvider);
     }
 
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-
         return http
-                .csrf(csrf -> {
-                    csrf.disable();
-                })
-                .cors(cors -> cors.disable())
+                .csrf(csrf -> csrf.disable())
+                //.cors(cors -> cors.configure(http)) // Habilitar CORS usando a configuração anterior
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/error/**").permitAll();
                     auth.requestMatchers("/api/auth/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder())))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())))
                 .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())
                 .build();

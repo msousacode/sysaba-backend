@@ -1,62 +1,45 @@
-package br.com.sysaba.modules.aprendiz;
+package br.com.sysaba.modules.aprendiz.dto;
 
-import br.com.sysaba.core.commons.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
-@Entity
-@Table(name = "aprendizes")
-public class Aprendiz extends BaseEntity {
+public class AprendizDTO {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "aprendiz_id")
-    private UUID aprendizId;
+    @JsonProperty("uuid")
+    private String uuid;
 
-    @Column(name = "nome_aprendiz", nullable = false)
+    @JsonProperty("nome_aprendiz")
     private String nomeAprendiz;
 
-    @Column(name = "data_anotacao", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonProperty("nasc_aprendiz")
     private LocalDate nascAprendiz;
 
-    @Column(name = "nome_mae")
+    @JsonProperty("nome_mae")
     private String nomeMae;
 
-    @Column(name = "nome_pai")
+    @JsonProperty("nome_pai")
     private String nomePai;
 
-    @Column(name = "nome_responsavel")
+    @JsonProperty("nome_responsavel")
     private String nomeResponsavel;
 
-    @Column(name = "observacao")
+    @JsonProperty("observacao")
     private String observacao;
 
-    public Aprendiz() {
-        super(LocalDateTime.now());
+    // Construtor padrão
+    public AprendizDTO() {
     }
 
-    public Aprendiz(LocalDateTime createdAt, UUID aprendizId, String nomeAprendiz, LocalDate nascAprendiz, String nomeMae, String nomePai, String nomeResponsavel, String observacao) {
-        super(createdAt);
-        this.aprendizId = aprendizId;
-        this.nomeAprendiz = nomeAprendiz;
-        this.nascAprendiz = nascAprendiz;
-        this.nomeMae = nomeMae;
-        this.nomePai = nomePai;
-        this.nomeResponsavel = nomeResponsavel;
-        this.observacao = observacao;
+    // Getters e Setters
+    public String getUuid() {
+        return uuid;
     }
 
-    public UUID getAprendizId() {
-        return aprendizId;
-    }
-
-    public void setAprendizId(UUID aprendizId) {
-        this.aprendizId = aprendizId;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getNomeAprendiz() {
