@@ -1,4 +1,4 @@
-package br.com.sysaba.modules.acesso;
+package br.com.sysaba.modules.acesso.dto;
 
 public class AuthDTO {
     public record LoginRequest(String username, String password) {
