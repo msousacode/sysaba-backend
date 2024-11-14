@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping(path = "/api/usuarios")
+@RequestMapping(path = "/api/auth/usuarios")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -24,10 +24,14 @@ public class UsuarioController {
     @Transactional
     @ResponseStatus(HttpStatus.OK)
     @PostMapping
-    public void salvar(@RequestBody UsuarioDTO usuarioDTO) throws RuntimeException {
-        Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
-        var result = usuarioService.save(usuario);
-        Assinatura assinatura = Assinatura.getInstance(result);
-        assinaturaService.save(assinatura);
+    public void salvar(@RequestBody UsuarioDTO usuarioDTO) {
+        try {
+            Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
+            var result = usuarioService.save(usuario);
+            Assinatura assinatura = Assinatura.getInstance(result);
+            assinaturaService.save(assinatura);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
     }
 }

@@ -15,6 +15,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({RuntimeException.class, DataBaseException.class})
     public ResponseEntity<Object> internalServerError(RuntimeException ex) {
+        System.out.print(ex.getCause());
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

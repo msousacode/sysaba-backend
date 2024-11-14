@@ -10,6 +10,9 @@ public class UsuarioDTO {
     @JsonProperty("email")
     private String email;
 
+    @JsonProperty("senha")
+    private String senha;
+
     @JsonProperty("banco_demonstracao")
     private String bancoDemonstracao;
 
@@ -41,5 +44,13 @@ public class UsuarioDTO {
 
     public void setBancoDemonstracao(String bancoDemonstracao) {
         this.bancoDemonstracao = bancoDemonstracao;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }

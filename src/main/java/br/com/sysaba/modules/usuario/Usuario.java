@@ -33,6 +33,9 @@ public class Usuario extends BaseEntity {
     @Column(name = "primeiro_acesso_realizado")
     private Boolean primeiroAcessoRealizado;
 
+    @Column(name = "senha")
+    private String senha;
+
     public Usuario(LocalDateTime createdAt, UUID usuarioId, String documento, String email, String fullName, String avatarUrl, String demonstracaoRestore, Boolean primeiroAcessoRealizado) {
         super(createdAt);
         this.usuarioId = usuarioId;
@@ -102,5 +105,13 @@ public class Usuario extends BaseEntity {
 
     public void setPrimeiroAcessoRealizado(Boolean primeiroAcessoRealizado) {
         this.primeiroAcessoRealizado = primeiroAcessoRealizado;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }
