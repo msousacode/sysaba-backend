@@ -38,7 +38,7 @@ public class AutenticacaoController {
                                     userLogin.password()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String token = authService.generateToken(authentication);
+            String token = authService.generateToken(authentication, userLogin.username());
 
             response = new AuthDTO.Response("User logged in successfully", token);
 

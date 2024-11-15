@@ -1,5 +1,7 @@
 package br.com.sysaba.core.aspect;
 
+import br.com.sysaba.core.security.config.TenantAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -8,6 +10,6 @@ import java.util.UUID;
 public class TenantContext {
 
     public UUID getTenantId() {
-        return UUID.randomUUID();
+        return ((TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getTenantId();
     }
 }

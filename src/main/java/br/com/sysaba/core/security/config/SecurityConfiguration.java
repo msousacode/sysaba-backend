@@ -1,5 +1,6 @@
 package br.com.sysaba.core.security.config;
 
+import br.com.sysaba.core.security.filter.TenantAuthorizationFilter;
 import br.com.sysaba.core.security.service.JpaUserDetailsService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -25,6 +26,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
@@ -34,6 +36,7 @@ public class SecurityConfiguration {
 
     @Autowired
     private RsaKeyConfigProperties rsaKeyConfigProperties;
+
     @Autowired
     private JpaUserDetailsService userDetailsService;
 
@@ -61,6 +64,8 @@ public class SecurityConfiguration {
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())))
                 .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())
+                // Adiciona o filtro personalizado antes do UsernamePasswordAuthenticationFilter
+                .addFilterBefore(new TenantAuthorizationFilter(rsaKeyConfigProperties), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
