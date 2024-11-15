@@ -1,14 +1,16 @@
 package br.com.sysaba.modules.aprendiz.dto;
 
+import br.com.sysaba.modules.aprendiz.Aprendiz;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class AprendizDTO {
 
     @JsonProperty("uuid")
-    private String uuid;
+    private UUID aprendizId;
 
     @JsonProperty("nome_aprendiz")
     private String nomeAprendiz;
@@ -33,14 +35,13 @@ public class AprendizDTO {
     public AprendizDTO() {
     }
 
-    // Getters e Setters
-    public String getUuid() {
-        return uuid;
+    public static AprendizDTO fromAprendizDTO(Aprendiz aprendiz) {
+        AprendizDTO dto = new AprendizDTO();
+
+        return dto;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+    // Getters e Setters
 
     public String getNomeAprendiz() {
         return nomeAprendiz;
@@ -88,5 +89,13 @@ public class AprendizDTO {
 
     public void setObservacao(String observacao) {
         this.observacao = observacao;
+    }
+
+    public UUID getAprendizId() {
+        return aprendizId;
+    }
+
+    public void setAprendizId(UUID aprendizId) {
+        this.aprendizId = aprendizId;
     }
 }

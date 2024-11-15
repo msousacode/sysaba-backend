@@ -4,6 +4,10 @@ import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -31,5 +35,16 @@ public class AprendizController {
             return ResponseEntity.internalServerError().build();
         }
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<AprendizDTO>> buscar(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size,
+            @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
+            @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
+        Page<Aprendiz> aprendizList = aprendizService.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
+        Page<AprendizDTO> dtoList = aprendizList.map(i -> MapperUtil.converte(i, AprendizDTO.class));
+        return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
 }
