@@ -4,7 +4,7 @@ import br.com.sysaba.core.commons.service.GenericService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -35,8 +35,6 @@ public class UsuarioService implements GenericService<Usuario, UUID> {
 
     @Override
     public Usuario save(Usuario entity) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        entity.setSenha(passwordEncoder.encode(entity.getSenha()));
         return GenericService.super.save(entity);
     }
 

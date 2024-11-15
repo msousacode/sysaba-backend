@@ -1,6 +1,5 @@
 package br.com.sysaba.modules.usuario;
 
-import br.com.sysaba.core.commons.BaseEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -8,7 +7,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "usuarios")
-public class Usuario extends BaseEntity {
+public class Usuario {
 
     @Id
     @GeneratedValue
@@ -36,19 +35,35 @@ public class Usuario extends BaseEntity {
     @Column(name = "senha")
     private String senha;
 
-    public Usuario(LocalDateTime createdAt, UUID usuarioId, String documento, String email, String fullName, String avatarUrl, String demonstracaoRestore, Boolean primeiroAcessoRealizado) {
-        super(createdAt);
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "ativo", nullable = false)
+    private Boolean ativo;
+
+    @Column(name = "criado_por")
+    private UUID criadoPor;
+
+    @Column(name = "tentant_id", nullable = false)
+    private UUID tenantId;
+
+    public Usuario(UUID usuarioId, String documento, String email, String fullName, String avatarUrl, String demonstracaoRestore, Boolean primeiroAcessoRealizado, String senha, LocalDateTime createdAt, Boolean ativo, UUID criadoPor, UUID tenantId) {
         this.usuarioId = usuarioId;
         this.documento = documento;
         this.email = email;
         this.fullName = fullName;
         this.avatarUrl = avatarUrl;
         this.demonstracaoRestore = demonstracaoRestore;
-        this.primeiroAcessoRealizado = Boolean.FALSE;
+        this.primeiroAcessoRealizado = primeiroAcessoRealizado;
+        this.senha = senha;
+        this.createdAt = createdAt;
+        this.ativo = ativo;
+        this.criadoPor = criadoPor;
+        this.tenantId = tenantId;
     }
 
     public Usuario() {
-        super(LocalDateTime.now());
+
     }
 
     public UUID getUsuarioId() {
@@ -113,5 +128,44 @@ public class Usuario extends BaseEntity {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public UUID getCriadoPor() {
+        return criadoPor;
+    }
+
+    public void setCriadoPor(UUID criadoPor) {
+        this.criadoPor = criadoPor;
+    }
+
+    public UUID getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(UUID tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.ativo = Boolean.TRUE;
+        this.primeiroAcessoRealizado = Boolean.FALSE;
     }
 }

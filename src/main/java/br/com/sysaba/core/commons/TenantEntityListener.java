@@ -7,6 +7,8 @@ import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.UUID;
+
 public class TenantEntityListener {
 
     @Autowired

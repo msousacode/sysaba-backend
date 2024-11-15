@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "assinaturas")
-public class Assinatura extends BaseEntity {
+public class Assinatura {
 
     @Id
     @GeneratedValue
@@ -33,18 +33,32 @@ public class Assinatura extends BaseEntity {
     @Column(name = "data_inicio_assinatura", nullable = false)
     private LocalDateTime dataInicioAssinatura;
 
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "ativo", nullable = false)
+    private Boolean ativo;
+
+    @Column(name = "criado_por")
+    private UUID criadoPor;
+
+    @Column(name = "tentant_id", nullable = false)
+    private UUID tenantId;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    public Assinatura(LocalDateTime createdAt, UUID assinaturaId, String motivoCancelamento, TipoAssinaturaEnum tipoAssinatura, LocalDateTime dataCancelamento, LocalDateTime dataContratacao, LocalDateTime dataInicioAssinatura, Usuario usuario) {
-        super(createdAt);
-        this.assinaturaId = assinaturaId;
+    public Assinatura(String motivoCancelamento, TipoAssinaturaEnum tipoAssinatura, LocalDateTime dataCancelamento, LocalDateTime dataContratacao, LocalDateTime dataInicioAssinatura, LocalDateTime createdAt, Boolean ativo, UUID criadoPor, UUID tenantId, Usuario usuario) {
         this.motivoCancelamento = motivoCancelamento;
         this.tipoAssinatura = tipoAssinatura;
         this.dataCancelamento = dataCancelamento;
         this.dataContratacao = dataContratacao;
         this.dataInicioAssinatura = dataInicioAssinatura;
+        this.createdAt = createdAt;
+        this.ativo = ativo;
+        this.criadoPor = criadoPor;
+        this.tenantId = tenantId;
         this.usuario = usuario;
     }
 
@@ -96,6 +110,38 @@ public class Assinatura extends BaseEntity {
         this.dataInicioAssinatura = dataInicioAssinatura;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public UUID getCriadoPor() {
+        return criadoPor;
+    }
+
+    public void setCriadoPor(UUID criadoPor) {
+        this.criadoPor = criadoPor;
+    }
+
+    public UUID getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(UUID tenantId) {
+        this.tenantId = tenantId;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }
@@ -104,18 +150,25 @@ public class Assinatura extends BaseEntity {
         this.usuario = usuario;
     }
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.ativo = Boolean.TRUE;
+    }
+
     public static Assinatura getInstance(Usuario usuario) {
         //@formatter:off
         return new Assinatura(
-                LocalDateTime.now(),
-                null,
                 null,
                 TipoAssinaturaEnum.FREE,
                 null,
                 null,
                 LocalDateTime.now(),
-                usuario
-        );
+                LocalDateTime.now(),
+                Boolean.TRUE,
+                usuario.getUsuarioId(),
+                usuario.getUsuarioId(),
+                usuario);
         //@formatter:off
     }
 }

@@ -25,10 +25,10 @@ import java.util.UUID;
 @Component
 public class TenantAuthorizationFilter extends GenericFilterBean {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final RsaKeyConfigProperties rsaKeyConfigProperties;
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
     public static final String HEADER_PREFIX = "Bearer ";
 
     public TenantAuthorizationFilter(RsaKeyConfigProperties rsaKeyConfigProperties) {
@@ -61,9 +61,7 @@ public class TenantAuthorizationFilter extends GenericFilterBean {
         TenantAuthenticationToken tenantAuthenticationToken = null;
 
         try {
-
             JwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(rsaKeyConfigProperties.publicKey()).build();
-
             // Decodifica o token
             Jwt jwsClaims = jwtDecoder.decode(authorizationHeader);
             String email = (String) jwsClaims.getClaims().get("subject");
