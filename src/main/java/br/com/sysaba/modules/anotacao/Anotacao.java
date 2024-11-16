@@ -1,6 +1,6 @@
 package br.com.sysaba.modules.anotacao;
 
-import br.com.sysaba.core.commons.BaseEntity;
+import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.treinamento.Alvo;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "anotacoes")
-public class Anotacao extends BaseEntity {
+public class Anotacao extends Tenantable {
 
     @Id
     @GeneratedValue
@@ -30,6 +30,10 @@ public class Anotacao extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "treinamento_id", nullable = false)
     private Treinamento treinamento;
+
+    public Anotacao() {
+        super(LocalDateTime.now());
+    }
 
     public Anotacao(LocalDateTime createdAt, UUID alvoId, LocalDateTime dataAnotacao, String anotacao, Alvo alvo, Treinamento treinamento) {
         super(createdAt);

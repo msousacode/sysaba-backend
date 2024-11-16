@@ -1,8 +1,6 @@
 package br.com.sysaba.modules.aprendiz;
 
-import br.com.sysaba.core.commons.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import br.com.sysaba.core.models.Tenantable;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -11,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "aprendizes")
-public class Aprendiz extends BaseEntity {
+public class Aprendiz extends Tenantable {
 
     @Id
     @GeneratedValue

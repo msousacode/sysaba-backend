@@ -1,6 +1,6 @@
 package br.com.sysaba.modules.atendimento;
 
-import br.com.sysaba.core.commons.BaseEntity;
+import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import jakarta.persistence.*;
 
@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "atendimentos")
-public class Atendimento extends BaseEntity {
+public class Atendimento extends Tenantable {
 
     @Id
     @GeneratedValue
@@ -22,6 +22,10 @@ public class Atendimento extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
+
+    public Atendimento(){
+        super(LocalDateTime.now());
+    }
 
     public Atendimento(LocalDateTime createdAt, UUID atendimentoId, LocalDateTime dataInicio, Aprendiz aprendiz) {
         super(createdAt);

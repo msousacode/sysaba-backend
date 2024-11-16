@@ -1,6 +1,7 @@
 package br.com.sysaba.modules.coleta;
 
 import br.com.sysaba.core.commons.BaseEntity;
+import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.treinamento.Alvo;
 import br.com.sysaba.modules.treinamento.Treinamento;
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "coletas")
-public class Coleta extends BaseEntity {
+public class Coleta extends Tenantable {
 
     @Id
     @GeneratedValue
@@ -60,7 +61,11 @@ public class Coleta extends BaseEntity {
     @JoinColumn(name = "treinamento_id", nullable = false)
     private Treinamento treinamento;
 
-    public Coleta(LocalDateTime createdAt, UUID coletaId, LocalDateTime dataColeta, String resposta, boolean foiRespondido, Alvo alvo, LocalDateTime dataFinalColeta, boolean seg, boolean ter, boolean qua, boolean qui, boolean sex, boolean sab) {
+    public Coleta() {
+        super(LocalDateTime.now());
+    }
+
+    public Coleta(LocalDateTime createdAt, UUID coletaId, LocalDateTime dataColeta, String resposta, boolean foiRespondido, Alvo alvo, LocalDateTime dataFinalColeta, boolean seg, boolean ter, boolean qua, boolean qui, boolean sex, boolean sab, Aprendiz aprendiz, Treinamento treinamento) {
         super(createdAt);
         this.coletaId = coletaId;
         this.dataColeta = dataColeta;
@@ -74,6 +79,8 @@ public class Coleta extends BaseEntity {
         this.qui = qui;
         this.sex = sex;
         this.sab = sab;
+        this.aprendiz = aprendiz;
+        this.treinamento = treinamento;
     }
 
     public UUID getColetaId() {
@@ -170,5 +177,21 @@ public class Coleta extends BaseEntity {
 
     public void setSab(boolean sab) {
         this.sab = sab;
+    }
+
+    public Aprendiz getAprendiz() {
+        return aprendiz;
+    }
+
+    public void setAprendiz(Aprendiz aprendiz) {
+        this.aprendiz = aprendiz;
+    }
+
+    public Treinamento getTreinamento() {
+        return treinamento;
+    }
+
+    public void setTreinamento(Treinamento treinamento) {
+        this.treinamento = treinamento;
     }
 }

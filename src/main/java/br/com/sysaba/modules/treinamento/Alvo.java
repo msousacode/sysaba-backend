@@ -1,6 +1,6 @@
 package br.com.sysaba.modules.treinamento;
 
-import br.com.sysaba.core.commons.BaseEntity;
+import br.com.sysaba.core.models.Tenantable;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "alvos")
-public class Alvo extends BaseEntity {
+public class Alvo extends Tenantable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,6 +43,14 @@ public class Alvo extends BaseEntity {
         this.descricaoAlvo = descricaoAlvo;
         this.treinamentoUuidFk = treinamentoUuidFk;
         this.tipoAprendizado = tipoAprendizado;
+    }
+
+    public UUID getAlvoId() {
+        return alvoId;
+    }
+
+    public void setAlvoId(UUID alvoId) {
+        this.alvoId = alvoId;
     }
 
     public String getNomeAlvo() {
@@ -83,13 +91,5 @@ public class Alvo extends BaseEntity {
 
     public void setTipoAprendizado(String tipoAprendizado) {
         this.tipoAprendizado = tipoAprendizado;
-    }
-
-    public UUID getAlvoId() {
-        return alvoId;
-    }
-
-    public void setAlvoId(UUID alvoId) {
-        this.alvoId = alvoId;
     }
 }

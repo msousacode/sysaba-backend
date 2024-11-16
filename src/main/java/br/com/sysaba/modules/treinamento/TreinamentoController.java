@@ -45,13 +45,13 @@ public class TreinamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<AprendizDTO>> buscar(
+    public ResponseEntity<Page<TreinamentoDTO>> buscar(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "100") int size,
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
         Page<Treinamento> list = treinamentoService.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
-        Page<AprendizDTO> dtoList = list.map(i -> MapperUtil.converte(i, AprendizDTO.class));
+        Page<TreinamentoDTO> dtoList = list.map(i -> MapperUtil.converte(i, TreinamentoDTO.class));
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
 

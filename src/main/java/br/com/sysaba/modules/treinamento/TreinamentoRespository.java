@@ -1,10 +1,8 @@
 package br.com.sysaba.modules.treinamento;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import br.com.sysaba.core.repository.TenantableRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface TreinamentoRespository extends JpaRepository<Treinamento, UUID> {
+public interface TreinamentoRespository extends TenantableRepository<Treinamento> {
 }

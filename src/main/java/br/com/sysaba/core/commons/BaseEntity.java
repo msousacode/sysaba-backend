@@ -29,9 +29,6 @@ public class BaseEntity {
     @Column(name = "criado_por")
     private UUID criadoPor;
 
-    @Column(name = "tentant_id", nullable = false)
-    private UUID tenantId;
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -46,14 +43,6 @@ public class BaseEntity {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
-    }
-
-    public UUID getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(UUID tenantId) {
-        this.tenantId = tenantId;
     }
 
     public UUID getCriadoPor() {
