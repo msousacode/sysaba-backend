@@ -1,7 +1,7 @@
 package br.com.sysaba.modules.anotacao;
 
 import br.com.sysaba.core.commons.BaseEntity;
-import br.com.sysaba.modules.alvo.Alvo;
+import br.com.sysaba.modules.treinamento.Alvo;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import jakarta.persistence.*;
 

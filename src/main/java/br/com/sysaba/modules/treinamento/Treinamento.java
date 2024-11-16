@@ -31,6 +31,10 @@ public class Treinamento extends BaseEntity {
         this.descricao = descricao;
     }
 
+    public Treinamento() {
+        super(LocalDateTime.now());
+    }
+
     public UUID getTreinamentoId() {
         return treinamentoId;
     }
