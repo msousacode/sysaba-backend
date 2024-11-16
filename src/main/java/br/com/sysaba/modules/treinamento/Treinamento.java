@@ -4,6 +4,7 @@ import br.com.sysaba.core.models.Tenantable;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,6 +24,9 @@ public class Treinamento extends Tenantable {
 
     @Column(name = "descricao", nullable = false, length = 500)
     private String descricao;
+
+    @OneToMany(mappedBy = "treinamento")
+    private List<Alvo> alvos;
 
     public Treinamento() {
         super(LocalDateTime.now());
@@ -66,5 +70,13 @@ public class Treinamento extends Tenantable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public List<Alvo> getAlvos() {
+        return alvos;
+    }
+
+    public void setAlvos(List<Alvo> alvos) {
+        this.alvos = alvos;
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -61,7 +62,7 @@ public class TreinamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<TreinamentoDTO>> getAll(
+    public ResponseEntity<Page<TreinamentoDTO>> getTreinamentosAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "100") int size,
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
@@ -72,17 +73,24 @@ public class TreinamentoController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<TreinamentoDTO> get(@PathVariable("id") UUID id) {
+    public ResponseEntity<TreinamentoDTO> getTreinamento(@PathVariable("id") UUID id) {
         var saved = treinamentoService.findById(id);
         TreinamentoDTO dto = MapperUtil.converte(saved, TreinamentoDTO.class);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
+
+    /**
+     *
+     * Alvos
+     */
 
     @Transactional
     @PostMapping("/alvos")
     public ResponseEntity<AlvoDTO> salvarAlvo(@RequestBody AlvoDTO alvoDTO) {
         try {
             Alvo alvo = MapperUtil.converte(alvoDTO, Alvo.class);
+            Treinamento treinamento = treinamentoService.findById(UUID.fromString(alvoDTO.getTreinamentoUuidFk()));
+            alvo.setTreinamento(treinamento);
             Alvo saved = alvoService.save(alvo);
             AlvoDTO dto = MapperUtil.converte(saved, AlvoDTO.class);
             return ResponseEntity.ok().body(dto);
@@ -90,5 +98,19 @@ public class TreinamentoController {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping("/alvos/all/{id}")
+    public ResponseEntity<List<AlvoDTO>> getAlvosAll(@PathVariable("id") UUID id) {
+        Treinamento treinamento = treinamentoService.findById(id);
+        List<AlvoDTO> dtoList = treinamento.getAlvos().stream().map(i -> MapperUtil.converte(i, AlvoDTO.class)).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(dtoList);
+    }
+
+    @GetMapping("/alvo/{id}")
+    public ResponseEntity<TreinamentoDTO> getAlvo(@PathVariable("id") UUID id) {
+        var saved = treinamentoService.findById(id);
+        TreinamentoDTO dto = MapperUtil.converte(saved, TreinamentoDTO.class);
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 }

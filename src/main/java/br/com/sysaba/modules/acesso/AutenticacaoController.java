@@ -4,6 +4,7 @@ import br.com.sysaba.core.security.CustomAuthenticationManager;
 import br.com.sysaba.core.security.service.AuthService;
 import br.com.sysaba.modules.acesso.dto.AuthDTO;
 import br.com.sysaba.modules.usuario.UsuarioRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,8 @@ public class AutenticacaoController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthDTO.LoginRequest userLogin) {
-        AuthDTO.Response response;
+    public ResponseEntity<String> login(@RequestBody AuthDTO.LoginRequest userLogin, HttpServletResponse response) {
+        AuthDTO.Response auth;
 
         try {
             usuarioRepository.findByEmail(userLogin.username()).orElseThrow(() -> new UsernameNotFoundException(userLogin.username()));
@@ -52,12 +53,14 @@ public class AutenticacaoController {
 
             String token = authService.generateToken(authentication, userLogin.username());
 
-            response = new AuthDTO.Response("User logged in successfully", token);
+            auth = new AuthDTO.Response("User logged in successfully", token);
 
         } catch (RuntimeException ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok().body(response.token());
+        response.setHeader("Cache-Control", "no-store");
+        response.setHeader("sysaba", "no-cache");
+        return ResponseEntity.ok().body(auth.token());
     }
 }

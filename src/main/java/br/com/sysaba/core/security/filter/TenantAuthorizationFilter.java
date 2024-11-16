@@ -2,6 +2,7 @@ package br.com.sysaba.core.security.filter;
 
 import br.com.sysaba.core.security.config.RsaKeyConfigProperties;
 import br.com.sysaba.core.security.config.TenantAuthenticationToken;
+import br.com.sysaba.modules.usuario.UsuarioService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -64,7 +65,7 @@ public class TenantAuthorizationFilter extends GenericFilterBean {
             JwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(rsaKeyConfigProperties.publicKey()).build();
             // Decodifica o token
             Jwt jwsClaims = jwtDecoder.decode(authorizationHeader);
-            String email = (String) jwsClaims.getClaims().get("subject");
+            String email = (String) jwsClaims.getClaims().get("sub");
 
             String tenantId = (String) jwsClaims.getClaims().get("tenantId");
             tenantAuthenticationToken = new TenantAuthenticationToken(email, UUID.fromString(tenantId));

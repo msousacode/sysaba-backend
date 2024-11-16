@@ -30,6 +30,10 @@ public class Alvo extends Tenantable {
     @Column(name = "tipo_aprendizado")
     private String tipoAprendizado;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "treinamento_id", nullable = false)
+    private Treinamento treinamento;
+
     // Construtor padrão
     public Alvo() {
         super(LocalDateTime.now());
@@ -91,5 +95,13 @@ public class Alvo extends Tenantable {
 
     public void setTipoAprendizado(String tipoAprendizado) {
         this.tipoAprendizado = tipoAprendizado;
+    }
+
+    public Treinamento getTreinamento() {
+        return treinamento;
+    }
+
+    public void setTreinamento(Treinamento treinamento) {
+        this.treinamento = treinamento;
     }
 }
