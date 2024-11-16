@@ -1,7 +1,10 @@
 package br.com.sysaba.modules.treinamento.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 public class TreinamentoDTO {
 
+    @JsonAlias({"treinamentoId", "uuid"})
     private String treinamentoId;
     private String treinamento;
     private String protocolo;

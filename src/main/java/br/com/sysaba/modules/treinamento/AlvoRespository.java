@@ -1,10 +1,8 @@
 package br.com.sysaba.modules.treinamento;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import br.com.sysaba.core.repository.TenantableRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface AlvoRespository extends JpaRepository<Alvo, UUID> {
+public interface AlvoRespository extends TenantableRepository<Alvo> {
 }

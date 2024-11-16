@@ -1,10 +1,8 @@
 package br.com.sysaba.modules.aprendiz;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import br.com.sysaba.core.repository.TenantableRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface AprendizRespository extends JpaRepository<Aprendiz, UUID> {
+public interface AprendizRespository extends TenantableRepository<Aprendiz> {
 }

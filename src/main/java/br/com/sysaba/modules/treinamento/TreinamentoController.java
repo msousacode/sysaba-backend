@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping(path = "/api/treinamentos")
 public class TreinamentoController {
@@ -44,8 +46,22 @@ public class TreinamentoController {
         }
     }
 
+    @Transactional
+    @PutMapping
+    public ResponseEntity<TreinamentoDTO> atualizar(@RequestBody TreinamentoDTO treinamentoDTO) {
+        try {
+            Treinamento treinamento = MapperUtil.converte(treinamentoDTO, Treinamento.class);
+            Treinamento saved = treinamentoService.update(UUID.fromString(treinamentoDTO.getTreinamentoId()), treinamento);
+            TreinamentoDTO dto = MapperUtil.converte(saved, TreinamentoDTO.class);
+            return ResponseEntity.ok().body(dto);
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @GetMapping
-    public ResponseEntity<Page<TreinamentoDTO>> buscar(
+    public ResponseEntity<Page<TreinamentoDTO>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "100") int size,
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
@@ -53,6 +69,13 @@ public class TreinamentoController {
         Page<Treinamento> list = treinamentoService.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
         Page<TreinamentoDTO> dtoList = list.map(i -> MapperUtil.converte(i, TreinamentoDTO.class));
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<TreinamentoDTO> get(@PathVariable("id") UUID id) {
+        var saved = treinamentoService.findById(id);
+        TreinamentoDTO dto = MapperUtil.converte(saved, TreinamentoDTO.class);
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @Transactional

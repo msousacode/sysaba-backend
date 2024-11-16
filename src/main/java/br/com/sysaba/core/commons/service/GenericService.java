@@ -2,6 +2,7 @@ package br.com.sysaba.core.commons.service;
 
 import br.com.sysaba.core.exception.DataBaseException;
 import br.com.sysaba.core.util.MapperUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,7 +34,7 @@ public interface GenericService<T, UUID> {
     @Transactional
     default T update(final UUID id, final T entity) {
         T result = findById(id);
-        MapperUtil.copyEntity(entity, result);
+        BeanUtils.copyProperties(entity, result, "treinamentoId");
         return save(result);
     }
 
