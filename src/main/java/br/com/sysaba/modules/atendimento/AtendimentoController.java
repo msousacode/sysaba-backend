@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -69,8 +70,10 @@ public class AtendimentoController {
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
         Page<Atendimento> atendimentoList = atendimentoService.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
-        Page<AtendimentoDTO> dtoList = atendimentoList.map(i -> MapperUtil.converte(i, AtendimentoDTO.class));
-        return ResponseEntity.status(HttpStatus.OK).body(dtoList);
+
+        Page<AtendimentoDTO> fromList = atendimentoList.map(AtendimentoDTO::fromAtendimentoList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(fromList);
     }
 
     @GetMapping("/{id}")

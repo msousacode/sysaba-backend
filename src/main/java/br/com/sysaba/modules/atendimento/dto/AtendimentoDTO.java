@@ -1,5 +1,6 @@
 package br.com.sysaba.modules.atendimento.dto;
 
+import br.com.sysaba.modules.atendimento.Atendimento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -69,6 +70,18 @@ public class AtendimentoDTO {
 
     public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
+    }
+
+    public static AtendimentoDTO fromAtendimentoList(Atendimento atendimento) {
+
+        AprendizDTO aprendizDTO = new AprendizDTO();
+        aprendizDTO.setLabel(atendimento.getAprendiz().getNomeAprendiz());
+        aprendizDTO.setValue(String.valueOf(atendimento.getAprendiz().getAprendizId()));
+
+        AtendimentoDTO atendimentoDTO = new AtendimentoDTO();
+        atendimentoDTO.setAprendiz(aprendizDTO);
+
+        return atendimentoDTO;
     }
 }
 
@@ -211,4 +224,6 @@ class ConfiguracoesDTO {
     public void setSab(boolean sab) {
         this.sab = sab;
     }
+
+
 }
