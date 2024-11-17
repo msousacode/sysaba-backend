@@ -6,11 +6,18 @@ public class TreinamentoDTO {
 
     @JsonAlias({"treinamentoId", "uuid"})
     private String treinamentoId;
+
     private String treinamento;
+
     private String protocolo;
+
     private String descricao;
+
     private boolean sync;
+
     private boolean ativo;
+
+    public TreinamentoDTO() {}
 
     public TreinamentoDTO(String treinamentoId, String treinamento, String protocolo, String descricao, boolean sync, boolean ativo) {
         this.treinamentoId = treinamentoId;
@@ -19,9 +26,6 @@ public class TreinamentoDTO {
         this.descricao = descricao;
         this.sync = sync;
         this.ativo = ativo;
-    }
-
-    public TreinamentoDTO() {
     }
 
     public String getTreinamentoId() {
@@ -37,7 +41,7 @@ public class TreinamentoDTO {
     }
 
     public void setTreinamento(String treinamento) {
-        this.treinamento = treinamento;
+        this.treinamento = this.descricao;//Isso é um ajuste manaul nunca retirar. Se não no frontend apresenta uuid do treinamento no lugar da descrição.
     }
 
     public String getProtocolo() {
