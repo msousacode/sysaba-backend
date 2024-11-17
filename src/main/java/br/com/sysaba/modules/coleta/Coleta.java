@@ -2,7 +2,7 @@ package br.com.sysaba.modules.coleta;
 
 import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
-import br.com.sysaba.modules.treinamento.Alvo;
+import br.com.sysaba.modules.treinamento.alvo.Alvo;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import jakarta.persistence.*;
 
@@ -18,20 +18,20 @@ public class Coleta extends Tenantable {
     @Column(name = "coleta_id")
     private UUID coletaId;
 
-    @Column(name = "data_coleta", nullable = false)
+    @Column(name = "data_coleta")
     private LocalDateTime dataColeta;
 
-    @Column(name = "resposta", nullable = false)
+    @Column(name = "resposta")
     private String resposta;
 
-    @Column(name = "foi_respondido", nullable = false)
+    @Column(name = "foi_respondido")
     private boolean foiRespondido;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "alvo_id", nullable = false)
     private Alvo alvo;
 
-    @Column(name = "data_final_coleta", nullable = false)
+    @Column(name = "data_final_coleta")
     private LocalDateTime dataFinalColeta;
 
     @Column(name = "seg", nullable = false)

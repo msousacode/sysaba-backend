@@ -7,6 +7,4 @@ import java.util.UUID;
 
 @NoRepositoryBean
 public interface TenantableRepository<T> extends JpaRepository<T, UUID> {
-
-    //Optional<T> findOneById(UUID id);
 }

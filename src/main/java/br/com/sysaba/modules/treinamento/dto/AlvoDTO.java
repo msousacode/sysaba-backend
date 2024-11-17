@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AlvoDTO {
 
-    private String uuid;
+    private String alvoId;
 
     @JsonProperty("nome_alvo")
     private String nomeAlvo;
@@ -24,12 +24,12 @@ public class AlvoDTO {
     public AlvoDTO() {
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getAlvoId() {
+        return alvoId;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setAlvoId(String alvoId) {
+        this.alvoId = alvoId;
     }
 
     public String getNomeAlvo() {

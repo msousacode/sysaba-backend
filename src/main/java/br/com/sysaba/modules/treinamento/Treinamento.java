@@ -2,6 +2,7 @@ package br.com.sysaba.modules.treinamento;
 
 import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.atendimento.Atendimento;
+import br.com.sysaba.modules.treinamento.alvo.Alvo;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
