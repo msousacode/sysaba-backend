@@ -1,6 +1,7 @@
 package br.com.sysaba.modules.treinamento;
 
 import br.com.sysaba.core.models.Tenantable;
+import br.com.sysaba.modules.atendimento.Atendimento;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -16,9 +17,6 @@ public class Treinamento extends Tenantable {
     @Column(name = "treinamento_id")
     private UUID treinamentoId;
 
-    @Column(name = "treinamento", nullable = false)
-    private String treinamento;
-
     @Column(name = "protocolo", nullable = false)
     private String protocolo;
 
@@ -28,16 +26,21 @@ public class Treinamento extends Tenantable {
     @OneToMany(mappedBy = "treinamento")
     private List<Alvo> alvos;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "atendimento_id")
+    private Atendimento atendimento;
+
     public Treinamento() {
         super(LocalDateTime.now());
     }
 
-    public Treinamento(LocalDateTime createdAt, UUID treinamentoId, String treinamento, String protocolo, String descricao) {
+    public Treinamento(LocalDateTime createdAt, UUID treinamentoId, String protocolo, String descricao, List<Alvo> alvos, Atendimento atendimento) {
         super(createdAt);
         this.treinamentoId = treinamentoId;
-        this.treinamento = treinamento;
         this.protocolo = protocolo;
         this.descricao = descricao;
+        this.alvos = alvos;
+        this.atendimento = atendimento;
     }
 
     public UUID getTreinamentoId() {
@@ -46,14 +49,6 @@ public class Treinamento extends Tenantable {
 
     public void setTreinamentoId(UUID treinamentoId) {
         this.treinamentoId = treinamentoId;
-    }
-
-    public String getTreinamento() {
-        return treinamento;
-    }
-
-    public void setTreinamento(String treinamento) {
-        this.treinamento = treinamento;
     }
 
     public String getProtocolo() {
@@ -78,5 +73,13 @@ public class Treinamento extends Tenantable {
 
     public void setAlvos(List<Alvo> alvos) {
         this.alvos = alvos;
+    }
+
+    public Atendimento getAtendimento() {
+        return atendimento;
+    }
+
+    public void setAtendimento(Atendimento atendimento) {
+        this.atendimento = atendimento;
     }
 }

@@ -1,6 +1,7 @@
-package br.com.sysaba.modules.aprendiz;
+package br.com.sysaba.modules.atendimento;
 
 import br.com.sysaba.core.commons.service.GenericService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,21 +10,20 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class AprendizService implements GenericService<Aprendiz, UUID> {
+public class AtendimentoService implements GenericService<Atendimento, UUID> {
 
-    private final AprendizRespository aprendizRespository;
+    private final AtendimentoRespository atendimentoRepository;
 
-    public AprendizService(AprendizRespository aprendizRespository) {
-        this.aprendizRespository = aprendizRespository;
+    public AtendimentoService(AtendimentoRespository atendimentoRepository) {
+        this.atendimentoRepository = atendimentoRepository;
+    }
+    @Override
+    public JpaRepository<Atendimento, UUID> getRepository() {
+        return atendimentoRepository;
     }
 
     @Override
-    public JpaRepository<Aprendiz, UUID> getRepository() {
-        return aprendizRespository;
-    }
-
-    @Override
-    public Aprendiz findById(UUID id) {
+    public Atendimento findById(UUID id) {
         return GenericService.super.findById(id);
     }
 
@@ -33,17 +33,17 @@ public class AprendizService implements GenericService<Aprendiz, UUID> {
     }
 
     @Override
-    public Aprendiz save(Aprendiz entity) {
+    public Atendimento save(Atendimento entity) {
         return GenericService.super.save(entity);
     }
 
     @Override
-    public Aprendiz update(UUID id, Aprendiz entity) {
+    public Atendimento update(UUID id, Atendimento entity) {
         return GenericService.super.update(id, entity);
     }
 
     @Override
-    public Page<Aprendiz> findAll(Pageable pageable) {
+    public Page<Atendimento> findAll(Pageable pageable) {
         return GenericService.super.findAll(pageable);
     }
 

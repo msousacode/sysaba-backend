@@ -34,10 +34,6 @@ public class Aprendiz extends Tenantable {
     @Column(name = "observacao")
     private String observacao;
 
-    public Aprendiz() {
-        super(LocalDateTime.now());
-    }
-
     public Aprendiz(LocalDateTime createdAt, UUID aprendizId, String nomeAprendiz, LocalDate nascAprendiz, String nomeMae, String nomePai, String nomeResponsavel, String observacao) {
         super(createdAt);
         this.aprendizId = aprendizId;
@@ -47,6 +43,10 @@ public class Aprendiz extends Tenantable {
         this.nomePai = nomePai;
         this.nomeResponsavel = nomeResponsavel;
         this.observacao = observacao;
+    }
+
+    public Aprendiz() {
+        super(LocalDateTime.now());
     }
 
     public UUID getAprendizId() {

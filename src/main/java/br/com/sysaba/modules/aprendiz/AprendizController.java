@@ -2,8 +2,6 @@ package br.com.sysaba.modules.aprendiz;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
-import br.com.sysaba.modules.treinamento.Treinamento;
-import br.com.sysaba.modules.treinamento.dto.TreinamentoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;

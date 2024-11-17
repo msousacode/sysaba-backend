@@ -1,6 +1,5 @@
 package br.com.sysaba.modules.coleta;
 
-import br.com.sysaba.core.commons.BaseEntity;
 import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.treinamento.Alvo;

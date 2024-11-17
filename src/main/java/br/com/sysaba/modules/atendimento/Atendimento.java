@@ -2,9 +2,12 @@ package br.com.sysaba.modules.atendimento;
 
 import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
+import br.com.sysaba.modules.treinamento.Treinamento;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,21 +20,25 @@ public class Atendimento extends Tenantable {
     private UUID atendimentoId;
 
     @Column(name = "data_inicio", nullable = false)
-    private LocalDateTime dataInicio;
+    private LocalDate dataInicio;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
 
-    public Atendimento(){
+    @OneToMany(mappedBy = "atendimento")
+    private List<Treinamento> treinamento;
+
+    public Atendimento() {
         super(LocalDateTime.now());
     }
 
-    public Atendimento(LocalDateTime createdAt, UUID atendimentoId, LocalDateTime dataInicio, Aprendiz aprendiz) {
+    public Atendimento(LocalDateTime createdAt, UUID atendimentoId, LocalDate dataInicio, Aprendiz aprendiz, List<Treinamento> treinamento) {
         super(createdAt);
         this.atendimentoId = atendimentoId;
         this.dataInicio = dataInicio;
         this.aprendiz = aprendiz;
+        this.treinamento = treinamento;
     }
 
     public UUID getAtendimentoId() {
@@ -42,11 +49,11 @@ public class Atendimento extends Tenantable {
         this.atendimentoId = atendimentoId;
     }
 
-    public LocalDateTime getDataInicio() {
+    public LocalDate getDataInicio() {
         return dataInicio;
     }
 
-    public void setDataInicio(LocalDateTime dataInicio) {
+    public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
     }
 
@@ -56,5 +63,13 @@ public class Atendimento extends Tenantable {
 
     public void setAprendiz(Aprendiz aprendiz) {
         this.aprendiz = aprendiz;
+    }
+
+    public List<Treinamento> getTreinamento() {
+        return treinamento;
+    }
+
+    public void setTreinamento(List<Treinamento> treinamento) {
+        this.treinamento = treinamento;
     }
 }
