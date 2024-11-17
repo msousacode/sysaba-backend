@@ -31,6 +31,9 @@ public class AprendizDTO {
     @JsonProperty("observacao")
     private String observacao;
 
+    @JsonProperty("ativo")
+    private boolean ativo;
+
     // Construtor padrão
     public AprendizDTO() {
     }
@@ -97,5 +100,13 @@ public class AprendizDTO {
 
     public void setAprendizId(UUID aprendizId) {
         this.aprendizId = aprendizId;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }

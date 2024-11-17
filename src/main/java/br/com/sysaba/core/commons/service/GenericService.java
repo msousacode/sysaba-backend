@@ -34,7 +34,7 @@ public interface GenericService<T, UUID> {
     @Transactional
     default T update(final UUID id, final T entity) {
         T result = findById(id);
-        BeanUtils.copyProperties(entity, result, "treinamentoId");
+        BeanUtils.copyProperties(entity, result, "aprendizId", "treinamentoId");
         return save(result);
     }
 
