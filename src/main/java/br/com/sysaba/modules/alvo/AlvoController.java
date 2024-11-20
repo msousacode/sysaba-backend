@@ -1,16 +1,14 @@
-package br.com.sysaba.modules.treinamento.alvo;
+package br.com.sysaba.modules.alvo;
 
 import br.com.sysaba.core.util.MapperUtil;
+import br.com.sysaba.modules.alvo.dto.AlvoDTO;
 import br.com.sysaba.modules.aprendiz.AprendizController;
+import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import br.com.sysaba.modules.treinamento.TreinamentoService;
-import br.com.sysaba.modules.treinamento.dto.AlvoDTO;
 import br.com.sysaba.modules.treinamento.dto.TreinamentoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +40,25 @@ public class AlvoController {
             Treinamento treinamento = treinamentoService.findById(UUID.fromString(alvoDTO.getTreinamentoUuidFk()));
             alvo.setTreinamento(treinamento);
             Alvo saved = alvoService.save(alvo);
-            AlvoDTO dto = MapperUtil.converte(saved, AlvoDTO.class);
+            br.com.sysaba.modules.alvo.dto.AlvoDTO dto = MapperUtil.converte(saved, AlvoDTO.class);
+            return ResponseEntity.ok().body(dto);
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @Transactional
+    @PutMapping
+    public ResponseEntity<AlvoDTO> atualizar(@RequestBody AlvoDTO alvoDTO) {
+        try {
+            Alvo saved = alvoService.findById(UUID.fromString(alvoDTO.getAlvoId()));
+            saved.setNomeAlvo(alvoDTO.getNomeAlvo());
+            saved.setPergunta(alvoDTO.getPergunta());
+            saved.setDescricaoAlvo(alvoDTO.getDescricaoAlvo());
+
+            Alvo updated = alvoService.update(saved.getAlvoId(), saved);
+            AlvoDTO dto = MapperUtil.converte(updated, AlvoDTO.class);
             return ResponseEntity.ok().body(dto);
         } catch (RuntimeException ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
@@ -53,7 +69,7 @@ public class AlvoController {
     @GetMapping("/all/{id}")
     public ResponseEntity<List<AlvoDTO>> getAlvosAll(@PathVariable("id") UUID id) {
         Treinamento treinamento = treinamentoService.findById(id);
-        List<AlvoDTO> dtoList = treinamento.getAlvos().stream().map(i -> MapperUtil.converte(i, AlvoDTO.class)).toList();
+        List<br.com.sysaba.modules.alvo.dto.AlvoDTO> dtoList = treinamento.getAlvos().stream().map(i -> MapperUtil.converte(i, AlvoDTO.class)).toList();
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
 

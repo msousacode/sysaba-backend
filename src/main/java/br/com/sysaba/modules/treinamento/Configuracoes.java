@@ -1,5 +1,6 @@
 package br.com.sysaba.modules.treinamento;
 
+import br.com.sysaba.modules.atendimento.dto.ConfiguracoesDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -38,13 +39,14 @@ public class Configuracoes {
     @Column(name = "sab")
     private boolean sab;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "treinamento_id")
-    private Treinamento treinamento;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "treinamento_atendimento_id", nullable = false)
+    private TreinamentoAtendimento treinamentoAtendimento;
 
-    public Configuracoes(){}
+    public Configuracoes() {
+    }
 
-    public Configuracoes(UUID configuracaoId, LocalDate dataFinal, Integer repetir, boolean seg, boolean ter, boolean qua, boolean qui, boolean sex, boolean sab, Treinamento treinamento) {
+    public Configuracoes(UUID configuracaoId, LocalDate dataFinal, Integer repetir, boolean seg, boolean ter, boolean qua, boolean qui, boolean sex, boolean sab, TreinamentoAtendimento treinamentoAtendimento) {
         this.configuracaoId = configuracaoId;
         this.dataFinal = dataFinal;
         this.repetir = repetir;
@@ -54,7 +56,7 @@ public class Configuracoes {
         this.qui = qui;
         this.sex = sex;
         this.sab = sab;
-        this.treinamento = treinamento;
+        this.treinamentoAtendimento = treinamentoAtendimento;
     }
 
     public UUID getConfiguracaoId() {
@@ -129,11 +131,11 @@ public class Configuracoes {
         this.sab = sab;
     }
 
-    public Treinamento getTreinamento() {
-        return treinamento;
+    public TreinamentoAtendimento getTreinamentoAtendimento() {
+        return treinamentoAtendimento;
     }
 
-    public void setTreinamento(Treinamento treinamento) {
-        this.treinamento = treinamento;
+    public void setTreinamentoAtendimento(TreinamentoAtendimento treinamentoAtendimento) {
+        this.treinamentoAtendimento = treinamentoAtendimento;
     }
 }

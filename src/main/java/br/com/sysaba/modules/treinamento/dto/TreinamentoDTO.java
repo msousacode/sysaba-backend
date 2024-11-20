@@ -41,7 +41,7 @@ public class TreinamentoDTO {
     }
 
     public void setTreinamento(String treinamento) {
-        this.treinamento = this.descricao;//Isso é um ajuste manaul nunca retirar. Se não no frontend apresenta uuid do treinamento no lugar da descrição.
+        this.treinamento = treinamento;
     }
 
     public String getProtocolo() {

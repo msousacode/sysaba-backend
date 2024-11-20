@@ -1,4 +1,4 @@
-package br.com.sysaba.modules.treinamento.alvo;
+package br.com.sysaba.modules.alvo;
 
 import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.treinamento.Treinamento;
@@ -28,9 +28,6 @@ public class Alvo extends Tenantable {
     @Column(name = "treinamento_uuid_fk")
     private String treinamentoUuidFk;
 
-    @Column(name = "tipo_aprendizado")
-    private String tipoAprendizado;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "treinamento_id", nullable = false)
     private Treinamento treinamento;
@@ -40,14 +37,13 @@ public class Alvo extends Tenantable {
         super(LocalDateTime.now());
     }
 
-    public Alvo(LocalDateTime createdAt, UUID alvoId, String nomeAlvo, String pergunta, String descricaoAlvo, String treinamentoUuidFk, String tipoAprendizado) {
+    public Alvo(LocalDateTime createdAt, UUID alvoId, String nomeAlvo, String pergunta, String descricaoAlvo, String treinamentoUuidFk) {
         super(createdAt);
         this.alvoId = alvoId;
         this.nomeAlvo = nomeAlvo;
         this.pergunta = pergunta;
         this.descricaoAlvo = descricaoAlvo;
         this.treinamentoUuidFk = treinamentoUuidFk;
-        this.tipoAprendizado = tipoAprendizado;
     }
 
     public UUID getAlvoId() {
@@ -88,14 +84,6 @@ public class Alvo extends Tenantable {
 
     public void setTreinamentoUuidFk(String treinamentoUuidFk) {
         this.treinamentoUuidFk = treinamentoUuidFk;
-    }
-
-    public String getTipoAprendizado() {
-        return tipoAprendizado;
-    }
-
-    public void setTipoAprendizado(String tipoAprendizado) {
-        this.tipoAprendizado = tipoAprendizado;
     }
 
     public Treinamento getTreinamento() {

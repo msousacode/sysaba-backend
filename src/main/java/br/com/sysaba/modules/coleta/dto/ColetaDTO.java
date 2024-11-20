@@ -1,6 +1,6 @@
 package br.com.sysaba.modules.coleta.dto;
 
-import br.com.sysaba.modules.treinamento.dto.AlvoDTO;
+import br.com.sysaba.modules.alvo.dto.AlvoDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,14 +1,27 @@
 package br.com.sysaba.modules.atendimento.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
+import java.util.UUID;
+
 public class TreinamentoItemDTO {
+
+    @JsonAlias({"treinamentoId", "uuid"})
+    private UUID treinamentoId;
+
     private String treinamento;
+
     private String protocolo;
-    private boolean ativo;
+
+    private Boolean ativo;
+
     private ConfiguracoesDTO configuracoes;
 
-    public TreinamentoItemDTO() {}
+    public TreinamentoItemDTO() {
+    }
 
-    public TreinamentoItemDTO(String treinamento, String protocolo, boolean ativo, ConfiguracoesDTO configuracoesDTO) {
+    public TreinamentoItemDTO(UUID treinamentoId, String treinamento, String protocolo, Boolean ativo, ConfiguracoesDTO configuracoesDTO) {
+        this.treinamentoId = treinamentoId;
         this.treinamento = treinamento;
         this.protocolo = protocolo;
         this.ativo = ativo;
@@ -31,13 +44,6 @@ public class TreinamentoItemDTO {
         this.protocolo = protocolo;
     }
 
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
 
     public ConfiguracoesDTO getConfiguracoes() {
         return configuracoes;
@@ -45,5 +51,21 @@ public class TreinamentoItemDTO {
 
     public void setConfiguracoes(ConfiguracoesDTO configuracoes) {
         this.configuracoes = configuracoes;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public UUID getTreinamentoId() {
+        return treinamentoId;
+    }
+
+    public void setTreinamentoId(UUID treinamentoId) {
+        this.treinamentoId = treinamentoId;
     }
 }

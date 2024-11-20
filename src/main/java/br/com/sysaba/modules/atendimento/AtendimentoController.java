@@ -5,10 +5,7 @@ import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
 import br.com.sysaba.modules.atendimento.dto.AtendimentoDTO;
-import br.com.sysaba.modules.treinamento.Configuracoes;
-import br.com.sysaba.modules.treinamento.ConfiguracoesRepository;
-import br.com.sysaba.modules.treinamento.Treinamento;
-import br.com.sysaba.modules.treinamento.TreinamentoService;
+import br.com.sysaba.modules.treinamento.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -19,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,12 +32,15 @@ public class AtendimentoController {
 
     private final TreinamentoService treinamentoService;
 
+    private final TreinamentoAtendimentoRepository treinamentoAtendimentoRepository;
+
     private final ConfiguracoesRepository configuracoesRepository;
 
-    public AtendimentoController(AtendimentoService atendimentoService, AprendizService aprendizService, TreinamentoService treinamentoService, ConfiguracoesRepository configuracoesRepository) {
+    public AtendimentoController(AtendimentoService atendimentoService, AprendizService aprendizService, TreinamentoService treinamentoService, TreinamentoAtendimentoRepository treinamentoAtendimentoRepository, ConfiguracoesRepository configuracoesRepository) {
         this.atendimentoService = atendimentoService;
         this.aprendizService = aprendizService;
         this.treinamentoService = treinamentoService;
+        this.treinamentoAtendimentoRepository = treinamentoAtendimentoRepository;
         this.configuracoesRepository = configuracoesRepository;
     }
 
@@ -52,15 +53,26 @@ public class AtendimentoController {
             Aprendiz aprendiz = aprendizService.findById(aprendizId);
             atendimento.setAprendiz(aprendiz);
 
-            Atendimento saved = atendimentoService.save(atendimento);
+            Atendimento atendimentoSaved = atendimentoService.save(atendimento);
 
-            List<Treinamento> treinamentoList = atendimentoDTO.getTreinamentos().stream().map(i -> Treinamento.fromTreinamento(i, saved)).toList();
-            atendimento.setTreinamentos(treinamentoList);
+            List<Treinamento> treinamentoList = atendimentoDTO.getTreinamentos().stream().map(i -> treinamentoService.findById(i.getTreinamentoId())).toList();
 
-            Treinamento treinamentoSaved = treinamentoService.save(treinamentoList.get(0));
+            List<TreinamentoAtendimento> treinamentoAtendimento = treinamentoList.stream().map(i -> new TreinamentoAtendimento(i, atendimentoSaved)).toList();
+            List<TreinamentoAtendimento> treinamentoAtendimentoSaved = treinamentoAtendimentoRepository.saveAll(treinamentoAtendimento);
 
-            treinamentoList.get(0).getConfiguracoes().get(0).setTreinamento(treinamentoSaved);
-            configuracoesRepository.save(treinamentoList.get(0).getConfiguracoes().get(0));
+
+            List<Configuracoes> configuracoes = new ArrayList<>();
+            atendimentoDTO.getTreinamentos().forEach(dto -> {
+                treinamentoAtendimentoSaved.stream()
+                        .filter(ta -> ta.getTreinamento().getTreinamentoId().equals(dto.getTreinamentoId())).findFirst()
+                        .map(ta -> {
+                            Configuracoes config = MapperUtil.converte(dto.getConfiguracoes(), Configuracoes.class);
+                            config.setTreinamentoAtendimento(ta);
+                            configuracoes.add(config);
+                            return null;
+                        });
+            });
+            configuracoesRepository.saveAll(configuracoes);
 
         } catch (RuntimeException ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
@@ -99,7 +111,7 @@ public class AtendimentoController {
     @GetMapping("/{id}")
     public ResponseEntity<AtendimentoDTO> getAlvo(@PathVariable("id") UUID id) {
         Atendimento saved = atendimentoService.findById(id);
-        AtendimentoDTO dto = MapperUtil.converte(saved, AtendimentoDTO.class);
+        AtendimentoDTO dto = AtendimentoDTO.fromAtendimento(saved);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 }

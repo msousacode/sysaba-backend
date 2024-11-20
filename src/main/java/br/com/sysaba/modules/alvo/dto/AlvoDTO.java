@@ -1,5 +1,6 @@
-package br.com.sysaba.modules.treinamento.dto;
+package br.com.sysaba.modules.alvo.dto;
 
+import br.com.sysaba.modules.alvo.Alvo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AlvoDTO {

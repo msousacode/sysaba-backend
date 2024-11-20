@@ -1,4 +1,4 @@
-package br.com.sysaba.modules.treinamento.alvo;
+package br.com.sysaba.modules.alvo;
 
 import br.com.sysaba.core.commons.service.GenericService;
 import br.com.sysaba.modules.treinamento.TreinamentoService;

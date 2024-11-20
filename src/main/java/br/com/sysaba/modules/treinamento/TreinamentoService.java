@@ -1,13 +1,11 @@
 package br.com.sysaba.modules.treinamento;
 
 import br.com.sysaba.core.commons.service.GenericService;
-import br.com.sysaba.modules.treinamento.dto.AlvoDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service

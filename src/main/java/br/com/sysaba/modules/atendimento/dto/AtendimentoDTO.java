@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AtendimentoDTO {
 
-    @JsonAlias({"treinamentoId", "uuid"})
+    @JsonAlias({"atendimentoId", "uuid"})
     private String uuid;
 
     private AprendizDTO aprendiz;
@@ -89,6 +89,26 @@ public class AtendimentoDTO {
         atendimentoDTO.setDataInicio(atendimento.getDataInicio());
         atendimentoDTO.setAprendizUuidFk(aprendizDTO.getValue());
         atendimentoDTO.setAprendiz(aprendizDTO);
+
+        return atendimentoDTO;
+    }
+
+    public static AtendimentoDTO fromAtendimento(Atendimento saved) {
+
+        AtendimentoDTO atendimentoDTO = new AtendimentoDTO();
+        TreinamentoItemDTO treinamentoItem = new TreinamentoItemDTO();
+
+        atendimentoDTO.setDataInicio(saved.getDataInicio());
+
+        AprendizDTO aprendizDTO = new AprendizDTO();
+        aprendizDTO.setLabel(saved.getAprendiz().getNomeAprendiz());
+        aprendizDTO.setValue(String.valueOf(saved.getAprendiz().getAprendizId()));
+        atendimentoDTO.setAprendiz(aprendizDTO);
+
+
+        atendimentoDTO.setUuid(String.valueOf(saved.getAtendimentoId()));
+        atendimentoDTO.setAprendizUuidFk(String.valueOf(saved.getAprendiz().getAprendizId()));
+        atendimentoDTO.setTreinamentos(List.of(treinamentoItem));
 
         return atendimentoDTO;
     }

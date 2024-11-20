@@ -2,7 +2,7 @@ package br.com.sysaba.modules.treinamento;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.AprendizController;
-import br.com.sysaba.modules.treinamento.alvo.AlvoService;
+import br.com.sysaba.modules.alvo.AlvoService;
 import br.com.sysaba.modules.treinamento.dto.TreinamentoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

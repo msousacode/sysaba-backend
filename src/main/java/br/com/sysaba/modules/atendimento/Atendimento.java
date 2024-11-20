@@ -26,19 +26,15 @@ public class Atendimento extends Tenantable {
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
 
-    @OneToMany(mappedBy = "atendimento")
-    private List<Treinamento> treinamentos;
-
     public Atendimento() {
         super(LocalDateTime.now());
     }
 
-    public Atendimento(LocalDateTime createdAt, UUID atendimentoId, LocalDate dataInicio, Aprendiz aprendiz, List<Treinamento> treinamento) {
+    public Atendimento(LocalDateTime createdAt, UUID atendimentoId, LocalDate dataInicio, Aprendiz aprendiz) {
         super(createdAt);
         this.atendimentoId = atendimentoId;
         this.dataInicio = dataInicio;
         this.aprendiz = aprendiz;
-        this.treinamentos = treinamento;
     }
 
     public UUID getAtendimentoId() {
@@ -63,13 +59,5 @@ public class Atendimento extends Tenantable {
 
     public void setAprendiz(Aprendiz aprendiz) {
         this.aprendiz = aprendiz;
-    }
-
-    public List<Treinamento> getTreinamentos() {
-        return treinamentos;
-    }
-
-    public void setTreinamentos(List<Treinamento> treinamentos) {
-        this.treinamentos = treinamentos;
     }
 }
