@@ -5,6 +5,8 @@ import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
 import br.com.sysaba.modules.atendimento.dto.AtendimentoDTO;
+import br.com.sysaba.modules.atendimento.dto.ConfiguracoesDTO;
+import br.com.sysaba.modules.atendimento.dto.TreinamentoItemDTO;
 import br.com.sysaba.modules.treinamento.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,7 +98,7 @@ public class AtendimentoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<AtendimentoDTO>> buscar(
+    public ResponseEntity<Page<AtendimentoDTO>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "100") int size,
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
@@ -109,9 +111,18 @@ public class AtendimentoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AtendimentoDTO> getAlvo(@PathVariable("id") UUID id) {
+    public ResponseEntity<AtendimentoDTO> get(@PathVariable("id") UUID id) {
         Atendimento saved = atendimentoService.findById(id);
         AtendimentoDTO dto = AtendimentoDTO.fromAtendimento(saved);
+
+        TreinamentoAtendimento treinamentoAtendimentos = saved.getTreinamentoAtendimento();
+
+        TreinamentoItemDTO treinamentoItemDTOS = MapperUtil.converte(treinamentoAtendimentos.getTreinamento(), TreinamentoItemDTO.class);
+        ConfiguracoesDTO configuracoesDTO = MapperUtil.converte(treinamentoAtendimentos.getConfiguracoes(), ConfiguracoesDTO.class);
+
+        treinamentoItemDTOS.setConfiguracoes(configuracoesDTO);
+        dto.setTreinamentos(List.of(treinamentoItemDTOS));
+
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 }

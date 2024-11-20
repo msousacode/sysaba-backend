@@ -2,7 +2,7 @@ package br.com.sysaba.modules.atendimento;
 
 import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
-import br.com.sysaba.modules.treinamento.Treinamento;
+import br.com.sysaba.modules.treinamento.TreinamentoAtendimento;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -25,6 +25,9 @@ public class Atendimento extends Tenantable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "atendimento")
+    private TreinamentoAtendimento treinamentoAtendimento;
 
     public Atendimento() {
         super(LocalDateTime.now());
@@ -59,5 +62,13 @@ public class Atendimento extends Tenantable {
 
     public void setAprendiz(Aprendiz aprendiz) {
         this.aprendiz = aprendiz;
+    }
+
+    public TreinamentoAtendimento getTreinamentoAtendimento() {
+        return treinamentoAtendimento;
+    }
+
+    public void setTreinamentoAtendimento(TreinamentoAtendimento treinamentoAtendimento) {
+        this.treinamentoAtendimento = treinamentoAtendimento;
     }
 }

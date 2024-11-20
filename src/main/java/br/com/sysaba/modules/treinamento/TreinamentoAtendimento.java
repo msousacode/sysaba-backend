@@ -56,4 +56,12 @@ public class TreinamentoAtendimento {
     public void setAtendimento(Atendimento atendimento) {
         this.atendimento = atendimento;
     }
+
+    public Configuracoes getConfiguracoes() {
+        return configuracoes;
+    }
+
+    public void setConfiguracoes(Configuracoes configuracoes) {
+        this.configuracoes = configuracoes;
+    }
 }
