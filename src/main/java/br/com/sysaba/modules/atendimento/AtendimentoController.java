@@ -115,13 +115,14 @@ public class AtendimentoController {
         Atendimento saved = atendimentoService.findById(id);
         AtendimentoDTO dto = AtendimentoDTO.fromAtendimento(saved);
 
-        TreinamentoAtendimento treinamentoAtendimentos = (TreinamentoAtendimento) saved.getTreinamentoAtendimentos();
-
-        TreinamentoItemDTO treinamentoItemDTOS = MapperUtil.converte(treinamentoAtendimentos.getTreinamento(), TreinamentoItemDTO.class);
-        ConfiguracoesDTO configuracoesDTO = MapperUtil.converte(treinamentoAtendimentos.getConfiguracoes(), ConfiguracoesDTO.class);
-
-        treinamentoItemDTOS.setConfiguracoes(configuracoesDTO);
-        dto.setTreinamentos(List.of(treinamentoItemDTOS));
+        List<TreinamentoItemDTO> treinamentoItemDTOArrayList = new ArrayList<>();
+        saved.getTreinamentoAtendimentos().forEach(i -> {
+            TreinamentoItemDTO treinamentoItemDTOS = MapperUtil.converte(i.getTreinamento(), TreinamentoItemDTO.class);
+            ConfiguracoesDTO configuracoesDTO = MapperUtil.converte(i.getConfiguracoes(), ConfiguracoesDTO.class);
+            treinamentoItemDTOS.setConfiguracoes(configuracoesDTO);
+            treinamentoItemDTOArrayList.add(treinamentoItemDTOS);
+        });
+        dto.setTreinamentos(treinamentoItemDTOArrayList);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
