@@ -69,7 +69,7 @@ public class ColetaController {
     public ResponseEntity<AprendizDTO> atualizar(@RequestBody ColetaDTO coletaDTO) {
         try {
             Coleta coleta = MapperUtil.converte(coletaDTO, Coleta.class);
-            Coleta saved = coletaService.update(coletaDTO.getUuid(), coleta);
+            Coleta saved = coletaService.update(coletaDTO.getColetaId(), coleta);
             AprendizDTO dto = MapperUtil.converte(saved, AprendizDTO.class);
             return ResponseEntity.ok().body(dto);
         } catch (RuntimeException ex) {
@@ -78,14 +78,15 @@ public class ColetaController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/treinamento/{treinamentoId}")
     public ResponseEntity<Page<ColetaDTO>> buscar(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "100") int size,
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
-            @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
-        Page<Coleta> aprendizList = coletaService.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
-        Page<ColetaDTO> dtoList = aprendizList.map(i -> MapperUtil.converte(i, ColetaDTO.class));
+            @RequestParam(value = "direction", defaultValue = "DESC") String direction,
+            @PathVariable("treinamentoId") UUID treinamentoId) {
+        Page<Coleta> coletas = coletaService.findByTreinamentoTreinamentoId(treinamentoId, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
+        Page<ColetaDTO> dtoList = coletas.map(i -> MapperUtil.converte(i, ColetaDTO.class));
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
 

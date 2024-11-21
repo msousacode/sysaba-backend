@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public class ColetaDTO {
-    private UUID uuid;
+    private UUID coletaId;
 
     @JsonProperty("aprendiz_uuid_fk")
     private UUID aprendizUuidFk;
@@ -43,7 +43,7 @@ public class ColetaDTO {
     }
 
     public ColetaDTO(UUID uuid, UUID aprendizUuidFk, LocalDate dataColeta, String resposta, boolean sync, boolean foiRespondido, AlvoDTO alvo, LocalDate dataFinalColeta, boolean seg, boolean ter, boolean qua, boolean qui, boolean sex, boolean sab, int semana, boolean ativo) {
-        this.uuid = uuid;
+        this.coletaId = uuid;
         this.aprendizUuidFk = aprendizUuidFk;
         this.dataColeta = dataColeta;
         this.resposta = resposta;
@@ -61,12 +61,12 @@ public class ColetaDTO {
         this.ativo = ativo;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getColetaId() {
+        return coletaId;
     }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+    public void setColetaId(UUID coletaId) {
+        this.coletaId = coletaId;
     }
 
     public UUID getAprendizUuidFk() {

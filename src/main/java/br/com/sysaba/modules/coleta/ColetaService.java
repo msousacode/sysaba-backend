@@ -51,4 +51,8 @@ public class ColetaService implements GenericService<Coleta, UUID> {
     public void beforeSave() {
         GenericService.super.beforeSave();
     }
+
+    public Page<Coleta> findByTreinamentoTreinamentoId(UUID treinamentoId, Pageable pageble) {
+        return coletaRepository.findByTreinamento_treinamentoId(treinamentoId, pageble);
+    }
 }
