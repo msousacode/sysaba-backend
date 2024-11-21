@@ -86,10 +86,13 @@ public class AtendimentoDTO {
         atendimentoDTO.setUuid(String.valueOf(atendimento.getAtendimentoId()));
 
         List<TreinamentoItemDTO> list = new ArrayList<>();
-        TreinamentoItemDTO treinamentoItemDTO = MapperUtil.converte(atendimento.getTreinamentoAtendimento().getTreinamento(), TreinamentoItemDTO.class);
-        ConfiguracoesDTO config = MapperUtil.converte(atendimento.getTreinamentoAtendimento().getConfiguracoes(), ConfiguracoesDTO.class);
-        treinamentoItemDTO.setConfiguracoes(config);
-        list.add(treinamentoItemDTO);
+
+        atendimento.getTreinamentoAtendimentos().forEach(i -> {
+            TreinamentoItemDTO treinamentoItemDTO = MapperUtil.converte(i.getTreinamento(), TreinamentoItemDTO.class);
+            ConfiguracoesDTO config = MapperUtil.converte(i.getConfiguracoes(), ConfiguracoesDTO.class);
+            treinamentoItemDTO.setConfiguracoes(config);
+            list.add(treinamentoItemDTO);
+        });
 
         atendimentoDTO.setTreinamentos(list);
         atendimentoDTO.setDataInicio(atendimento.getDataInicio());

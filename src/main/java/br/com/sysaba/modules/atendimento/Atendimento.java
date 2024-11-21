@@ -26,8 +26,8 @@ public class Atendimento extends Tenantable {
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "atendimento")
-    private TreinamentoAtendimento treinamentoAtendimento;
+    @OneToMany(mappedBy = "atendimento")
+    private List<TreinamentoAtendimento> treinamentoAtendimentos;
 
     public Atendimento() {
         super(LocalDateTime.now());
@@ -64,11 +64,12 @@ public class Atendimento extends Tenantable {
         this.aprendiz = aprendiz;
     }
 
-    public TreinamentoAtendimento getTreinamentoAtendimento() {
-        return treinamentoAtendimento;
+
+    public List<TreinamentoAtendimento> getTreinamentoAtendimentos() {
+        return treinamentoAtendimentos;
     }
 
-    public void setTreinamentoAtendimento(TreinamentoAtendimento treinamentoAtendimento) {
-        this.treinamentoAtendimento = treinamentoAtendimento;
+    public void setTreinamentoAtendimentos(List<TreinamentoAtendimento> treinamentoAtendimentos) {
+        this.treinamentoAtendimentos = treinamentoAtendimentos;
     }
 }

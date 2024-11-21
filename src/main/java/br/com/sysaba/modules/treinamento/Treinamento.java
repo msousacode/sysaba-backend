@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -30,6 +31,9 @@ public class Treinamento extends Tenantable {
 
     @OneToMany(mappedBy = "treinamento")
     private List<Alvo> alvos;
+
+    @OneToMany(mappedBy = "treinamento")
+    private List<TreinamentoAtendimento> treinamentoAtendimentos;
 
     public Treinamento() {
         super(LocalDateTime.now());
