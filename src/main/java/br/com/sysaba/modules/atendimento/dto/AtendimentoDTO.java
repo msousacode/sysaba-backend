@@ -1,11 +1,13 @@
 package br.com.sysaba.modules.atendimento.dto;
 
+import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.atendimento.Atendimento;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AtendimentoDTO {
@@ -83,9 +85,13 @@ public class AtendimentoDTO {
         AtendimentoDTO atendimentoDTO = new AtendimentoDTO();
         atendimentoDTO.setUuid(String.valueOf(atendimento.getAtendimentoId()));
 
-        //List<TreinamentoItemDTO> list = atendimento.getTreinamento().stream().map(TreinamentoItemDTO::fromDTO).toList();
+        List<TreinamentoItemDTO> list = new ArrayList<>();
+        TreinamentoItemDTO treinamentoItemDTO = MapperUtil.converte(atendimento.getTreinamentoAtendimento().getTreinamento(), TreinamentoItemDTO.class);
+        ConfiguracoesDTO config = MapperUtil.converte(atendimento.getTreinamentoAtendimento().getConfiguracoes(), ConfiguracoesDTO.class);
+        treinamentoItemDTO.setConfiguracoes(config);
+        list.add(treinamentoItemDTO);
 
-        //atendimentoDTO.setTreinamentos(list);
+        atendimentoDTO.setTreinamentos(list);
         atendimentoDTO.setDataInicio(atendimento.getDataInicio());
         atendimentoDTO.setAprendizUuidFk(aprendizDTO.getValue());
         atendimentoDTO.setAprendiz(aprendizDTO);

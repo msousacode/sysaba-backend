@@ -1,14 +1,15 @@
 package br.com.sysaba.modules.treinamento;
 
-import br.com.sysaba.modules.atendimento.dto.ConfiguracoesDTO;
+import br.com.sysaba.core.models.Tenantable;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "treinamentos_config")
-public class Configuracoes {
+public class Configuracoes extends Tenantable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,9 +45,11 @@ public class Configuracoes {
     private TreinamentoAtendimento treinamentoAtendimento;
 
     public Configuracoes() {
+        super(LocalDateTime.now());
     }
 
     public Configuracoes(UUID configuracaoId, LocalDate dataFinal, Integer repetir, boolean seg, boolean ter, boolean qua, boolean qui, boolean sex, boolean sab, TreinamentoAtendimento treinamentoAtendimento) {
+        super(LocalDateTime.now());
         this.configuracaoId = configuracaoId;
         this.dataFinal = dataFinal;
         this.repetir = repetir;
