@@ -5,6 +5,7 @@ import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
 import br.com.sysaba.modules.coleta.dto.ColetaDTO;
+import br.com.sysaba.modules.coleta.dto.RespostaDTO;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import br.com.sysaba.modules.treinamento.TreinamentoService;
 import br.com.sysaba.modules.alvo.Alvo;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -44,19 +46,22 @@ public class ColetaController {
 
     @Transactional
     @PostMapping
-    public ResponseEntity<?> salvar(@RequestBody ColetaDTO coletaDTO) {
+    public ResponseEntity<?> salvar(@RequestBody List<ColetaDTO> coletaDTO) {
         try {
-            Coleta coleta = MapperUtil.converte(coletaDTO, Coleta.class);
+            coletaDTO.stream().forEach(i -> {
+                Coleta coleta = MapperUtil.converte(i, Coleta.class);
 
-            Alvo alvo = alvoService.findById(UUID.fromString(coletaDTO.getAlvo().getAlvoId()));
-            Aprendiz aprendiz = aprendizService.findById(coletaDTO.getAprendizUuidFk());
-            Treinamento treinamento = treinamentoService.findById(UUID.fromString(coletaDTO.getAlvo().getTreinamentoUuidFk()));
+                Alvo alvo = alvoService.findById(UUID.fromString(i.getAlvo().getAlvoId()));
+                Aprendiz aprendiz = aprendizService.findById(i.getAprendizUuidFk());
+                Treinamento treinamento = treinamentoService.findById(UUID.fromString(i.getAlvo().getTreinamentoUuidFk()));
 
-            coleta.setAlvo(alvo);
-            coleta.setAprendiz(aprendiz);
-            coleta.setTreinamento(treinamento);
+                coleta.setAlvo(alvo);
+                coleta.setAprendiz(aprendiz);
+                coleta.setTreinamento(treinamento);
 
-            coletaService.save(coleta);
+                coletaService.save(coleta);
+            });
+
         } catch (RuntimeException ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.internalServerError().build();
@@ -85,7 +90,7 @@ public class ColetaController {
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction,
             @PathVariable("treinamentoId") UUID treinamentoId) {
-        Page<Coleta> coletas = coletaService.findByTreinamentoTreinamentoId(treinamentoId, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
+        Page<Coleta> coletas = coletaService.findByTreinamentoTreinamentoId(treinamentoId, PageRequest.of(page, size, Sort.by("semana")));
         Page<ColetaDTO> dtoList = coletas.map(i -> MapperUtil.converte(i, ColetaDTO.class));
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
@@ -95,5 +100,17 @@ public class ColetaController {
         Coleta saved = coletaService.findById(id);
         ColetaDTO dto = MapperUtil.converte(saved, ColetaDTO.class);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @Transactional
+    @PutMapping("/respostas")
+    public ResponseEntity<?> salvarRespostas(@RequestBody List<RespostaDTO> respostasDTOs) {
+        try {
+            coletaService.updateResposta(respostasDTOs);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

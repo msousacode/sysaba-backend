@@ -52,6 +52,9 @@ public class Coleta extends Tenantable {
     @Column(name = "sab", nullable = false)
     private boolean sab;
 
+    @Column(name = "semana", nullable = false)
+    private int semana;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
@@ -64,7 +67,7 @@ public class Coleta extends Tenantable {
         super(LocalDateTime.now());
     }
 
-    public Coleta(LocalDateTime createdAt, UUID coletaId, LocalDateTime dataColeta, String resposta, boolean foiRespondido, Alvo alvo, LocalDateTime dataFinalColeta, boolean seg, boolean ter, boolean qua, boolean qui, boolean sex, boolean sab, Aprendiz aprendiz, Treinamento treinamento) {
+    public Coleta(LocalDateTime createdAt, UUID coletaId, LocalDateTime dataColeta, String resposta, boolean foiRespondido, Alvo alvo, LocalDateTime dataFinalColeta, boolean seg, boolean ter, boolean qua, boolean qui, boolean sex, boolean sab, int semana, Aprendiz aprendiz, Treinamento treinamento) {
         super(createdAt);
         this.coletaId = coletaId;
         this.dataColeta = dataColeta;
@@ -78,6 +81,7 @@ public class Coleta extends Tenantable {
         this.qui = qui;
         this.sex = sex;
         this.sab = sab;
+        this.semana = semana;
         this.aprendiz = aprendiz;
         this.treinamento = treinamento;
     }
@@ -192,5 +196,13 @@ public class Coleta extends Tenantable {
 
     public void setTreinamento(Treinamento treinamento) {
         this.treinamento = treinamento;
+    }
+
+    public int getSemana() {
+        return semana;
+    }
+
+    public void setSemana(int semana) {
+        this.semana = semana;
     }
 }
