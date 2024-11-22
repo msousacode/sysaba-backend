@@ -40,7 +40,7 @@ public class AuthService {
         Map<String, Object> customClaims = new HashMap<>();
         customClaims.put("username", username);
         customClaims.put("tenantId", usuario.getUsuarioId());
-        customClaims.put("perfil", "ADMIN");
+        customClaims.put("perfil", "ADMIN");//TODO depois implementar o perfil.
 
         Instant now = Instant.now();
 

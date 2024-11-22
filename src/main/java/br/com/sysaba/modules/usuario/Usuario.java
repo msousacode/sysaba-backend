@@ -44,7 +44,7 @@ public class Usuario {
     @Column(name = "criado_por")
     private UUID criadoPor;
 
-    @Column(name = "tentant_id", nullable = false)
+    @Column(name = "tentant_id")
     private UUID tenantId;
 
     public Usuario(UUID usuarioId, String documento, String email, String fullName, String avatarUrl, String demonstracaoRestore, Boolean primeiroAcessoRealizado, String senha, LocalDateTime createdAt, Boolean ativo, UUID criadoPor, UUID tenantId) {

@@ -38,7 +38,6 @@ public class UsuarioController {
     public ResponseEntity salvar(@RequestBody UsuarioDTO usuarioDTO) {
         try {
             Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
-            usuario.setTenantId(UUID.randomUUID());//TenantId provisorio somente para salvar.
             usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
             Usuario result = usuarioService.save(usuario);
 
