@@ -73,4 +73,8 @@ public class ColetaService implements GenericService<Coleta, UUID> {
 
         coletaRepository.saveAll(coletas);
     }
+
+    public Coleta findColetaId(UUID coletaId) {
+        return coletaRepository.findByColetaId(coletaId);
+    }
 }

@@ -1,7 +1,8 @@
 package br.com.sysaba.modules.alvo.dto;
 
-import br.com.sysaba.modules.alvo.Alvo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.UUID;
 
 public class AlvoDTO {
 
@@ -20,6 +21,9 @@ public class AlvoDTO {
 
     @JsonProperty("tipo_aprendizado")
     private String tipoAprendizado;
+
+    @JsonProperty("identificador")
+    private UUID identificador = UUID.randomUUID();
 
     // Construtor padrão
     public AlvoDTO() {
@@ -71,5 +75,13 @@ public class AlvoDTO {
 
     public void setTipoAprendizado(String tipoAprendizado) {
         this.tipoAprendizado = tipoAprendizado;
+    }
+
+    public UUID getIdentificador() {
+        return identificador;
+    }
+
+    public void setIdentificador(UUID identificador) {
+        this.identificador = identificador;
     }
 }

@@ -1,14 +1,12 @@
 package br.com.sysaba.modules.treinamento;
 
 import br.com.sysaba.core.models.Tenantable;
-import br.com.sysaba.modules.atendimento.Atendimento;
-import br.com.sysaba.modules.atendimento.dto.TreinamentoItemDTO;
+import br.com.sysaba.modules.anotacao.Anotacao;
 import br.com.sysaba.modules.alvo.Alvo;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -35,17 +33,21 @@ public class Treinamento extends Tenantable {
     @OneToMany(mappedBy = "treinamento")
     private List<TreinamentoAtendimento> treinamentoAtendimentos;
 
+    @OneToMany(mappedBy = "treinamento")
+    private List<Anotacao> anotacoes;
+
     public Treinamento() {
         super(LocalDateTime.now());
     }
 
-    public Treinamento(LocalDateTime createdAt, UUID treinamentoId, String protocolo, String treinamento, String descricao, List<Alvo> alvos) {
+    public Treinamento(LocalDateTime createdAt, UUID treinamentoId, String protocolo, String treinamento, String descricao, List<Alvo> alvos, List<Anotacao> anotacoes) {
         super(createdAt);
         this.treinamentoId = treinamentoId;
         this.protocolo = protocolo;
         this.treinamento = treinamento;
         this.descricao = descricao;
         this.alvos = alvos;
+        this.anotacoes = anotacoes;
     }
 
     public UUID getTreinamentoId() {
@@ -86,5 +88,13 @@ public class Treinamento extends Tenantable {
 
     public void setTreinamento(String treinamento) {
         this.treinamento = treinamento;
+    }
+
+    public List<Anotacao> getAnotacoes() {
+        return anotacoes;
+    }
+
+    public void setAnotacoes(List<Anotacao> anotacoes) {
+        this.anotacoes = anotacoes;
     }
 }

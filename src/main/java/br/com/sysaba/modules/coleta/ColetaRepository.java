@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface ColetaRepository extends TenantableRepository<Coleta> {
     Page<Coleta> findByTreinamento_treinamentoId(UUID treinamentoId, Pageable pageble);
+
+    Coleta findByColetaId(UUID alvoId);
 }

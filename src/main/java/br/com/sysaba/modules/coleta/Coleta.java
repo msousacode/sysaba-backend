@@ -1,12 +1,14 @@
 package br.com.sysaba.modules.coleta;
 
 import br.com.sysaba.core.models.Tenantable;
+import br.com.sysaba.modules.anotacao.Anotacao;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.alvo.Alvo;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -63,11 +65,15 @@ public class Coleta extends Tenantable {
     @JoinColumn(name = "treinamento_id", nullable = false)
     private Treinamento treinamento;
 
+    @OneToMany
+    @JoinColumn(name = "coleta_id")
+    private List<Anotacao> anotacoes;
+
     public Coleta() {
         super(LocalDateTime.now());
     }
 
-    public Coleta(LocalDateTime createdAt, UUID coletaId, LocalDateTime dataColeta, String resposta, boolean foiRespondido, Alvo alvo, LocalDateTime dataFinalColeta, boolean seg, boolean ter, boolean qua, boolean qui, boolean sex, boolean sab, int semana, Aprendiz aprendiz, Treinamento treinamento) {
+    public Coleta(LocalDateTime createdAt, UUID coletaId, LocalDateTime dataColeta, String resposta, boolean foiRespondido, Alvo alvo, LocalDateTime dataFinalColeta, boolean seg, boolean ter, boolean qua, boolean qui, boolean sex, boolean sab, int semana, Aprendiz aprendiz, Treinamento treinamento, List<Anotacao> anotacoes) {
         super(createdAt);
         this.coletaId = coletaId;
         this.dataColeta = dataColeta;
@@ -84,6 +90,7 @@ public class Coleta extends Tenantable {
         this.semana = semana;
         this.aprendiz = aprendiz;
         this.treinamento = treinamento;
+        this.anotacoes = anotacoes;
     }
 
     public UUID getColetaId() {
@@ -204,5 +211,13 @@ public class Coleta extends Tenantable {
 
     public void setSemana(int semana) {
         this.semana = semana;
+    }
+
+    public List<Anotacao> getAnotacoes() {
+        return anotacoes;
+    }
+
+    public void setAnotacoes(List<Anotacao> anotacoes) {
+        this.anotacoes = anotacoes;
     }
 }

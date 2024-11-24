@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class ColetaDTO {
+public class    ColetaDTO {
     private UUID coletaId;
 
     @JsonProperty("aprendiz_uuid_fk")
@@ -27,7 +27,7 @@ public class ColetaDTO {
     private AlvoDTO alvo;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    @JsonProperty("26/11/2024")
+    @JsonProperty("data_final_coleta")
     private LocalDate dataFinalColeta;
 
     private boolean seg;
