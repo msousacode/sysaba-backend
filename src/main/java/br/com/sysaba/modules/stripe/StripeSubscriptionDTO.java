@@ -1,52 +1,12 @@
 package br.com.sysaba.modules.stripe;
 
-import jakarta.persistence.*;
+public class StripeSubscriptionDTO {
 
-import java.util.UUID;
-
-@Entity
-@Table(name = "stripe_customers")
-public class StripeCustomers {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "stripe_id")
-    private UUID stripeId;
-
-    @Column(name = "stripe_customer_id")
     private String stripeCustomerId;
-
-    @Column(name = "stripe_subscription_id")
     private String stripeSubscriptionId;
-
-    @Column(name = "stripe_subscription_status")
     private String stripeSubscriptionStatus;
-
-    @Column(name = "stripe_price_id")
     private String stripePriceId;
-
-    @Column(name = "email")
     private String email;
-
-    public StripeCustomers() {
-    }
-
-    public StripeCustomers(UUID stripeId, String stripeCustomerId, String stripeSubscriptionId, String stripeSubscriptionStatus, String stripePriceId, String email) {
-        this.stripeId = stripeId;
-        this.stripeCustomerId = stripeCustomerId;
-        this.stripeSubscriptionId = stripeSubscriptionId;
-        this.stripeSubscriptionStatus = stripeSubscriptionStatus;
-        this.stripePriceId = stripePriceId;
-        this.email = email;
-    }
-
-    public UUID getStripeId() {
-        return stripeId;
-    }
-
-    public void setStripeId(UUID stripeId) {
-        this.stripeId = stripeId;
-    }
 
     public String getStripeCustomerId() {
         return stripeCustomerId;

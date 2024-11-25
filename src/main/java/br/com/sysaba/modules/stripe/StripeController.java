@@ -16,9 +16,15 @@ public class StripeController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCustomer(@RequestBody StripeCustomersDTO stripeCustomersDTO) {
-        StripeCustomers stripeCustomers = MapperUtil.converte(stripeCustomersDTO, StripeCustomers.class);
+    public ResponseEntity<?> createCustomer(@RequestBody StripeSubscriptionDTO stripeSubscriptionDTO) {
+        StripeCustomers stripeCustomers = MapperUtil.converte(stripeSubscriptionDTO, StripeCustomers.class);
         stripeRepository.save(stripeCustomers);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<StripeCustomers> getUserStripeSubscriptionId(@PathVariable("email") String email) {
+        StripeCustomers stripeCustomers = stripeRepository.findByEmail(email);
+        return ResponseEntity.ok(stripeCustomers);
     }
 }

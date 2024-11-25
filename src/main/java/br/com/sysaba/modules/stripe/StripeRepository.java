@@ -7,4 +7,5 @@ import java.util.UUID;
 
 @Repository
 public interface StripeRepository extends JpaRepository<StripeCustomers, UUID> {
+    StripeCustomers findByEmail(String email);
 }
