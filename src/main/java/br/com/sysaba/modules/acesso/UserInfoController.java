@@ -3,6 +3,8 @@ package br.com.sysaba.modules.acesso;
 import br.com.sysaba.core.security.config.RsaKeyConfigProperties;
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.acesso.dto.UsuarioInfoDTO;
+import br.com.sysaba.modules.termo.Termo;
+import br.com.sysaba.modules.termo.TermoRepository;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,13 +31,16 @@ public class UserInfoController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserInfoController.class);
 
+    private final TermoRepository termoRepository;
+
     private final UsuarioRepository usuarioRepository;
 
     private final RsaKeyConfigProperties rsaKeyConfigProperties;
 
     public static final String HEADER_PREFIX = "Bearer ";
 
-    public UserInfoController(UsuarioRepository usuarioRepository, RsaKeyConfigProperties rsaKeyConfigProperties) {
+    public UserInfoController(TermoRepository termoRepository, UsuarioRepository usuarioRepository, RsaKeyConfigProperties rsaKeyConfigProperties) {
+        this.termoRepository = termoRepository;
         this.usuarioRepository = usuarioRepository;
         this.rsaKeyConfigProperties = rsaKeyConfigProperties;
     }
@@ -55,6 +60,14 @@ public class UserInfoController {
             Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
 
             UsuarioInfoDTO dto = MapperUtil.converte(usuario, UsuarioInfoDTO.class);
+
+            Optional<Termo> termo = termoRepository.findByUsuario_usuarioId(usuario.get().getUsuarioId());
+
+            if (termo.isPresent()) {
+                dto.setTermoAceite(termo.get().isAceite());
+            } else {
+                dto.setTermoAceite(false);
+            }
 
             return ResponseEntity.ok(dto);
 

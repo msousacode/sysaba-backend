@@ -7,14 +7,16 @@ public class UsuarioInfoDTO {
     private UUID usuarioId;
     private String fullName;
     private String email;
+    private Boolean termoAceite;
 
     public UsuarioInfoDTO() {
     }
 
-    public UsuarioInfoDTO(UUID usuarioId, String nome, String email) {
+    public UsuarioInfoDTO(UUID usuarioId, String nome, String email, Boolean termoAceite) {
         this.usuarioId = usuarioId;
         this.fullName = nome;
         this.email = email;
+        this.termoAceite = termoAceite;
     }
 
     public UUID getUsuarioId() {
@@ -39,5 +41,13 @@ public class UsuarioInfoDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getTermoAceite() {
+        return termoAceite;
+    }
+
+    public void setTermoAceite(Boolean termoAceite) {
+        this.termoAceite = termoAceite;
     }
 }
