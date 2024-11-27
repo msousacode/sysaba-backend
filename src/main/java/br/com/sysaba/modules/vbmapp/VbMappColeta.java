@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "vbmapp_coletas")
-public class VbMappColetas extends BaseEntity {
+public class VbMappColeta extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -30,13 +30,13 @@ public class VbMappColetas extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vbmapp_id", nullable = false)
-    private VbMapp vbMapp;
+    private VbMappAvaliacao vbMapp;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
 
-    public VbMappColetas(LocalDateTime createdAt, UUID vbmappColetaId, int nivelColeta, int tipo, Double pontuacao, LocalDateTime dataColeta, VbMapp vbMapp, Aprendiz aprendiz) {
+    public VbMappColeta(LocalDateTime createdAt, UUID vbmappColetaId, int nivelColeta, int tipo, Double pontuacao, LocalDateTime dataColeta, VbMappAvaliacao vbMapp, Aprendiz aprendiz) {
         super(createdAt);
         this.vbmappColetaId = vbmappColetaId;
         this.nivelColeta = nivelColeta;
@@ -87,11 +87,11 @@ public class VbMappColetas extends BaseEntity {
         this.dataColeta = dataColeta;
     }
 
-    public VbMapp getVbMapp() {
+    public VbMappAvaliacao getVbMapp() {
         return vbMapp;
     }
 
-    public void setVbMapp(VbMapp vbMapp) {
+    public void setVbMapp(VbMappAvaliacao vbMapp) {
         this.vbMapp = vbMapp;
     }
 
