@@ -2,6 +2,7 @@ package br.com.sysaba.modules.vbmapp;
 
 import br.com.sysaba.core.commons.BaseEntity;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
+import br.com.sysaba.modules.vbmapp.dto.VbMappColetaDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,25 @@ public class VbMappColeta extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
+
+    public static VbMappColeta from(VbMappColetaDTO dto, VbMappAvaliacao vbMappAvaliacao, Aprendiz aprendiz) {
+        VbMappColeta vbMappColeta = new VbMappColeta();
+
+        vbMappColeta.setVbMapp(vbMappAvaliacao);
+        vbMappColeta.setAprendiz(aprendiz);
+        vbMappColeta.setNivelColeta(dto.getNivelColeta());
+        vbMappColeta.setPontuacao(dto.getPontuacao());
+        vbMappColeta.setTipo(dto.getTipo());
+        vbMappColeta.setDataColeta(LocalDateTime.now());
+
+        return vbMappColeta;
+    }
+
+    public VbMappColeta() {
+        super(LocalDateTime.now());
+        this.setAtivo(true);
+        this.setCreatedAt(LocalDateTime.now());
+    }
 
     public VbMappColeta(LocalDateTime createdAt, UUID vbmappColetaId, int nivelColeta, int tipo, Double pontuacao, LocalDateTime dataColeta, VbMappAvaliacao vbMapp, Aprendiz aprendiz) {
         super(createdAt);

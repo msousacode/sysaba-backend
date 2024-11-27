@@ -4,6 +4,7 @@ import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizController;
 import br.com.sysaba.modules.aprendiz.AprendizService;
+import br.com.sysaba.modules.vbmapp.dto.VbMappColetaDTO;
 import br.com.sysaba.modules.vbmapp.dto.VbMappDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -45,12 +47,31 @@ public class VBMappController {
         }
     }
 
+    @Transactional
+    @PostMapping("/coletas")
+    public ResponseEntity<UUID> salvarColeta(@RequestBody List<VbMappColetaDTO> vbMappColetaDTOs) {
+        try {
+            VbMappAvaliacao vbMappAvaliacao = vbMappService.findById(vbMappColetaDTOs.get(0).getVbmappUuidFk());
+
+            Aprendiz aprendiz = aprendizService.findById(vbMappColetaDTOs.get(0).getAprendizUuidFk());
+
+            List<VbMappColeta> vbMappColeta = vbMappColetaDTOs.stream().map(i -> VbMappColeta.from(i, vbMappAvaliacao, aprendiz)).toList();
+
+            vbMappService.saveColetaAvaliacao(vbMappColeta);
+
+            return ResponseEntity.ok(vbMappAvaliacao.getVbMappId());
+
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @GetMapping("/config-tela/{vbmappId}")
-    public ResponseEntity<VbMappDTO> getConfigTela(@PathVariable("vbmappId") UUID vbmappId) {
+    public ResponseEntity<VbMappAvaliacao> getConfigTela(@PathVariable("vbmappId") UUID vbmappId) {
         try {
             VbMappAvaliacao vbMapp = vbMappService.findById(vbmappId);
-            VbMappDTO vbMappDTO = MapperUtil.converte(vbMapp, VbMappDTO.class);
-            return ResponseEntity.ok(vbMappDTO);
+            return ResponseEntity.ok(vbMapp);
         } catch (RuntimeException ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.internalServerError().build();
