@@ -30,4 +30,8 @@ public class VBMappService {
     public void saveColetaAvaliacao(List<VbMappColeta> vbMappColeta) {
         vbMappColetaRepository.saveAll(vbMappColeta);
     }
+
+    public List<VbMappAvaliacao> findAllByAprendizId(UUID aprendizId) {
+        return vbMappRepository.findAllByAprendiz_aprendizId(aprendizId);
+    }
 }

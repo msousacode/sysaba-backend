@@ -1,6 +1,6 @@
 package br.com.sysaba.modules.vbmapp;
 
-import br.com.sysaba.core.commons.BaseEntity;
+import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.vbmapp.dto.VbMappDTO;
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "vbmapp_avaliacoes")
-public class VbMappAvaliacao extends BaseEntity {
+public class VbMappAvaliacao extends Tenantable {
 
     @Id
     @GeneratedValue

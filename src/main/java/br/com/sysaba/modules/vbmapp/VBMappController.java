@@ -1,6 +1,5 @@
 package br.com.sysaba.modules.vbmapp;
 
-import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizController;
 import br.com.sysaba.modules.aprendiz.AprendizService;
@@ -71,6 +70,17 @@ public class VBMappController {
     public ResponseEntity<VbMappAvaliacao> getConfigTela(@PathVariable("vbmappId") UUID vbmappId) {
         try {
             VbMappAvaliacao vbMapp = vbMappService.findById(vbmappId);
+            return ResponseEntity.ok(vbMapp);
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/aprendiz/{aprendizId}")
+    public ResponseEntity<List<VbMappAvaliacao>> getVbMaapAprendiz(@PathVariable("aprendizId") UUID aprendizId) {
+        try {
+            List<VbMappAvaliacao> vbMapp = vbMappService.findAllByAprendizId(aprendizId);
             return ResponseEntity.ok(vbMapp);
         } catch (RuntimeException ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
