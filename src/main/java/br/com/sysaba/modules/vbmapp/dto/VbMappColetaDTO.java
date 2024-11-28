@@ -12,7 +12,7 @@ public class VbMappColetaDTO {
     @JsonProperty("aprendiz_uuid_fk")
     private UUID aprendizUuidFk;
 
-    @JsonProperty("data_id")
+    @JsonProperty("coleta_id")
     private int coletaId;
 
     @JsonProperty("nivel_coleta")

@@ -1,6 +1,6 @@
 package br.com.sysaba.modules.vbmapp;
 
-import br.com.sysaba.core.commons.BaseEntity;
+import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.vbmapp.dto.VbMappColetaDTO;
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "vbmapp_coletas")
-public class VbMappColeta extends BaseEntity {
+public class VbMappColeta extends Tenantable {
 
     @Id
     @GeneratedValue
@@ -37,7 +37,10 @@ public class VbMappColeta extends BaseEntity {
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
 
-    public static VbMappColeta from(VbMappColetaDTO dto, VbMappAvaliacao vbMappAvaliacao, Aprendiz aprendiz) {
+    @Column(name = "coleta_id", nullable = false)
+    private Integer coletaId;
+
+    public static VbMappColeta of(VbMappColetaDTO dto, VbMappAvaliacao vbMappAvaliacao, Aprendiz aprendiz) {
         VbMappColeta vbMappColeta = new VbMappColeta();
 
         vbMappColeta.setVbMapp(vbMappAvaliacao);
@@ -46,6 +49,7 @@ public class VbMappColeta extends BaseEntity {
         vbMappColeta.setPontuacao(dto.getPontuacao());
         vbMappColeta.setTipo(dto.getTipo());
         vbMappColeta.setDataColeta(LocalDateTime.now());
+        vbMappColeta.setColetaId(dto.getColetaId());
 
         return vbMappColeta;
     }
@@ -56,7 +60,7 @@ public class VbMappColeta extends BaseEntity {
         this.setCreatedAt(LocalDateTime.now());
     }
 
-    public VbMappColeta(LocalDateTime createdAt, UUID vbmappColetaId, int nivelColeta, int tipo, Double pontuacao, LocalDateTime dataColeta, VbMappAvaliacao vbMapp, Aprendiz aprendiz) {
+    public VbMappColeta(LocalDateTime createdAt, UUID vbmappColetaId, int nivelColeta, int tipo, Double pontuacao, LocalDateTime dataColeta, VbMappAvaliacao vbMapp, Aprendiz aprendiz, Integer coletaId) {
         super(createdAt);
         this.vbmappColetaId = vbmappColetaId;
         this.nivelColeta = nivelColeta;
@@ -65,6 +69,7 @@ public class VbMappColeta extends BaseEntity {
         this.dataColeta = dataColeta;
         this.vbMapp = vbMapp;
         this.aprendiz = aprendiz;
+        this.coletaId = coletaId;
     }
 
     public UUID getVbmappColetaId() {
@@ -121,5 +126,13 @@ public class VbMappColeta extends BaseEntity {
 
     public void setAprendiz(Aprendiz aprendiz) {
         this.aprendiz = aprendiz;
+    }
+
+    public Integer getColetaId() {
+        return coletaId;
+    }
+
+    public void setColetaId(Integer coletaId) {
+        this.coletaId = coletaId;
     }
 }

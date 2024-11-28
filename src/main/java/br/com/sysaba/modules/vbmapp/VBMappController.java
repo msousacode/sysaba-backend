@@ -7,6 +7,7 @@ import br.com.sysaba.modules.vbmapp.dto.VbMappColetaDTO;
 import br.com.sysaba.modules.vbmapp.dto.VbMappDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +55,7 @@ public class VBMappController {
 
             Aprendiz aprendiz = aprendizService.findById(vbMappColetaDTOs.get(0).getAprendizUuidFk());
 
-            List<VbMappColeta> vbMappColeta = vbMappColetaDTOs.stream().map(i -> VbMappColeta.from(i, vbMappAvaliacao, aprendiz)).toList();
+            List<VbMappColeta> vbMappColeta = vbMappColetaDTOs.stream().map(i -> VbMappColeta.of(i, vbMappAvaliacao, aprendiz)).toList();
 
             vbMappService.saveColetaAvaliacao(vbMappColeta);
 
