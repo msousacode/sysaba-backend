@@ -1,7 +1,9 @@
 package br.com.sysaba.modules.vbmapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class VbMappColetaDTO {
@@ -24,10 +26,13 @@ public class VbMappColetaDTO {
     @JsonProperty("pontuacao")
     private double pontuacao;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     @JsonProperty("data_coleta")
-    private long dataColeta;
+    private LocalDate dataColeta;
 
-    public VbMappColetaDTO(UUID vbmappUuidFk, UUID aprendizUuidFk, int coletaId, int nivelColeta, int tipo, double pontuacao, long dataColeta) {
+    public VbMappColetaDTO(){}
+
+    public VbMappColetaDTO(UUID vbmappUuidFk, UUID aprendizUuidFk, int coletaId, int nivelColeta, int tipo, double pontuacao, LocalDate dataColeta) {
         this.vbmappUuidFk = vbmappUuidFk;
         this.aprendizUuidFk = aprendizUuidFk;
         this.coletaId = coletaId;
@@ -85,11 +90,11 @@ public class VbMappColetaDTO {
         this.pontuacao = pontuacao;
     }
 
-    public long getDataColeta() {
+    public LocalDate getDataColeta() {
         return dataColeta;
     }
 
-    public void setDataColeta(long dataColeta) {
+    public void setDataColeta(LocalDate dataColeta) {
         this.dataColeta = dataColeta;
     }
 }

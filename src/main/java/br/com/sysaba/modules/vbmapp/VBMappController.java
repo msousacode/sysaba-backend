@@ -1,5 +1,6 @@
 package br.com.sysaba.modules.vbmapp;
 
+import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizController;
 import br.com.sysaba.modules.aprendiz.AprendizService;
@@ -7,11 +8,12 @@ import br.com.sysaba.modules.vbmapp.dto.VbMappColetaDTO;
 import br.com.sysaba.modules.vbmapp.dto.VbMappDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -87,5 +89,20 @@ public class VBMappController {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping("/coletas-respondidas/{vbmappUuid}")
+    public ResponseEntity<List<VbMappColetaDTO>> getColetasRespondidas(@PathVariable("vbmappUuid") UUID vbmappUuid) {
+        List<VbMappColeta> coletas = vbMappService.findByColetasRespondidas(vbmappUuid);
+        List<VbMappColetaDTO> dtos = new ArrayList<>();
+
+        coletas.stream().forEach(i -> dtos.add(MapperUtil.converte(i, VbMappColetaDTO.class)));
+        return ResponseEntity.status(HttpStatus.OK).body(dtos);
+    }
+
+    @GetMapping("/chart/milestones/{vbmappUuid}")
+    public ResponseEntity<List<Double>> getChartMilestones(@PathVariable("vbmappUuid") UUID vbmappUuid) {
+        List<Double> coletaPontuacoes = vbMappService.findPontuacaoColetaAvaliacao(vbmappUuid);
+        return ResponseEntity.ok(coletaPontuacoes);
     }
 }

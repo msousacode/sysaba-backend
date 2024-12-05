@@ -1,6 +1,8 @@
 package br.com.sysaba.modules.coleta;
 
 import br.com.sysaba.core.util.MapperUtil;
+import br.com.sysaba.modules.alvo.Alvo;
+import br.com.sysaba.modules.alvo.AlvoService;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
@@ -8,8 +10,6 @@ import br.com.sysaba.modules.coleta.dto.ColetaDTO;
 import br.com.sysaba.modules.coleta.dto.RespostaDTO;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import br.com.sysaba.modules.treinamento.TreinamentoService;
-import br.com.sysaba.modules.alvo.Alvo;
-import br.com.sysaba.modules.alvo.AlvoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -97,8 +97,8 @@ public class ColetaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ColetaDTO> get(@PathVariable("id") UUID id) {
-        Coleta saved = coletaService.findById(id);
-        ColetaDTO dto = MapperUtil.converte(saved, ColetaDTO.class);
+        Coleta coleta = coletaService.findById(id);
+        ColetaDTO dto = MapperUtil.converte(coleta, ColetaDTO.class);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
