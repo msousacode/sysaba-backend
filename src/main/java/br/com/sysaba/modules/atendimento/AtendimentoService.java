@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -50,5 +51,13 @@ public class AtendimentoService implements GenericService<Atendimento, UUID> {
     @Override
     public void beforeSave() {
         GenericService.super.beforeSave();
+    }
+
+    public List<Atendimento> findAllAtendimentosTreinamentosByAprendizId(UUID aprendizId) {
+        List<Atendimento> atendimentos = atendimentoRepository.findAllByAprendiz_aprendizIdAndAtivoTrue(aprendizId);
+        if(atendimentos.isEmpty()) {
+            throw new RuntimeException("Não foi localizado treinamentos para o aprendiz: " + aprendizId);
+        }
+        return atendimentos;
     }
 }

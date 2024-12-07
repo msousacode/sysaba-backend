@@ -3,6 +3,7 @@ package br.com.sysaba.modules.treinamento;
 import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.anotacao.Anotacao;
 import br.com.sysaba.modules.alvo.Alvo;
+import br.com.sysaba.modules.coleta.Coleta;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -34,19 +35,23 @@ public class Treinamento extends Tenantable {
     private List<TreinamentoAtendimento> treinamentoAtendimentos;
 
     @OneToMany(mappedBy = "treinamento")
+    private List<Coleta> coletas;
+
+    @OneToMany(mappedBy = "treinamento")
     private List<Anotacao> anotacoes;
 
     public Treinamento() {
         super(LocalDateTime.now());
     }
 
-    public Treinamento(LocalDateTime createdAt, UUID treinamentoId, String protocolo, String treinamento, String descricao, List<Alvo> alvos, List<Anotacao> anotacoes) {
+    public Treinamento(LocalDateTime createdAt, UUID treinamentoId, String protocolo, String treinamento, String descricao, List<Alvo> alvos, List<Coleta> coletas, List<Anotacao> anotacoes) {
         super(createdAt);
         this.treinamentoId = treinamentoId;
         this.protocolo = protocolo;
         this.treinamento = treinamento;
         this.descricao = descricao;
         this.alvos = alvos;
+        this.coletas = coletas;
         this.anotacoes = anotacoes;
     }
 
@@ -96,5 +101,13 @@ public class Treinamento extends Tenantable {
 
     public void setAnotacoes(List<Anotacao> anotacoes) {
         this.anotacoes = anotacoes;
+    }
+
+    public List<Coleta> getColetas() {
+        return coletas;
+    }
+
+    public void setColetas(List<Coleta> coletas) {
+        this.coletas = coletas;
     }
 }
