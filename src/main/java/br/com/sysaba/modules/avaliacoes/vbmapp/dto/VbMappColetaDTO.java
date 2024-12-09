@@ -1,4 +1,4 @@
-package br.com.sysaba.modules.vbmapp.dto;
+package br.com.sysaba.modules.avaliacoes.vbmapp.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

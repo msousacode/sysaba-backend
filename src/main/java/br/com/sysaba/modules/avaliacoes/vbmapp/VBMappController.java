@@ -1,11 +1,11 @@
-package br.com.sysaba.modules.vbmapp;
+package br.com.sysaba.modules.avaliacoes.vbmapp;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizController;
 import br.com.sysaba.modules.aprendiz.AprendizService;
-import br.com.sysaba.modules.vbmapp.dto.VbMappColetaDTO;
-import br.com.sysaba.modules.vbmapp.dto.VbMappDTO;
+import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappColetaDTO;
+import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

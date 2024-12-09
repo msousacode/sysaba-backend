@@ -1,7 +1,7 @@
-package br.com.sysaba.modules.vbmapp;
+package br.com.sysaba.modules.avaliacoes.vbmapp;
 
-import br.com.sysaba.modules.vbmapp.repository.VBMappColetaRepository;
-import br.com.sysaba.modules.vbmapp.repository.VBMappRepository;
+import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappColetaRepository;
+import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

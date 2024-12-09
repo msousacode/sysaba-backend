@@ -1,7 +1,7 @@
-package br.com.sysaba.modules.vbmapp.repository;
+package br.com.sysaba.modules.avaliacoes.vbmapp.repository;
 
 import br.com.sysaba.core.repository.TenantableRepository;
-import br.com.sysaba.modules.vbmapp.VbMappColeta;
+import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappColeta;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

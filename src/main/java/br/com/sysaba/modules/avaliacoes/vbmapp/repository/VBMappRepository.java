@@ -1,7 +1,7 @@
-package br.com.sysaba.modules.vbmapp.repository;
+package br.com.sysaba.modules.avaliacoes.vbmapp.repository;
 
 import br.com.sysaba.core.repository.TenantableRepository;
-import br.com.sysaba.modules.vbmapp.VbMappAvaliacao;
+import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappAvaliacao;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

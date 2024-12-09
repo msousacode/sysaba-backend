@@ -1,8 +1,8 @@
-package br.com.sysaba.modules.vbmapp;
+package br.com.sysaba.modules.avaliacoes.vbmapp;
 
 import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
-import br.com.sysaba.modules.vbmapp.dto.VbMappColetaDTO;
+import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappColetaDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
