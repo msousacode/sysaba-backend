@@ -9,6 +9,9 @@ public class PortageDTO {
     @JsonProperty("aprendiz_uuid_fk")
     private UUID aprendizId;
 
+    @JsonProperty("portage_uuid_fk")
+    private UUID portageId;
+
     @JsonProperty("idades_coleta")
     private String idadesColeta;
 
@@ -21,11 +24,12 @@ public class PortageDTO {
     public PortageDTO() {
     }
 
-    public PortageDTO(UUID aprendizId, String idadesColeta, String objetivo, String protocolo) {
+    public PortageDTO(UUID aprendizId, String idadesColeta, String objetivo, String protocolo, UUID portageId) {
         this.aprendizId = aprendizId;
         this.idadesColeta = idadesColeta;
         this.objetivo = objetivo;
         this.protocolo = protocolo;
+        this.portageId = portageId;
     }
 
     public UUID getAprendizId() {
@@ -58,5 +62,13 @@ public class PortageDTO {
 
     public void setProtocolo(String protocolo) {
         this.protocolo = protocolo;
+    }
+
+    public UUID getPortageId() {
+        return portageId;
+    }
+
+    public void setPortageId(UUID portageId) {
+        this.portageId = portageId;
     }
 }

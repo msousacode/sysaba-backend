@@ -1,7 +1,10 @@
 package br.com.sysaba.modules.avaliacoes.portage.dto;
 
+import br.com.sysaba.modules.avaliacoes.portage.PortageColeta;
+import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappColetaDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class PortageColetaDTO {
@@ -15,20 +18,30 @@ public class PortageColetaDTO {
     @JsonProperty("idade_coleta")
     private String idadeColeta;
 
-    @JsonProperty("codigo")
-    private int codigo;
-
     @JsonProperty("resposta")
     private String resposta;
 
+    @JsonProperty("coleta_id")
+    private Integer coletaId;
+
     public PortageColetaDTO(){}
 
-    public PortageColetaDTO(UUID portageUuidFk, UUID aprendizUuidFk, String idadeColeta, int codigo, String resposta) {
+    public PortageColetaDTO(UUID portageUuidFk, UUID aprendizUuidFk, String idadeColeta, String resposta, Integer coletaId) {
         this.portageUuidFk = portageUuidFk;
         this.aprendizUuidFk = aprendizUuidFk;
         this.idadeColeta = idadeColeta;
-        this.codigo = codigo;
         this.resposta = resposta;
+        this.coletaId = coletaId;
+    }
+
+    public static PortageColetaDTO of(PortageColeta portageColeta) {
+        PortageColetaDTO portageColetaDTO = new PortageColetaDTO();
+        portageColetaDTO.setPortageUuidFk(portageColeta.getPortageColetaId());
+        portageColetaDTO.setColetaId(portageColeta.getColetaId());
+        portageColetaDTO.setIdadeColeta(portageColeta.getIdadeColeta());
+        portageColetaDTO.setResposta(portageColeta.getResposta());
+        portageColetaDTO.setAprendizUuidFk(portageColeta.getAprendiz().getAprendizId());
+        return portageColetaDTO;
     }
 
     public UUID getPortageUuidFk() {
@@ -55,19 +68,19 @@ public class PortageColetaDTO {
         this.idadeColeta = idadeColeta;
     }
 
-    public int getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
-    }
-
     public String getResposta() {
         return resposta;
     }
 
     public void setResposta(String resposta) {
         this.resposta = resposta;
+    }
+
+    public Integer getColetaId() {
+        return coletaId;
+    }
+
+    public void setColetaId(Integer coletaId) {
+        this.coletaId = coletaId;
     }
 }

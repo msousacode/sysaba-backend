@@ -20,9 +20,6 @@ public class PortageColeta extends Tenantable {
     @Column(name = "idade_coleta", nullable = false)
     private String idadeColeta;
 
-    @Column(name = "codigo", nullable = false)
-    private String codigo;
-
     @Column(name = "resposta", nullable = false)
     private String resposta;
 
@@ -46,10 +43,9 @@ public class PortageColeta extends Tenantable {
         portageColeta.setPortage(portageAvaliacao);
         portageColeta.setAprendiz(aprendiz);
         portageColeta.setIdadeColeta(dto.getIdadeColeta());
-        portageColeta.setCodigo(String.valueOf(dto.getCodigo()));
         portageColeta.setResposta(dto.getResposta());
         portageColeta.setDataColeta(LocalDateTime.now());
-        portageColeta.setColetaId(dto.getCodigo());
+        portageColeta.setColetaId(dto.getColetaId());
 
         return portageColeta;
     }
@@ -74,14 +70,6 @@ public class PortageColeta extends Tenantable {
 
     public void setIdadeColeta(String idadeColeta) {
         this.idadeColeta = idadeColeta;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public String getResposta() {
