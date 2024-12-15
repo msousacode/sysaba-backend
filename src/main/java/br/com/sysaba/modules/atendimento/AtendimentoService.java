@@ -2,6 +2,7 @@ package br.com.sysaba.modules.atendimento;
 
 import br.com.sysaba.core.commons.service.GenericService;
 
+import br.com.sysaba.core.exception.RegistroNaoEncontradoException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -56,7 +57,7 @@ public class AtendimentoService implements GenericService<Atendimento, UUID> {
     public List<Atendimento> findAllAtendimentosTreinamentosByAprendizId(UUID aprendizId) {
         List<Atendimento> atendimentos = atendimentoRepository.findAllByAprendiz_aprendizIdAndAtivoTrue(aprendizId);
         if(atendimentos.isEmpty()) {
-            throw new RuntimeException("Não foi localizado treinamentos para o aprendiz: " + aprendizId);
+            throw new RegistroNaoEncontradoException("Não foi localizado treinamentos para o aprendiz");
         }
         return atendimentos;
     }

@@ -4,6 +4,7 @@ import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.atendimento.Atendimento;
 import br.com.sysaba.modules.atendimento.AtendimentoService;
+import br.com.sysaba.modules.relatorio.client.RelatorioApiService;
 import br.com.sysaba.modules.relatorio.dto.*;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import org.jfree.chart.ChartFactory;
@@ -32,24 +33,33 @@ public class RelatorioService {
 
     private final AtendimentoService atendimentoService;
 
-    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService) {
+    private final RelatorioApiService relatorioApiService;
+
+    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService) {
         this.aprendizService = aprendizService;
         this.atendimentoService = atendimentoService;
+        this.relatorioApiService = relatorioApiService;
     }
 
-    public RelatorioDTO gerarRelatorio(UUID aprendizId) throws IOException {
+    public Boolean gerarRelatorio(UUID aprendizId, String dataInicio, String dataFinal) {
+        //TODO Dados dos profissionais envolvidos
+        try {
+            CabecarioDTO cabecalho = getCabecalhoDTO();
+            AprendizDTO aprendiz = getAprendizDTO(aprendizId);
+            List<TreinamentoDTO> treinamentos = getTreinamentos(aprendizId, null, null);
 
-        //TODO tentar criar os dadas do gráfico aqui e se possível criar a imagem do gráfico em svg.
+            if(treinamentos.isEmpty()) {
+                return Boolean.FALSE;
+            }
 
-        //Dados dos profissionais envolvidos
+            RelatorioDTO relatorioDTO = new RelatorioDTO(cabecalho, List.of(), aprendiz, treinamentos);
 
-        CabecarioDTO cabecalho = getCabecalhoDTO();
-        AprendizDTO aprendiz = getAprendizDTO(aprendizId);
-        List<TreinamentoDTO> treinamentos = getTreinamentos(aprendizId, null, null);
+            relatorioApiService.postRelatorioTreinamentos(relatorioDTO);
+        } catch (RuntimeException ex) {
+            throw new RuntimeException(RelatorioService.class.getName(), ex);
+        }
 
-        RelatorioDTO relatorioDTO = new RelatorioDTO(cabecalho, List.of(), aprendiz, treinamentos);
-
-        return relatorioDTO;
+        return Boolean.TRUE;
     }
 
     private CabecarioDTO getCabecalhoDTO() {
