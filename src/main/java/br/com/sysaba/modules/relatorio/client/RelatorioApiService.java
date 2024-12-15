@@ -1,7 +1,13 @@
 package br.com.sysaba.modules.relatorio.client;
 
+import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.relatorio.RelatorioService;
+import br.com.sysaba.modules.relatorio.dto.LinkDowloadResponseDTO;
 import br.com.sysaba.modules.relatorio.dto.RelatorioDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,12 +20,25 @@ public class RelatorioApiService {
         this.restTemplate = restTemplate;
     }
 
-    public void postRelatorioTreinamentos(RelatorioDTO dto) {
+    @Value("${nestjs.relatorios.host}")
+    private String relatorioHost;
+
+    public LinkDowloadResponseDTO postRelatorioTreinamentos(RelatorioDTO dto) {
         try {
-            String url = "http://localhost:3000/print";
-            restTemplate.postForObject(url, dto, String.class);
+            String url = relatorioHost + "/print/relatorios/treinamentos";
+            String responseObject = restTemplate.postForObject(url, dto, String.class);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            LinkDowloadResponseDTO mapper = objectMapper.readValue(responseObject, LinkDowloadResponseDTO.class);
+
+            return mapper;
+
         } catch (RuntimeException ex) {
             throw new RuntimeException(RelatorioService.class.getName(), ex);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 }

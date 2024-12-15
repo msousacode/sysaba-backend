@@ -12,6 +12,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -41,25 +42,23 @@ public class RelatorioService {
         this.relatorioApiService = relatorioApiService;
     }
 
-    public Boolean gerarRelatorio(UUID aprendizId, String dataInicio, String dataFinal) {
+    public LinkDowloadResponseDTO gerarRelatorio(UUID aprendizId, String dataInicio, String dataFinal) {
         //TODO Dados dos profissionais envolvidos
         try {
             CabecarioDTO cabecalho = getCabecalhoDTO();
             AprendizDTO aprendiz = getAprendizDTO(aprendizId);
-            List<TreinamentoDTO> treinamentos = getTreinamentos(aprendizId, null, null);
+            List<TreinamentoDTO> treinamentos = getTreinamentos(aprendizId, dataInicio, dataFinal);
 
             if(treinamentos.isEmpty()) {
-                return Boolean.FALSE;
+                return null;
             }
 
             RelatorioDTO relatorioDTO = new RelatorioDTO(cabecalho, List.of(), aprendiz, treinamentos);
 
-            relatorioApiService.postRelatorioTreinamentos(relatorioDTO);
+            return relatorioApiService.postRelatorioTreinamentos(relatorioDTO);
         } catch (RuntimeException ex) {
             throw new RuntimeException(RelatorioService.class.getName(), ex);
         }
-
-        return Boolean.TRUE;
     }
 
     private CabecarioDTO getCabecalhoDTO() {
@@ -78,6 +77,8 @@ public class RelatorioService {
     }
 
     private List<TreinamentoDTO> getTreinamentos(UUID aprendizId, String dataInicio, String dataFinal) {
+
+        //TODO fazer depois o limite por data.
 
         List<Atendimento> atendimentos = atendimentoService.findAllAtendimentosTreinamentosByAprendizId(aprendizId);
 
