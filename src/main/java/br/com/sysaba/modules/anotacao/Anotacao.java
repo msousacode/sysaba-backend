@@ -1,6 +1,7 @@
 package br.com.sysaba.modules.anotacao;
 
 import br.com.sysaba.core.models.Tenantable;
+import br.com.sysaba.modules.atendimento.Atendimento;
 import br.com.sysaba.modules.coleta.Coleta;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import jakarta.persistence.*;
@@ -29,20 +30,20 @@ public class Anotacao extends Tenantable {
     private Coleta coleta;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "treinamento_id", nullable = false)
-    private Treinamento treinamento;
+    @JoinColumn(name = "atendimento_id", nullable = false)
+    private Atendimento atendimento;
 
     public Anotacao() {
         super(LocalDateTime.now());
     }
 
-    public Anotacao(LocalDateTime createdAt, UUID anotacaoId, LocalDate dataAnotacao, String anotacao, Coleta coleta, Treinamento treinamento) {
+    public Anotacao(LocalDateTime createdAt, UUID anotacaoId, LocalDate dataAnotacao, String anotacao, Coleta coleta, Atendimento atendimento) {
         super(createdAt);
         this.anotacaoId = anotacaoId;
         this.dataAnotacao = dataAnotacao;
         this.anotacao = anotacao;
         this.coleta = coleta;
-        this.treinamento = treinamento;
+        this.atendimento = atendimento;
     }
 
     public UUID getAnotacaoId() {
@@ -77,11 +78,11 @@ public class Anotacao extends Tenantable {
         this.coleta = coleta;
     }
 
-    public Treinamento getTreinamento() {
-        return treinamento;
+    public Atendimento getAtendimento() {
+        return atendimento;
     }
 
-    public void setTreinamento(Treinamento treinamento) {
-        this.treinamento = treinamento;
+    public void setAtendimento(Atendimento atendimento) {
+        this.atendimento = atendimento;
     }
 }

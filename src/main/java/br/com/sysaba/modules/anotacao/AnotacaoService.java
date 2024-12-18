@@ -2,7 +2,6 @@ package br.com.sysaba.modules.anotacao;
 
 import br.com.sysaba.core.commons.service.GenericService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -53,7 +52,7 @@ public class AnotacaoService implements GenericService<Anotacao, UUID> {
         GenericService.super.beforeSave();
     }
 
-    public Page<Anotacao> findByTreinamento_treinamentoId(UUID trinamentoId, Pageable pageable) {
-        return anotacaoRepository.findByTreinamento_treinamentoId(trinamentoId, pageable);
+    public Page<Anotacao> findByAtendimento_atendimentoId(UUID treinamentoId, Pageable pageable) {
+        return anotacaoRepository.findByAtendimento_atendimentoId(treinamentoId, pageable);
     }
 }

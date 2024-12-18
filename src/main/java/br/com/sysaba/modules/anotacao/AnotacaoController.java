@@ -2,10 +2,10 @@ package br.com.sysaba.modules.anotacao;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.anotacao.dto.AnotacaoDTO;
+import br.com.sysaba.modules.atendimento.Atendimento;
+import br.com.sysaba.modules.atendimento.AtendimentoService;
 import br.com.sysaba.modules.coleta.Coleta;
 import br.com.sysaba.modules.coleta.ColetaService;
-import br.com.sysaba.modules.treinamento.Treinamento;
-import br.com.sysaba.modules.treinamento.TreinamentoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -26,14 +26,14 @@ public class AnotacaoController {
 
     private final AnotacaoService anotacaoService;
 
-    private final TreinamentoService treinamentoService;
+    private final AtendimentoService atendimentoService;
 
     private final ColetaService coletaService;
 
-    public AnotacaoController(AnotacaoService anotacaoService, TreinamentoService treinamentoService, ColetaService coletaService) {
+    public AnotacaoController(AnotacaoService anotacaoService, ColetaService coletaService, AtendimentoService atendimentoService) {
         this.anotacaoService = anotacaoService;
-        this.treinamentoService = treinamentoService;
         this.coletaService = coletaService;
+        this.atendimentoService = atendimentoService;
     }
 
     @Transactional
@@ -41,10 +41,10 @@ public class AnotacaoController {
     public ResponseEntity<?> salvar(@RequestBody AnotacaoDTO anotacaoDTO) {
         try {
             Anotacao anotacao = MapperUtil.converte(anotacaoDTO, Anotacao.class);
-            Treinamento treinamento = treinamentoService.findById(anotacaoDTO.getTreinamentoId());
+            Atendimento atendimento = atendimentoService.findById(anotacaoDTO.getAtendimentoId());
             Coleta coleta = coletaService.findColetaId(anotacaoDTO.getColetaId());
 
-            anotacao.setTreinamento(treinamento);
+            anotacao.setAtendimento(atendimento);
             anotacao.setColeta(coleta);
 
             anotacaoService.save(anotacao);
@@ -75,7 +75,7 @@ public class AnotacaoController {
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction,
             @PathVariable("treinamentoId") UUID trinamentoId) {
-        Page<Anotacao> anotacoes = anotacaoService.findByTreinamento_treinamentoId(trinamentoId, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
+        Page<Anotacao> anotacoes = anotacaoService.findByAtendimento_atendimentoId(trinamentoId, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
         Page<AnotacaoDTO> dtoList = anotacoes.map(AnotacaoDTO::fromAnotacaoDTO);
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }

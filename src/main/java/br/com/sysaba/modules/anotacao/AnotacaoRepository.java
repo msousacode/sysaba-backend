@@ -7,5 +7,5 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface AnotacaoRepository extends TenantableRepository<Anotacao> {
-    Page<Anotacao> findByTreinamento_treinamentoId(UUID trinamentoId, Pageable pageable);
+    Page<Anotacao> findByAtendimento_atendimentoId(UUID atendimentoId, Pageable pageable);
 }
