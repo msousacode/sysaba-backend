@@ -25,7 +25,7 @@ public class Anotacao extends Tenantable {
     @Column(name = "anotacao", nullable = false, length = 500)
     private String anotacao;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coleta_id", nullable = false)
     private Coleta coleta;
 

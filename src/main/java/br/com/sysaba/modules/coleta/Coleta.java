@@ -65,8 +65,7 @@ public class Coleta extends Tenantable {
     @JoinColumn(name = "treinamento_id", nullable = false)
     private Treinamento treinamento;
 
-    @OneToMany
-    @JoinColumn(name = "coleta_id")
+    @OneToMany(mappedBy = "coleta")
     private List<Anotacao> anotacoes;
 
     public Coleta() {
