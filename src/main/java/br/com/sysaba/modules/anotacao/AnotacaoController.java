@@ -68,14 +68,14 @@ public class AnotacaoController {
         }
     }
 
-    @GetMapping("/treinamento/{treinamentoId}")
+    @GetMapping("/atendimento/{atendimentoId}")
     public ResponseEntity<Page<AnotacaoDTO>> buscar(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "100") int size,
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction,
-            @PathVariable("treinamentoId") UUID trinamentoId) {
-        Page<Anotacao> anotacoes = anotacaoService.findByAtendimento_atendimentoId(trinamentoId, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
+            @PathVariable("atendimentoId") UUID atendimentoId) {
+        Page<Anotacao> anotacoes = anotacaoService.findByAtendimento_atendimentoId(atendimentoId, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
         Page<AnotacaoDTO> dtoList = anotacoes.map(AnotacaoDTO::fromAnotacaoDTO);
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
