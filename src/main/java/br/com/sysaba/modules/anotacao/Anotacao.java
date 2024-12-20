@@ -33,17 +33,22 @@ public class Anotacao extends Tenantable {
     @JoinColumn(name = "atendimento_id", nullable = false)
     private Atendimento atendimento;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "treinamento_id", nullable = false)
+    private Treinamento treinamento;
+
     public Anotacao() {
         super(LocalDateTime.now());
     }
 
-    public Anotacao(LocalDateTime createdAt, UUID anotacaoId, LocalDate dataAnotacao, String anotacao, Coleta coleta, Atendimento atendimento) {
+    public Anotacao(LocalDateTime createdAt, UUID anotacaoId, LocalDate dataAnotacao, String anotacao, Coleta coleta, Atendimento atendimento, Treinamento treinamento) {
         super(createdAt);
         this.anotacaoId = anotacaoId;
         this.dataAnotacao = dataAnotacao;
         this.anotacao = anotacao;
         this.coleta = coleta;
         this.atendimento = atendimento;
+        this.treinamento = treinamento;
     }
 
     public UUID getAnotacaoId() {
@@ -84,5 +89,13 @@ public class Anotacao extends Tenantable {
 
     public void setAtendimento(Atendimento atendimento) {
         this.atendimento = atendimento;
+    }
+
+    public Treinamento getTreinamento() {
+        return treinamento;
+    }
+
+    public void setTreinamento(Treinamento treinamento) {
+        this.treinamento = treinamento;
     }
 }

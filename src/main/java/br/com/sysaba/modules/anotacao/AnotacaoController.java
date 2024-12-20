@@ -6,6 +6,8 @@ import br.com.sysaba.modules.atendimento.Atendimento;
 import br.com.sysaba.modules.atendimento.AtendimentoService;
 import br.com.sysaba.modules.coleta.Coleta;
 import br.com.sysaba.modules.coleta.ColetaService;
+import br.com.sysaba.modules.treinamento.Treinamento;
+import br.com.sysaba.modules.treinamento.TreinamentoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -28,12 +30,15 @@ public class AnotacaoController {
 
     private final AtendimentoService atendimentoService;
 
+    private final TreinamentoService treinamentoService;
+
     private final ColetaService coletaService;
 
-    public AnotacaoController(AnotacaoService anotacaoService, ColetaService coletaService, AtendimentoService atendimentoService) {
+    public AnotacaoController(AnotacaoService anotacaoService, ColetaService coletaService, AtendimentoService atendimentoService, TreinamentoService treinamentoService) {
         this.anotacaoService = anotacaoService;
         this.coletaService = coletaService;
         this.atendimentoService = atendimentoService;
+        this.treinamentoService = treinamentoService;
     }
 
     @Transactional
@@ -42,9 +47,11 @@ public class AnotacaoController {
         try {
             Anotacao anotacao = MapperUtil.converte(anotacaoDTO, Anotacao.class);
             Atendimento atendimento = atendimentoService.findById(anotacaoDTO.getAtendimentoId());
+            Treinamento treinamento = treinamentoService.findById(anotacaoDTO.getTreinamentoId());
             Coleta coleta = coletaService.findColetaId(anotacaoDTO.getColetaId());
 
             anotacao.setAtendimento(atendimento);
+            anotacao.setTreinamento(treinamento);
             anotacao.setColeta(coleta);
 
             anotacaoService.save(anotacao);
@@ -68,14 +75,15 @@ public class AnotacaoController {
         }
     }
 
-    @GetMapping("/atendimento/{atendimentoId}")
+    @GetMapping("/atendimento/{atendimentoId}/treinamento/{treinamentoId}")
     public ResponseEntity<Page<AnotacaoDTO>> buscar(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "100") int size,
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction,
-            @PathVariable("atendimentoId") UUID atendimentoId) {
-        Page<Anotacao> anotacoes = anotacaoService.findByAtendimento_atendimentoId(atendimentoId, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
+            @PathVariable("atendimentoId") UUID atendimentoId,
+            @PathVariable("treinamentoId") UUID treinamentoId) {
+        Page<Anotacao> anotacoes = anotacaoService.findByAtendimento_atendimentoId(atendimentoId, treinamentoId, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
         Page<AnotacaoDTO> dtoList = anotacoes.map(AnotacaoDTO::fromAnotacaoDTO);
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }

@@ -18,6 +18,9 @@ public class AnotacaoDTO {
     @JsonProperty("atendimentoId")
     private UUID atendimentoId;
 
+    @JsonProperty("treinamentoId")
+    private UUID treinamentoId;
+
     @JsonProperty("data_anotacao")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate dataAnotacao;
@@ -100,5 +103,13 @@ public class AnotacaoDTO {
         anotacaoDTO.setColetaId(anotacao.getColeta().getColetaId());
 
         return anotacaoDTO;
+    }
+
+    public UUID getTreinamentoId() {
+        return treinamentoId;
+    }
+
+    public void setTreinamentoId(UUID treinamentoId) {
+        this.treinamentoId = treinamentoId;
     }
 }

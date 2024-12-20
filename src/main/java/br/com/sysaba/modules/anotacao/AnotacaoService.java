@@ -52,7 +52,7 @@ public class AnotacaoService implements GenericService<Anotacao, UUID> {
         GenericService.super.beforeSave();
     }
 
-    public Page<Anotacao> findByAtendimento_atendimentoId(UUID treinamentoId, Pageable pageable) {
-        return anotacaoRepository.findByAtendimento_atendimentoId(treinamentoId, pageable);
+    public Page<Anotacao> findByAtendimento_atendimentoId(UUID atendimentoId, UUID treinamentoId, Pageable pageable) {
+        return anotacaoRepository.findByAtendimento_atendimentoIdAndTreinamento_treinamentoId(atendimentoId, treinamentoId, pageable);
     }
 }
