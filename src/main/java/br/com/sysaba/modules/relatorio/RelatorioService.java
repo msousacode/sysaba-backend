@@ -1,18 +1,27 @@
 package br.com.sysaba.modules.relatorio;
 
+import br.com.sysaba.modules.alvo.Alvo;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.atendimento.Atendimento;
 import br.com.sysaba.modules.atendimento.AtendimentoService;
+import br.com.sysaba.modules.coleta.Coleta;
 import br.com.sysaba.modules.relatorio.client.RelatorioApiService;
 import br.com.sysaba.modules.relatorio.dto.*;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -26,6 +35,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class RelatorioService {
@@ -49,7 +59,7 @@ public class RelatorioService {
             AprendizDTO aprendiz = getAprendizDTO(aprendizId);
             List<TreinamentoDTO> treinamentos = getTreinamentos(aprendizId, dataInicio, dataFinal);
 
-            if(treinamentos.isEmpty()) {
+            if (treinamentos.isEmpty()) {
                 return null;
             }
 
@@ -92,10 +102,18 @@ public class RelatorioService {
                 treinamentoDTO.setTitulo(treinamento.getTreinamento().getTreinamento());
                 treinamentoDTO.setProtocolo(treinamento.getTreinamento().getProtocolo());
                 treinamentoDTO.setDescricao(treinamento.getTreinamento().getDescricao());
+
                 try {
-                    treinamentoDTO.setChartImage(createPieChart(treinamento.getTreinamento()));
+
+                    if ("Protocolo ABC".equals(treinamento.getTreinamento().getProtocolo())) {
+                        treinamentoDTO.setChartImage(createPieChart(treinamento.getTreinamento()));
+                    } else {
+                        List<String> imgChartList = createLineChart(treinamento.getTreinamento());
+                        treinamentoDTO.setChartImageList(imgChartList);
+                    }
+
                 } catch (IOException e) {
-                    throw new RuntimeException("Erro ao gerar o gráfico: ",e);
+                    throw new RuntimeException("Erro ao gerar o gráfico: ", e);
                 }
 
                 List<AlvoColetadoDTO> alvos = new ArrayList<>();
@@ -144,14 +162,14 @@ public class RelatorioService {
     }
 
     private String converterLocalDateTimeParaString(LocalDateTime localDateTime) {
-        if(localDateTime == null)
+        if (localDateTime == null)
             return "Sem Data";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return localDateTime.format(formatter);
     }
 
     private String converterLocalDateParaString(LocalDate localDate) {
-        if(localDate == null)
+        if (localDate == null)
             return "Sem Data";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return localDate.format(formatter);
@@ -165,11 +183,11 @@ public class RelatorioService {
 
         // Criação do dataset
         DefaultPieDataset dataset = new DefaultPieDataset();
-        if(semAjuda != 0)
+        if (semAjuda != 0)
             dataset.setValue("Fez", semAjuda);
-        if(comAjuda != 0)
+        if (comAjuda != 0)
             dataset.setValue("Com Ajuda", comAjuda);
-        if(naoFez != 0)
+        if (naoFez != 0)
             dataset.setValue("Não Fez", naoFez);
 
         // Criação do gráfico
@@ -183,11 +201,11 @@ public class RelatorioService {
 
         // Configurando as cores
         PiePlot plot = (PiePlot) pieChart.getPlot();
-        if(semAjuda != 0)
+        if (semAjuda != 0)
             plot.setSectionPaint("Fez", new Color(58, 161, 119));
-        if(comAjuda != 0)
+        if (comAjuda != 0)
             plot.setSectionPaint("Com Ajuda", new Color(255, 224, 102));
-        if(naoFez != 0)
+        if (naoFez != 0)
             plot.setSectionPaint("Não Fez", new Color(255, 102, 102));
 
         // Criação da imagem
@@ -201,4 +219,111 @@ public class RelatorioService {
 
         return "data:image/png;base64," + base64Image;
     }
+
+    public List<String> createLineChart(Treinamento treinamento) throws IOException {
+        List<String> imgList = new ArrayList<>();
+
+        for (Alvo alvo : treinamento.getAlvos()) {
+            // Para cada alvo, cria uma série
+            XYSeries series = new XYSeries(alvo.getDescricaoAlvo());
+
+            // Adiciona os dados na série
+            for (Coleta coleta : treinamento.getColetas()) {
+                if (coleta.getAlvo().getAlvoId() == alvo.getAlvoId()) {
+                    if (coleta.getResposta() != null) {
+                        series.add(coleta.getSemana(), Integer.parseInt(coleta.getResposta()));
+                    }
+                }
+            }
+
+            // Instancia o conjunto de dados e adiciona a série
+            XYSeriesCollection dataset = new XYSeriesCollection();
+            dataset.addSeries(series);
+
+            // Cria o gráfico
+            JFreeChart lineChart = ChartFactory.createXYLineChart(
+                    null,                          // Título
+                    "Semana",                     // Rótulo do eixo X
+                    "Qtde.",                      // Rótulo do eixo Y
+                    dataset,                      // Conjunto de dados
+                    PlotOrientation.VERTICAL,     // Orientação do gráfico
+                    true,                         // Incluir legenda
+                    true,                         // Usar tooltips
+                    false                         // Não usar URLs
+            );
+
+            // Configurar o plot para usar XYSplineRenderer
+            XYPlot plot = lineChart.getXYPlot();
+            XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer(true, false); // Linhas, sem formas nos pontos
+            renderer.setSeriesPaint(0, new Color(14, 51, 176)); // Cor para a série
+
+            // Adiciona o Spline Renderer
+            plot.setRenderer(renderer);
+
+            // Formatar os eixos para mostrar apenas inteiros
+            NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
+            xAxis.setTickUnit(new NumberTickUnit(1)); // Definir unidade do tick x para 1
+
+            NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+            yAxis.setTickUnit(new NumberTickUnit(1)); // Definir unidade do tick y para 1
+
+            // Criação da imagem
+            BufferedImage bufferedImage = lineChart.createBufferedImage(400, 400);
+
+            // Convertendo a imagem em um formato Base64
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                ImageIO.write(bufferedImage, "png", outputStream);
+                byte[] imageBytes = outputStream.toByteArray();
+                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                imgList.add("data:image/png;base64," + base64Image);
+            }
+        }
+
+        return imgList;
+    }
+    /*
+    public List<String> createLineChart(Treinamento treinamento) throws IOException {
+        List<String> imgList = new ArrayList<>();
+
+        // Para cada grupo de semana
+        XYSeries series = new XYSeries(treinamento.getTreinamento());
+
+        // Adiciona os dados na série
+        for (Coleta coleta : treinamento.getColetas()) {
+            series.add(coleta.getSemana(), coleta.getResposta() != null ? Integer.parseInt(coleta.getResposta()) : 0);
+        }
+
+        // Instancia o conjunto de dados e adiciona a série
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series);
+
+        // Cria o gráfico
+        JFreeChart lineChart = ChartFactory.createXYLineChart(
+                null,                          // Título
+                "Semana",                     // Rótulo do eixo X
+                "Ocorrências",                // Rótulo do eixo Y
+                dataset,                      // Conjunto de dados
+                PlotOrientation.VERTICAL,     // Orientação do gráfico
+                true,                         // Incluir legenda
+                true,                         // Usar tooltips
+                false                         // Não usar URLs
+        );
+
+        // Configurar a cor da série - Para um gráfico de linhas
+        XYPlot plot = lineChart.getXYPlot();
+        plot.getRenderer().setSeriesPaint(0, new Color(58, 161, 119)); // Cor para "S1"
+
+        // Criação da imagem
+        BufferedImage bufferedImage = lineChart.createBufferedImage(200, 200);
+
+        // Convertendo a imagem em um formato Base64
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            ImageIO.write(bufferedImage, "png", outputStream);
+            byte[] imageBytes = outputStream.toByteArray();
+            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+            imgList.add("data:image/png;base64," + base64Image);
+        }
+
+        return imgList;
+    }*/
 }

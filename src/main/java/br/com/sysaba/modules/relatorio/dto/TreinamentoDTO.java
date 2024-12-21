@@ -1,5 +1,6 @@
 package br.com.sysaba.modules.relatorio.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,11 +14,13 @@ public class TreinamentoDTO {
     private List<AlvoColetadoDTO> alvosColetados;
     private List<ProfissionalDTO> profissionalDTOS;
     private String chartImage;
+    private List<String> chartImageList;
 
     public TreinamentoDTO() {
+        this.chartImageList = new ArrayList<>();
     }
 
-    public TreinamentoDTO(UUID treinamentoId, String data, String titulo, String protocolo, String descricao, List<AlvoColetadoDTO> alvosColetados, List<ProfissionalDTO> profissionalDTOS, String chartImage) {
+    public TreinamentoDTO(UUID treinamentoId, String data, String titulo, String protocolo, String descricao, List<AlvoColetadoDTO> alvosColetados, List<ProfissionalDTO> profissionalDTOS, String chartImage, List<String> chartImageList) {
         this.treinamentoId = treinamentoId;
         this.data = data;
         this.titulo = titulo;
@@ -26,6 +29,7 @@ public class TreinamentoDTO {
         this.alvosColetados = alvosColetados;
         this.profissionalDTOS = profissionalDTOS;
         this.chartImage = chartImage;
+        this.chartImageList = chartImageList;
     }
 
     public UUID getTreinamentoId() {
@@ -90,5 +94,13 @@ public class TreinamentoDTO {
 
     public void setChartImage(String chartImage) {
         this.chartImage = chartImage;
+    }
+
+    public List<String> getChartImageList() {
+        return chartImageList;
+    }
+
+    public void setChartImageList(List<String> chartImageList) {
+        this.chartImageList = chartImageList;
     }
 }
