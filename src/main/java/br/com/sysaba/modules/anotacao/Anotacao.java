@@ -37,11 +37,15 @@ public class Anotacao extends Tenantable {
     @JoinColumn(name = "treinamento_id", nullable = false)
     private Treinamento treinamento;
 
+    @Column(name = "imprimir_relatorio")
+    private Boolean imprimirRelatorio;
+
     public Anotacao() {
         super(LocalDateTime.now());
+        this.imprimirRelatorio = true;
     }
 
-    public Anotacao(LocalDateTime createdAt, UUID anotacaoId, LocalDate dataAnotacao, String anotacao, Coleta coleta, Atendimento atendimento, Treinamento treinamento) {
+    public Anotacao(LocalDateTime createdAt, UUID anotacaoId, LocalDate dataAnotacao, String anotacao, Coleta coleta, Atendimento atendimento, Treinamento treinamento, Boolean imprimirRelatorio) {
         super(createdAt);
         this.anotacaoId = anotacaoId;
         this.dataAnotacao = dataAnotacao;
@@ -49,6 +53,7 @@ public class Anotacao extends Tenantable {
         this.coleta = coleta;
         this.atendimento = atendimento;
         this.treinamento = treinamento;
+        this.imprimirRelatorio = imprimirRelatorio;
     }
 
     public UUID getAnotacaoId() {
@@ -97,5 +102,13 @@ public class Anotacao extends Tenantable {
 
     public void setTreinamento(Treinamento treinamento) {
         this.treinamento = treinamento;
+    }
+
+    public Boolean getImprimirRelatorio() {
+        return imprimirRelatorio;
+    }
+
+    public void setImprimirRelatorio(Boolean imprimirRelatorio) {
+        this.imprimirRelatorio = imprimirRelatorio;
     }
 }

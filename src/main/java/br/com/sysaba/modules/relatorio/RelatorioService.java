@@ -126,7 +126,7 @@ public class RelatorioService {
 
                     List<AnotacaoDTO> anotacoes = new ArrayList<>();
 
-                    coleta.getAnotacoes().forEach(anotacao -> {
+                    coleta.getAnotacoes().stream().filter(anotacao -> anotacao.getImprimirRelatorio() != false).forEach(anotacao -> {
                         AnotacaoDTO anotacaoDTO = new AnotacaoDTO();
                         anotacaoDTO.setAnotacaoId(anotacao.getAnotacaoId());
                         anotacaoDTO.setData(converterLocalDateParaString(anotacao.getDataAnotacao()));
@@ -281,49 +281,4 @@ public class RelatorioService {
 
         return imgList;
     }
-    /*
-    public List<String> createLineChart(Treinamento treinamento) throws IOException {
-        List<String> imgList = new ArrayList<>();
-
-        // Para cada grupo de semana
-        XYSeries series = new XYSeries(treinamento.getTreinamento());
-
-        // Adiciona os dados na série
-        for (Coleta coleta : treinamento.getColetas()) {
-            series.add(coleta.getSemana(), coleta.getResposta() != null ? Integer.parseInt(coleta.getResposta()) : 0);
-        }
-
-        // Instancia o conjunto de dados e adiciona a série
-        XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(series);
-
-        // Cria o gráfico
-        JFreeChart lineChart = ChartFactory.createXYLineChart(
-                null,                          // Título
-                "Semana",                     // Rótulo do eixo X
-                "Ocorrências",                // Rótulo do eixo Y
-                dataset,                      // Conjunto de dados
-                PlotOrientation.VERTICAL,     // Orientação do gráfico
-                true,                         // Incluir legenda
-                true,                         // Usar tooltips
-                false                         // Não usar URLs
-        );
-
-        // Configurar a cor da série - Para um gráfico de linhas
-        XYPlot plot = lineChart.getXYPlot();
-        plot.getRenderer().setSeriesPaint(0, new Color(58, 161, 119)); // Cor para "S1"
-
-        // Criação da imagem
-        BufferedImage bufferedImage = lineChart.createBufferedImage(200, 200);
-
-        // Convertendo a imagem em um formato Base64
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            ImageIO.write(bufferedImage, "png", outputStream);
-            byte[] imageBytes = outputStream.toByteArray();
-            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-            imgList.add("data:image/png;base64," + base64Image);
-        }
-
-        return imgList;
-    }*/
 }

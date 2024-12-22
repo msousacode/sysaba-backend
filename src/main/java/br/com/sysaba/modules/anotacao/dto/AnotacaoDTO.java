@@ -31,18 +31,22 @@ public class AnotacaoDTO {
     @JsonProperty("ativo")
     private boolean ativo;
 
+    @JsonProperty("imprimirRelatorio")
+    private boolean imprimirRelatorio;
+
     public AnotacaoDTO() {
         this.ativo = true;
         this.dataAnotacao = LocalDate.now();
     }
 
-    public AnotacaoDTO(UUID anotacaoId, UUID coletaId, UUID treinamentoId, LocalDate dataAnotacao, String anotacao, boolean ativo) {
+    public AnotacaoDTO(UUID anotacaoId, UUID coletaId, UUID treinamentoId, LocalDate dataAnotacao, String anotacao, boolean ativo, boolean imprimirRelatorio) {
         this.anotacaoId = anotacaoId;
         this.coletaId = coletaId;
         this.atendimentoId = treinamentoId;
         this.dataAnotacao = dataAnotacao;
         this.anotacao = anotacao;
         this.ativo = ativo;
+        this.imprimirRelatorio = imprimirRelatorio;
     }
 
     public UUID getAnotacaoId() {
@@ -111,5 +115,13 @@ public class AnotacaoDTO {
 
     public void setTreinamentoId(UUID treinamentoId) {
         this.treinamentoId = treinamentoId;
+    }
+
+    public boolean isImprimirRelatorio() {
+        return imprimirRelatorio;
+    }
+
+    public void setImprimirRelatorio(boolean imprimirRelatorio) {
+        this.imprimirRelatorio = imprimirRelatorio;
     }
 }

@@ -8,15 +8,17 @@ public class UsuarioInfoDTO {
     private String fullName;
     private String email;
     private Boolean termoAceite;
+    private String documento;
 
     public UsuarioInfoDTO() {
     }
 
-    public UsuarioInfoDTO(UUID usuarioId, String nome, String email, Boolean termoAceite) {
+    public UsuarioInfoDTO(UUID usuarioId, String nome, String email, Boolean termoAceite, String documento) {
         this.usuarioId = usuarioId;
         this.fullName = nome;
         this.email = email;
         this.termoAceite = termoAceite;
+        this.documento = documento;
     }
 
     public UUID getUsuarioId() {
@@ -49,5 +51,13 @@ public class UsuarioInfoDTO {
 
     public void setTermoAceite(Boolean termoAceite) {
         this.termoAceite = termoAceite;
+    }
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(String documento) {
+        this.documento = documento;
     }
 }

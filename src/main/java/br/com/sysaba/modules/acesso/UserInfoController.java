@@ -3,6 +3,7 @@ package br.com.sysaba.modules.acesso;
 import br.com.sysaba.core.security.config.RsaKeyConfigProperties;
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.acesso.dto.UsuarioInfoDTO;
+import br.com.sysaba.modules.acesso.dto.UsuarioInfoPerfilDTO;
 import br.com.sysaba.modules.termo.Termo;
 import br.com.sysaba.modules.termo.TermoRepository;
 import br.com.sysaba.modules.usuario.Usuario;
@@ -17,10 +18,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -84,5 +82,19 @@ public class UserInfoController {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> updateUsuarioInfo(@RequestBody UsuarioInfoPerfilDTO usuarioInfoPerfilDTO) {
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(usuarioInfoPerfilDTO.getEmail());
+
+        if(usuario.isPresent()) {
+            usuario.get().setFullName(usuarioInfoPerfilDTO.getNome());
+            usuario.get().setDocumento(usuarioInfoPerfilDTO.getDocumento());
+            usuarioRepository.save(usuario.get());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
