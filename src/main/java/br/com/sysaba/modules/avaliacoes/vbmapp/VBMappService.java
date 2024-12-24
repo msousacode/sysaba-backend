@@ -58,7 +58,7 @@ public class VBMappService {
         List<VbMappColeta> resultList = vbMappColetaRepository.findPontuacaoColetaAvaliacao(vbmappUuid);
 
         if (resultList.isEmpty()) {
-            return List.of(0.0, 0.0, 0.0, 0.0, 0.00, 0.0, 0.0, 0.0, 0.0);
+            return List.of(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         }
 
         Map<Integer, List<VbMappColeta>> pessoasAgrupadas = resultList.stream().collect(Collectors.groupingBy(VbMappColeta::getTipo));
@@ -66,7 +66,7 @@ public class VBMappService {
         pessoasAgrupadas.forEach((idx, coletas) -> {
             Double soma = 0.0;
             for (VbMappColeta num : coletas) {
-                soma += num.getPontuacao();
+                soma += num.getPontuacao() == -1 ? 0 : num.getPontuacao();
             }
             coletaPontuacoes.set((idx - 1), soma);
         });
