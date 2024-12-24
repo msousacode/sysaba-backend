@@ -53,12 +53,20 @@ public class VBMappService {
 
     public List<Double> findPontuacaoColetaAvaliacao(UUID vbmappUuid) {
 
-        List<Double> coletaPontuacoes = new ArrayList<>(List.of(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
-
         List<VbMappColeta> resultList = vbMappColetaRepository.findPontuacaoColetaAvaliacao(vbmappUuid);
 
         if (resultList.isEmpty()) {
             return List.of(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        }
+
+        int codigoNivelColeta = resultList.stream().findFirst().get().getNivelColeta();
+
+        List<Double> coletaPontuacoes;
+        if (codigoNivelColeta == 1) {
+            coletaPontuacoes = new ArrayList<>(List.of(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
+        }
+        else {
+            coletaPontuacoes = new ArrayList<>(List.of(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
         }
 
         Map<Integer, List<VbMappColeta>> pessoasAgrupadas = resultList.stream().collect(Collectors.groupingBy(VbMappColeta::getTipo));
