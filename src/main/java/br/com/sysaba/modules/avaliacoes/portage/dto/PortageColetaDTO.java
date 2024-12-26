@@ -1,10 +1,8 @@
 package br.com.sysaba.modules.avaliacoes.portage.dto;
 
 import br.com.sysaba.modules.avaliacoes.portage.PortageColeta;
-import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappColetaDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 public class PortageColetaDTO {
@@ -24,14 +22,18 @@ public class PortageColetaDTO {
     @JsonProperty("coleta_id")
     private Integer coletaId;
 
+    @JsonProperty("tipo")
+    private int tipo;
+
     public PortageColetaDTO(){}
 
-    public PortageColetaDTO(UUID portageUuidFk, UUID aprendizUuidFk, String idadeColeta, String resposta, Integer coletaId) {
+    public PortageColetaDTO(UUID portageUuidFk, UUID aprendizUuidFk, String idadeColeta, String resposta, Integer coletaId, int tipo) {
         this.portageUuidFk = portageUuidFk;
         this.aprendizUuidFk = aprendizUuidFk;
         this.idadeColeta = idadeColeta;
         this.resposta = resposta;
         this.coletaId = coletaId;
+        this.tipo = tipo;
     }
 
     public static PortageColetaDTO of(PortageColeta portageColeta) {
@@ -82,5 +84,13 @@ public class PortageColetaDTO {
 
     public void setColetaId(Integer coletaId) {
         this.coletaId = coletaId;
+    }
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
     }
 }

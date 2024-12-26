@@ -14,7 +14,7 @@ public class PortageColeta extends Tenantable {
 
     @Id
     @GeneratedValue
-    @Column(name = "vbmapp_coleta_id")
+    @Column(name = "portage_coleta_id")
     private UUID portageColetaId;
 
     @Column(name = "idade_coleta", nullable = false)
@@ -23,11 +23,14 @@ public class PortageColeta extends Tenantable {
     @Column(name = "resposta", nullable = false)
     private String resposta;
 
+    @Column(name = "tipo", nullable = false)
+    private int tipo;//TODO criar um enum depois para isso aqui.
+
     @Column(name = "data_coleta", nullable = false)
     private LocalDateTime dataColeta;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vbmapp_id", nullable = false)
+    @JoinColumn(name = "portage_id", nullable = false)
     private PortageAvaliacao portage;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,6 +49,7 @@ public class PortageColeta extends Tenantable {
         portageColeta.setResposta(dto.getResposta());
         portageColeta.setDataColeta(LocalDateTime.now());
         portageColeta.setColetaId(dto.getColetaId());
+        portageColeta.setTipo(dto.getTipo());
 
         return portageColeta;
     }
@@ -110,5 +114,13 @@ public class PortageColeta extends Tenantable {
 
     public void setColetaId(Integer coletaId) {
         this.coletaId = coletaId;
+    }
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
     }
 }

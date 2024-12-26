@@ -94,4 +94,11 @@ public class PortageController {
         List<PortageColetaDTO> dtos = coletas.stream().map(PortageColetaDTO::of).toList();
         return ResponseEntity.status(HttpStatus.OK).body(dtos);
     }
+
+
+    @GetMapping("/chart/pontuacoes/{portageId}")
+    public ResponseEntity<List<Double>> getDataSetPontuacaoPortage(@PathVariable("portageId") UUID portageId) {
+        List<Double> coletaPontuacoes = portageService.findDataSetPontuacaoPortage(portageId);
+        return ResponseEntity.ok(coletaPontuacoes);
+    }
 }
