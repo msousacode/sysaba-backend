@@ -149,7 +149,7 @@ public class PortageService {
             else if (PortageEnum.TRES_A_QUATRO_ANOS.equals(portageIdade))
                 pontosTotais = 24;
             else if (PortageEnum.QUATRO_A_CINCO_ANOS.equals(portageIdade))
-                pontosTotais = 22;
+                pontosTotais = 43;
             else if (PortageEnum.CINCO_A_SEIS_ANOS.equals(portageIdade))
                 pontosTotais = 22;
             else

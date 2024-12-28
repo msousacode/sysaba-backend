@@ -5,8 +5,8 @@ import java.util.Map;
 
 public enum PortageAvaliacaoEnum {
     SOCIALIZACAO(1, "Socilização"),
-    LINGUAGEM(2, "Linguagem"),
-    COGNICAO(3, "Cognição"),
+    COGNICAO(2, "Cognição"),
+    LINGUAGEM(3, "Linguagem"),
     AUTOCUIDADO(4, "Autocuidados"),
     MOTOR(5, "Motor"),
     ;
