@@ -22,17 +22,21 @@ public class PortageColetaDTO {
     @JsonProperty("coleta_id")
     private Integer coletaId;
 
+    @JsonProperty("codigo")
+    private Integer codigo;
+
     @JsonProperty("tipo")
     private int tipo;
 
     public PortageColetaDTO(){}
 
-    public PortageColetaDTO(UUID portageUuidFk, UUID aprendizUuidFk, String idadeColeta, String resposta, Integer coletaId, int tipo) {
+    public PortageColetaDTO(UUID portageUuidFk, UUID aprendizUuidFk, String idadeColeta, String resposta, Integer coletaId, Integer codigo, int tipo) {
         this.portageUuidFk = portageUuidFk;
         this.aprendizUuidFk = aprendizUuidFk;
         this.idadeColeta = idadeColeta;
         this.resposta = resposta;
         this.coletaId = coletaId;
+        this.codigo = codigo;
         this.tipo = tipo;
     }
 
@@ -43,6 +47,7 @@ public class PortageColetaDTO {
         portageColetaDTO.setIdadeColeta(portageColeta.getIdadeColeta());
         portageColetaDTO.setResposta(portageColeta.getResposta());
         portageColetaDTO.setAprendizUuidFk(portageColeta.getAprendiz().getAprendizId());
+        portageColetaDTO.setTipo(portageColeta.getTipo());
         return portageColetaDTO;
     }
 
@@ -92,5 +97,13 @@ public class PortageColetaDTO {
 
     public void setTipo(int tipo) {
         this.tipo = tipo;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 }

@@ -48,7 +48,7 @@ public class PortageController {
 
     @Transactional
     @PostMapping("/coletas")
-    public ResponseEntity<UUID> salvarColeta(@RequestBody List<br.com.sysaba.modules.avaliacoes.portage.dto.PortageColetaDTO> portageDTOList) {
+    public ResponseEntity<UUID> salvarColeta(@RequestBody List<PortageColetaDTO> portageDTOList) {
         try {
             PortageAvaliacao portageAvaliacao = portageService.findById(portageDTOList.get(0).getPortageUuidFk());
 

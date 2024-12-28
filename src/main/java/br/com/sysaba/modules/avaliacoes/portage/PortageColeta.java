@@ -40,6 +40,9 @@ public class PortageColeta extends Tenantable {
     @Column(name = "coleta_id", nullable = false)
     private Integer coletaId;
 
+    @Column(name = "codigo", nullable = false)
+    private Integer codigo;
+
     public static PortageColeta of(PortageColetaDTO dto, PortageAvaliacao portageAvaliacao, Aprendiz aprendiz) {
         PortageColeta portageColeta = new PortageColeta();
 
@@ -50,6 +53,7 @@ public class PortageColeta extends Tenantable {
         portageColeta.setDataColeta(LocalDateTime.now());
         portageColeta.setColetaId(dto.getColetaId());
         portageColeta.setTipo(dto.getTipo());
+        portageColeta.setCodigo(dto.getCodigo());
 
         return portageColeta;
     }
@@ -122,5 +126,13 @@ public class PortageColeta extends Tenantable {
 
     public void setTipo(int tipo) {
         this.tipo = tipo;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 }
