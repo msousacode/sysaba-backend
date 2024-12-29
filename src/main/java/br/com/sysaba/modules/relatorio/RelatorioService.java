@@ -29,6 +29,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.xy.XYSeries;
@@ -414,50 +415,58 @@ public class RelatorioService {
     }
 
     private String getChartPortage(List<Double> pontuacoesCalculadas) throws IOException {
-        DefaultCategoryDataset datasetx = new DefaultCategoryDataset();
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         // Adiciona as barras com valores variáveis
-        datasetx.addValue(pontuacoesCalculadas.get(0), "1- Socialização", "1");
-        datasetx.addValue(pontuacoesCalculadas.get(1), "2 - Cognição", "2");
-        datasetx.addValue(pontuacoesCalculadas.get(2), "3 - Linguagem", "3");
-        datasetx.addValue(pontuacoesCalculadas.get(3), "4 - Autocuidados", "4");
-        datasetx.addValue(pontuacoesCalculadas.get(4), "5 - Motor", "5");
+        dataset.setValue(pontuacoesCalculadas.get(0), "1- Socialização", "Soc");
+        dataset.setValue(6, "a", "Soc");
 
-        // Adiciona a barra fixa de valor 6 ao lado de cada categoria
-        for (int i = 1; i <= 5; i++) {
-            datasetx.addValue(6, "Idade Atual", String.valueOf(i)); // "Valor Fixo" será a etiqueta para a barra fixa
-        }
+        dataset.setValue(pontuacoesCalculadas.get(1), "2 - Cognição", "Cog");
+        dataset.setValue(6, "b", "Cog");
 
-        DefaultCategoryDataset dataset = datasetx;
+        dataset.setValue(pontuacoesCalculadas.get(2), "3 - Linguagem", "Ling");
+        dataset.setValue(6, "c", "Ling");
+
+        dataset.setValue(pontuacoesCalculadas.get(3), "4 - Autocuidados", "AutoC");
+        dataset.setValue(6, "d", "AutoC");
+
+        dataset.setValue(pontuacoesCalculadas.get(4), "5 - Motor", "Mor");
+        dataset.setValue(6, "e", "Mor");
 
         // Cria o gráfico
         JFreeChart chart = ChartFactory.createBarChart(
-                "",  // Título
-                "",                  // Eixo X
-                "Idade",                     // Eixo Y
-                dataset,                       // Dataset
-                PlotOrientation.VERTICAL,      // Orientação
-                true,                          // Incluir legenda
-                true,                          // Tooltips
-                false                          // URLs
+                "",                      // Título
+                "",                      // Eixo X - permanece vazio para agrupar
+                "Idade",                // Eixo Y
+                dataset,                // Dataset
+                PlotOrientation.VERTICAL, // Orientação
+                false,                   // Incluir legenda
+                true,                   // Tooltips
+                false                   // URLs
         );
 
-        // Personaliza as cores das barras
+        // Personalizando o gráfico para deixar as barras juntas
         CategoryPlot plot = chart.getCategoryPlot();
-        BarRenderer renderer = new BarRenderer();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
 
         // Define as cores para cada barra
         renderer.setSeriesPaint(0, Color.RED);        // 1- Socialização
-        renderer.setSeriesPaint(1, Color.GREEN);      // 2- Linguagem
-        renderer.setSeriesPaint(2, Color.BLUE);       // 3- Cognição
-        renderer.setSeriesPaint(3, Color.ORANGE);     // 4- Autocuidados
-        renderer.setSeriesPaint(4, Color.MAGENTA);    // 5- Motor
-        renderer.setSeriesPaint(5, Color.GRAY); // Marrom para a barra fixa (RGB)
-        renderer.setMaximumBarWidth(2);
-        plot.setRenderer(renderer);
+        renderer.setSeriesPaint(1, Color.ORANGE);
+
+        renderer.setSeriesPaint(2, Color.GREEN);      // 2- Linguagem
+        renderer.setSeriesPaint(3, Color.ORANGE);
+
+        renderer.setSeriesPaint(4, Color.BLUE);       // 3- Cognição
+        renderer.setSeriesPaint(5, Color.ORANGE);
+
+        renderer.setSeriesPaint(6, Color.CYAN);     // 4- Autocuidados
+        renderer.setSeriesPaint(7, Color.ORANGE);
+
+        renderer.setSeriesPaint(8, Color.MAGENTA);    // 5- Motor
+        renderer.setSeriesPaint(9, Color.ORANGE);       // Idade Atual
 
         // Criação da imagem
-        BufferedImage bufferedImage = chart.createBufferedImage(600, 600); // parâmetros que aumentam a qualidade da imagem.
+        BufferedImage bufferedImage = chart.createBufferedImage(600, 600);
 
         // Convertendo a imagem em um formato Base64
         String imgChart;
