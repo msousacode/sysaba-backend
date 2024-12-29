@@ -88,6 +88,14 @@ public class PortageColeta extends Tenantable {
         this.resposta = resposta;
     }
 
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+
     public LocalDateTime getDataColeta() {
         return dataColeta;
     }
@@ -118,14 +126,6 @@ public class PortageColeta extends Tenantable {
 
     public void setColetaId(Integer coletaId) {
         this.coletaId = coletaId;
-    }
-
-    public int getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(int tipo) {
-        this.tipo = tipo;
     }
 
     public Integer getCodigo() {

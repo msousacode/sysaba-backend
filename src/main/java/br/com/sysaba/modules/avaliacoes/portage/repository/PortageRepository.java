@@ -4,6 +4,7 @@ import br.com.sysaba.core.repository.TenantableRepository;
 import br.com.sysaba.modules.avaliacoes.portage.PortageAvaliacao;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface PortageRepository extends TenantableRepository<PortageAvaliacao> {

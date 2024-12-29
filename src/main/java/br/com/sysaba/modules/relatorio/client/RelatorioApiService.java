@@ -4,6 +4,7 @@ import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.relatorio.RelatorioService;
 import br.com.sysaba.modules.relatorio.dto.LinkDowloadResponseDTO;
 import br.com.sysaba.modules.relatorio.dto.RelatorioDTO;
+import br.com.sysaba.modules.relatorio.dto.portage.PortageRelatorioDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +27,25 @@ public class RelatorioApiService {
     public LinkDowloadResponseDTO postRelatorioTreinamentos(RelatorioDTO dto) {
         try {
             String url = relatorioHost + "/print/relatorios/treinamentos";
+            String responseObject = restTemplate.postForObject(url, dto, String.class);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            LinkDowloadResponseDTO mapper = objectMapper.readValue(responseObject, LinkDowloadResponseDTO.class);
+
+            return mapper;
+
+        } catch (RuntimeException ex) {
+            throw new RuntimeException(RelatorioService.class.getName(), ex);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public LinkDowloadResponseDTO postRelatorioPortage(PortageRelatorioDTO dto) {
+        try {
+            String url = relatorioHost + "/print/relatorios/portage";
             String responseObject = restTemplate.postForObject(url, dto, String.class);
 
             ObjectMapper objectMapper = new ObjectMapper();

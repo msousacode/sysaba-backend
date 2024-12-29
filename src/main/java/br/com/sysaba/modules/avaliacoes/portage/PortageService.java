@@ -1,7 +1,7 @@
 package br.com.sysaba.modules.avaliacoes.portage;
 
 import br.com.sysaba.modules.avaliacoes.portage.enums.PortageAvaliacaoEnum;
-import br.com.sysaba.modules.avaliacoes.portage.enums.PortageEnum;
+import br.com.sysaba.modules.avaliacoes.portage.enums.PortageFaixaEnum;
 import br.com.sysaba.modules.avaliacoes.portage.repository.PortageColetaRepository;
 import br.com.sysaba.modules.avaliacoes.portage.repository.PortageRepository;
 import org.springframework.stereotype.Service;
@@ -78,12 +78,12 @@ public class PortageService {
         for (var coleta : coletasAgrupadas.entrySet()) {
             Map<String, Double> sumarizado = new HashMap<>();
 
-            sumarizado.put("1", somarRespostasColetadas(coleta, PortageEnum.ZERO_A_UM_ANO));
-            sumarizado.put("2", somarRespostasColetadas(coleta, PortageEnum.UM_A_DOIS_ANOS));
-            sumarizado.put("3", somarRespostasColetadas(coleta, PortageEnum.DOIS_A_TRES_ANOS));
-            sumarizado.put("4", somarRespostasColetadas(coleta, PortageEnum.TRES_A_QUATRO_ANOS));
-            sumarizado.put("5", somarRespostasColetadas(coleta, PortageEnum.QUATRO_A_CINCO_ANOS));
-            sumarizado.put("6", somarRespostasColetadas(coleta, PortageEnum.CINCO_A_SEIS_ANOS));
+            sumarizado.put("1", somarRespostasColetadas(coleta, PortageFaixaEnum.ZERO_A_UM_ANO));
+            sumarizado.put("2", somarRespostasColetadas(coleta, PortageFaixaEnum.UM_A_DOIS_ANOS));
+            sumarizado.put("3", somarRespostasColetadas(coleta, PortageFaixaEnum.DOIS_A_TRES_ANOS));
+            sumarizado.put("4", somarRespostasColetadas(coleta, PortageFaixaEnum.TRES_A_QUATRO_ANOS));
+            sumarizado.put("5", somarRespostasColetadas(coleta, PortageFaixaEnum.QUATRO_A_CINCO_ANOS));
+            sumarizado.put("6", somarRespostasColetadas(coleta, PortageFaixaEnum.CINCO_A_SEIS_ANOS));
 
             Double total = 0.0;
             for (var soma : sumarizado.entrySet()) {
@@ -97,7 +97,7 @@ public class PortageService {
         return coletaPontuacoesCalculadas;
     }
 
-    private static double somarRespostasColetadas(Map.Entry<Integer, List<PortageColeta>> coleta, PortageEnum portageEnum) {
+    private static double somarRespostasColetadas(Map.Entry<Integer, List<PortageColeta>> coleta, PortageFaixaEnum portageEnum) {
         return coleta.getValue().stream().filter(v -> portageEnum.getCod().equals(Integer.valueOf(v.getIdadeColeta()))).map(i -> Double.parseDouble(i.getResposta())).mapToDouble(Double::doubleValue).sum();
     }
 
@@ -105,82 +105,82 @@ public class PortageService {
 
         int pontosTotais;
 
-        PortageEnum portageIdade = PortageEnum.getByCod(Integer.valueOf(idadeColeta));
+        PortageFaixaEnum portageIdade = PortageFaixaEnum.getByCod(Integer.valueOf(idadeColeta));
 
         PortageAvaliacaoEnum avalicao = PortageAvaliacaoEnum.getByCod(tipo);
 
         if (PortageAvaliacaoEnum.SOCIALIZACAO.equals(avalicao)) {
-            if (PortageEnum.ZERO_A_UM_ANO.equals(portageIdade))
+            if (PortageFaixaEnum.ZERO_A_UM_ANO.equals(portageIdade))
                 pontosTotais = 28;
-            else if (PortageEnum.UM_A_DOIS_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.UM_A_DOIS_ANOS.equals(portageIdade))
                 pontosTotais = 15;
-            else if (PortageEnum.DOIS_A_TRES_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.DOIS_A_TRES_ANOS.equals(portageIdade))
                 pontosTotais = 8;
-            else if (PortageEnum.TRES_A_QUATRO_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.TRES_A_QUATRO_ANOS.equals(portageIdade))
                 pontosTotais = 12;
-            else if (PortageEnum.QUATRO_A_CINCO_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.QUATRO_A_CINCO_ANOS.equals(portageIdade))
                 pontosTotais = 9;
-            else if (PortageEnum.CINCO_A_SEIS_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.CINCO_A_SEIS_ANOS.equals(portageIdade))
                 pontosTotais = 11;
             else
                 throw new RuntimeException("Não foi identificada a faixa de idade para o Portage.");
         } else if (PortageAvaliacaoEnum.LINGUAGEM.equals(avalicao))
-            if (PortageEnum.ZERO_A_UM_ANO.equals(portageIdade))
+            if (PortageFaixaEnum.ZERO_A_UM_ANO.equals(portageIdade))
                 pontosTotais = 10;
-            else if (PortageEnum.UM_A_DOIS_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.UM_A_DOIS_ANOS.equals(portageIdade))
                 pontosTotais = 18;
-            else if (PortageEnum.DOIS_A_TRES_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.DOIS_A_TRES_ANOS.equals(portageIdade))
                 pontosTotais = 30;
-            else if (PortageEnum.TRES_A_QUATRO_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.TRES_A_QUATRO_ANOS.equals(portageIdade))
                 pontosTotais = 12;
-            else if (PortageEnum.QUATRO_A_CINCO_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.QUATRO_A_CINCO_ANOS.equals(portageIdade))
                 pontosTotais = 15;
-            else if (PortageEnum.CINCO_A_SEIS_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.CINCO_A_SEIS_ANOS.equals(portageIdade))
                 pontosTotais = 14;
             else
                 throw new RuntimeException("Não foi identificada a faixa de idade para o Portage.");
         else if (PortageAvaliacaoEnum.COGNICAO.equals(avalicao))
-            if (PortageEnum.ZERO_A_UM_ANO.equals(portageIdade))
+            if (PortageFaixaEnum.ZERO_A_UM_ANO.equals(portageIdade))
                 pontosTotais = 14;
-            else if (PortageEnum.UM_A_DOIS_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.UM_A_DOIS_ANOS.equals(portageIdade))
                 pontosTotais = 10;
-            else if (PortageEnum.DOIS_A_TRES_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.DOIS_A_TRES_ANOS.equals(portageIdade))
                 pontosTotais = 16;
-            else if (PortageEnum.TRES_A_QUATRO_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.TRES_A_QUATRO_ANOS.equals(portageIdade))
                 pontosTotais = 24;
-            else if (PortageEnum.QUATRO_A_CINCO_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.QUATRO_A_CINCO_ANOS.equals(portageIdade))
                 pontosTotais = 43;
-            else if (PortageEnum.CINCO_A_SEIS_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.CINCO_A_SEIS_ANOS.equals(portageIdade))
                 pontosTotais = 22;
             else
                 throw new RuntimeException("Não foi identificada a faixa de idade para o Portage.");
         else if (PortageAvaliacaoEnum.AUTOCUIDADO.equals(avalicao))
-            if (PortageEnum.ZERO_A_UM_ANO.equals(portageIdade))
+            if (PortageFaixaEnum.ZERO_A_UM_ANO.equals(portageIdade))
                 pontosTotais = 13;
-            else if (PortageEnum.UM_A_DOIS_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.UM_A_DOIS_ANOS.equals(portageIdade))
                 pontosTotais = 12;
-            else if (PortageEnum.DOIS_A_TRES_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.DOIS_A_TRES_ANOS.equals(portageIdade))
                 pontosTotais = 27;
-            else if (PortageEnum.TRES_A_QUATRO_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.TRES_A_QUATRO_ANOS.equals(portageIdade))
                 pontosTotais = 15;
-            else if (PortageEnum.QUATRO_A_CINCO_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.QUATRO_A_CINCO_ANOS.equals(portageIdade))
                 pontosTotais = 23;
-            else if (PortageEnum.CINCO_A_SEIS_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.CINCO_A_SEIS_ANOS.equals(portageIdade))
                 pontosTotais = 15;
             else
                 throw new RuntimeException("Não foi identificada a faixa de idade para o Portage.");
         else if (PortageAvaliacaoEnum.MOTOR.equals(avalicao))
-            if (PortageEnum.ZERO_A_UM_ANO.equals(portageIdade))
+            if (PortageFaixaEnum.ZERO_A_UM_ANO.equals(portageIdade))
                 pontosTotais = 45;
-            else if (PortageEnum.UM_A_DOIS_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.UM_A_DOIS_ANOS.equals(portageIdade))
                 pontosTotais = 18;
-            else if (PortageEnum.DOIS_A_TRES_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.DOIS_A_TRES_ANOS.equals(portageIdade))
                 pontosTotais = 17;
-            else if (PortageEnum.TRES_A_QUATRO_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.TRES_A_QUATRO_ANOS.equals(portageIdade))
                 pontosTotais = 15;
-            else if (PortageEnum.QUATRO_A_CINCO_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.QUATRO_A_CINCO_ANOS.equals(portageIdade))
                 pontosTotais = 16;
-            else if (PortageEnum.CINCO_A_SEIS_ANOS.equals(portageIdade))
+            else if (PortageFaixaEnum.CINCO_A_SEIS_ANOS.equals(portageIdade))
                 pontosTotais = 29;
             else
                 throw new RuntimeException("Não foi identificada a faixa de idade para o Portage.");

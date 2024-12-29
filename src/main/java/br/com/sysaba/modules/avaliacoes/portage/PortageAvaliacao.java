@@ -7,6 +7,8 @@ import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -30,6 +32,9 @@ public class PortageAvaliacao extends Tenantable {
     @ManyToOne
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
+
+    @OneToMany(mappedBy = "portage")
+    private List<PortageColeta> portageColetas = new ArrayList<>();
 
     public static PortageAvaliacao from(PortageDTO dto, Aprendiz aprendiz) {
         PortageAvaliacao vbMapp = new PortageAvaliacao();
@@ -92,5 +97,13 @@ public class PortageAvaliacao extends Tenantable {
 
     public void setAprendiz(Aprendiz aprendiz) {
         this.aprendiz = aprendiz;
+    }
+
+    public List<PortageColeta> getPortageColetas() {
+        return portageColetas;
+    }
+
+    public void setPortageColetas(List<PortageColeta> portageColetas) {
+        this.portageColetas = portageColetas;
     }
 }

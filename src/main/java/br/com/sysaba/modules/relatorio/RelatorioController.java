@@ -28,4 +28,14 @@ public class RelatorioController {
 
         return ResponseEntity.ok(linkDowloadResponseDTO);
     }
+
+    @GetMapping("/portage/{portageId}")
+    public ResponseEntity<LinkDowloadResponseDTO> getRelatorioPortage(@PathVariable("portageId") UUID portageId) {
+        LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.gerarRelatorioPorgate(portageId);
+
+        if(linkDowloadResponseDTO == null)
+            return ResponseEntity.internalServerError().build();
+
+        return ResponseEntity.ok(linkDowloadResponseDTO);
+    }
 }
