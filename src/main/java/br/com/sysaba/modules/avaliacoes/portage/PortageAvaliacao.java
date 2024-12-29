@@ -33,8 +33,8 @@ public class PortageAvaliacao extends Tenantable {
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
 
-    @OneToMany(mappedBy = "portage")
-    private List<PortageColeta> portageColetas = new ArrayList<>();
+    //@OneToMany(mappedBy = "portage")
+    //private List<PortageColeta> portageColetas = new ArrayList<>();
 
     public static PortageAvaliacao from(PortageDTO dto, Aprendiz aprendiz) {
         PortageAvaliacao vbMapp = new PortageAvaliacao();
@@ -97,13 +97,5 @@ public class PortageAvaliacao extends Tenantable {
 
     public void setAprendiz(Aprendiz aprendiz) {
         this.aprendiz = aprendiz;
-    }
-
-    public List<PortageColeta> getPortageColetas() {
-        return portageColetas;
-    }
-
-    public void setPortageColetas(List<PortageColeta> portageColetas) {
-        this.portageColetas = portageColetas;
     }
 }
