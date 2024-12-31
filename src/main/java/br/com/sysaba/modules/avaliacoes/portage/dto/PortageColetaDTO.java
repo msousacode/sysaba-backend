@@ -25,6 +25,9 @@ public class PortageColetaDTO {
     @JsonProperty("codigo")
     private Integer codigo;
 
+    @JsonProperty("descricao")
+    private String descricao;
+
     @JsonProperty("tipo")
     private int tipo;
 
@@ -105,5 +108,13 @@ public class PortageColetaDTO {
 
     public void setCodigo(Integer codigo) {
         this.codigo = codigo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 }

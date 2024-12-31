@@ -30,7 +30,14 @@ public class VbMappColetaDTO {
     @JsonProperty("data_coleta")
     private LocalDate dataColeta;
 
-    public VbMappColetaDTO(){}
+    @JsonProperty("descricao")
+    private String descricao;
+
+    @JsonProperty("codigo")
+    private String codigo;
+
+    public VbMappColetaDTO() {
+    }
 
     public VbMappColetaDTO(UUID vbmappUuidFk, UUID aprendizUuidFk, int coletaId, int nivelColeta, int tipo, double pontuacao, LocalDate dataColeta) {
         this.vbmappUuidFk = vbmappUuidFk;
@@ -96,5 +103,21 @@ public class VbMappColetaDTO {
 
     public void setDataColeta(LocalDate dataColeta) {
         this.dataColeta = dataColeta;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 }

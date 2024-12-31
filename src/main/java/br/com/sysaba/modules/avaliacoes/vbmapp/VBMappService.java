@@ -48,7 +48,7 @@ public class VBMappService {
     }
 
     public List<VbMappColeta> findByColetasRespondidas(UUID vbmappUuid) {
-        return vbMappColetaRepository.findByVbMapp_vbMappId(vbmappUuid);
+        return vbMappColetaRepository.findByAprendiz_aprendizId(vbmappUuid);
     }
 
     public List<Double> findPontuacaoColetaAvaliacao(UUID vbmappUuid) {

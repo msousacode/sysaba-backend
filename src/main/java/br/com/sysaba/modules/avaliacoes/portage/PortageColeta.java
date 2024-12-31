@@ -43,6 +43,9 @@ public class PortageColeta extends Tenantable {
     @Column(name = "codigo", nullable = false)
     private Integer codigo;
 
+    @Column(name = "descricao", nullable = false)
+    private String descricao;
+
     public static PortageColeta of(PortageColetaDTO dto, PortageAvaliacao portageAvaliacao, Aprendiz aprendiz) {
         PortageColeta portageColeta = new PortageColeta();
 
@@ -54,6 +57,7 @@ public class PortageColeta extends Tenantable {
         portageColeta.setColetaId(dto.getColetaId());
         portageColeta.setTipo(dto.getTipo());
         portageColeta.setCodigo(dto.getCodigo());
+        portageColeta.setDescricao(dto.getDescricao());
 
         return portageColeta;
     }
@@ -134,5 +138,13 @@ public class PortageColeta extends Tenantable {
 
     public void setCodigo(Integer codigo) {
         this.codigo = codigo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 }

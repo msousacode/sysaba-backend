@@ -38,4 +38,24 @@ public class RelatorioController {
 
         return ResponseEntity.ok(linkDowloadResponseDTO);
     }
+
+    @GetMapping("/portage/{portageId}/pei")
+    public ResponseEntity<LinkDowloadResponseDTO> getRelatorioPortagePEI(@PathVariable("portageId") UUID portageId) {
+        LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.gerarRelatorioPorgatePEI(portageId);
+
+        if(linkDowloadResponseDTO == null)
+            return ResponseEntity.internalServerError().build();
+
+        return ResponseEntity.ok(linkDowloadResponseDTO);
+    }
+
+    @GetMapping("/vbmapp/{vbmappId}/pei")
+    public ResponseEntity<LinkDowloadResponseDTO> getRelatorioVbMappPEI(@PathVariable("vbmappId") UUID vbmappId) {
+        LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.getRelatorioVbMappPEI(vbmappId);
+
+        if(linkDowloadResponseDTO == null)
+            return ResponseEntity.internalServerError().build();
+
+        return ResponseEntity.ok(linkDowloadResponseDTO);
+    }
 }

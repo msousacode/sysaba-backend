@@ -40,6 +40,12 @@ public class VbMappColeta extends Tenantable {
     @Column(name = "coleta_id", nullable = false)
     private Integer coletaId;
 
+    @Column(name = "codigo")
+    private String codigo;
+
+    @Column(name = "descricao")
+    private String descricao;
+
     public static VbMappColeta of(VbMappColetaDTO dto, VbMappAvaliacao vbMappAvaliacao, Aprendiz aprendiz) {
         VbMappColeta vbMappColeta = new VbMappColeta();
 
@@ -50,6 +56,8 @@ public class VbMappColeta extends Tenantable {
         vbMappColeta.setTipo(dto.getTipo());
         vbMappColeta.setDataColeta(LocalDateTime.now());
         vbMappColeta.setColetaId(dto.getColetaId());
+        vbMappColeta.setCodigo(dto.getCodigo());
+        vbMappColeta.setDescricao(dto.getDescricao());
 
         return vbMappColeta;
     }
@@ -135,4 +143,21 @@ public class VbMappColeta extends Tenantable {
     public void setColetaId(Integer coletaId) {
         this.coletaId = coletaId;
     }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
 }

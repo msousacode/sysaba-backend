@@ -11,9 +11,15 @@ import br.com.sysaba.modules.avaliacoes.portage.PortageService;
 import br.com.sysaba.modules.avaliacoes.portage.enums.PortageAvaliacaoEnum;
 import br.com.sysaba.modules.avaliacoes.portage.enums.PortageFaixaEnum;
 import br.com.sysaba.modules.avaliacoes.portage.repository.PortageColetaRepository;
+import br.com.sysaba.modules.avaliacoes.vbmapp.VBMappService;
+import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappColeta;
+import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappColetaRepository;
 import br.com.sysaba.modules.coleta.Coleta;
 import br.com.sysaba.modules.relatorio.client.RelatorioApiService;
 import br.com.sysaba.modules.relatorio.dto.*;
+import br.com.sysaba.modules.relatorio.dto.pei.PEIDadoDTO;
+import br.com.sysaba.modules.relatorio.dto.pei.PEIObjetivoDTO;
+import br.com.sysaba.modules.relatorio.dto.pei.PEIRelatorioDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.CabecalhoDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.DadosDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.PortageRelatorioDTO;
@@ -29,7 +35,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.xy.XYSeries;
@@ -63,12 +68,15 @@ public class RelatorioService {
 
     private final PortageColetaRepository portageColetaRepository;
 
-    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService, PortageService portageService, PortageColetaRepository portageColetaRepository) {
+    private final VBMappColetaRepository vbMappColetaRepository;
+
+    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService, PortageService portageService, PortageColetaRepository portageColetaRepository, VBMappService vbMappService, VBMappColetaRepository vbMappColetaRepository) {
         this.aprendizService = aprendizService;
         this.atendimentoService = atendimentoService;
         this.relatorioApiService = relatorioApiService;
         this.portageService = portageService;
         this.portageColetaRepository = portageColetaRepository;
+        this.vbMappColetaRepository = vbMappColetaRepository;
     }
 
     public LinkDowloadResponseDTO gerarRelatorio(UUID aprendizId, String dataInicio, String dataFinal) {
@@ -478,5 +486,135 @@ public class RelatorioService {
         }
 
         return imgChart;
+    }
+
+    public LinkDowloadResponseDTO gerarRelatorioPorgatePEI(UUID portageId) {
+        List<PortageColeta> resultList = portageColetaRepository.findByPortage_portageId(portageId);
+
+        if (resultList.isEmpty()) {
+            throw new RegistroNaoEncontradoException("Não foi localizado dados para gerar o relatório PEI Portage.");
+        }
+
+        Aprendiz aprendiz = resultList.stream().findFirst().get().getAprendiz();
+
+        PEIRelatorioDTO peiDTO = new PEIRelatorioDTO();
+        peiDTO.setTitulo("PEI - Plano Educacional Individualizado - Portage");
+        peiDTO.setCabecario(new CabecalhoDTO(aprendiz.getNomeAprendiz(), "12/12/2025"));
+
+        List<PEIDadoDTO> dados = new ArrayList<>();
+
+        PEIDadoDTO socializacaoPEIDadoDTO = getPeiDadoDTO(resultList, "Socialização", PortageAvaliacaoEnum.SOCIALIZACAO.getCod());
+        PEIDadoDTO cognicaoPEIDadoDTO = getPeiDadoDTO(resultList, "Cognição", PortageAvaliacaoEnum.COGNICAO.getCod());
+        PEIDadoDTO linguagemPEIDadoDTO = getPeiDadoDTO(resultList, "Linguagem", PortageAvaliacaoEnum.LINGUAGEM.getCod());
+        PEIDadoDTO autocuidadoPEIDadoDTO = getPeiDadoDTO(resultList, "Autocuidado", PortageAvaliacaoEnum.AUTOCUIDADO.getCod());
+        PEIDadoDTO motorPEIDadoDTO = getPeiDadoDTO(resultList, "Motor", PortageAvaliacaoEnum.MOTOR.getCod());
+
+        dados.add(socializacaoPEIDadoDTO);
+        dados.add(cognicaoPEIDadoDTO);
+        dados.add(linguagemPEIDadoDTO);
+        dados.add(autocuidadoPEIDadoDTO);
+        dados.add(motorPEIDadoDTO);
+
+        peiDTO.setDados(dados);
+
+        return relatorioApiService.postPEIRelatorioPortage(peiDTO);
+    }
+
+    private PEIDadoDTO getPeiDadoDTO(List<PortageColeta> resultList, String titulo, Integer tipo) {
+        PEIDadoDTO socializacaoPEIDadoDTO = new PEIDadoDTO();
+        socializacaoPEIDadoDTO.setTitulo(titulo);
+
+        List<PEIObjetivoDTO> objetivosZero = resultList.stream().filter(c -> c.getTipo() == tipo).filter(i -> Double.valueOf(i.getResposta()) == 0).map(k -> new PEIObjetivoDTO(String.valueOf(k.getCodigo()), k.getDescricao(), k.getTipo())).toList();
+        List<PEIObjetivoDTO> objetivosMeio = resultList.stream().filter(c -> c.getTipo() == tipo).filter(i -> Double.valueOf(i.getResposta()) == 0.5).map(k -> new PEIObjetivoDTO(String.valueOf(k.getCodigo()), k.getDescricao(), k.getTipo())).toList();
+
+        socializacaoPEIDadoDTO.setObjetivosZero(objetivosZero);
+        socializacaoPEIDadoDTO.setObjetivosMeio(objetivosMeio);
+        return socializacaoPEIDadoDTO;
+    }
+
+    public LinkDowloadResponseDTO getRelatorioVbMappPEI(UUID aprendizId) {
+        List<VbMappColeta> resultList = vbMappColetaRepository.findByAprendiz_aprendizId(aprendizId);
+
+        if (resultList.isEmpty()) {
+            throw new RegistroNaoEncontradoException("Não foi localizado dados para gerar o relatório PEI Portage.");
+        }
+
+        List<VbMappColeta> resultListNivel1 = resultList.stream().filter(i -> i.getNivelColeta() == 1).toList();
+        List<VbMappColeta> resultListNivel2 = resultList.stream().filter(i -> i.getNivelColeta() == 2).toList();
+        List<VbMappColeta> resultListNivel3 = resultList.stream().filter(i -> i.getNivelColeta() == 3).toList();
+
+        List<List<VbMappColeta>> todosResultListByNivel = new ArrayList<>();
+        todosResultListByNivel.add(resultListNivel1);
+        todosResultListByNivel.add(resultListNivel2);
+        todosResultListByNivel.add(resultListNivel3);
+
+        Aprendiz aprendiz = resultList.stream().findFirst().get().getAprendiz();
+
+        PEIRelatorioDTO peiDTO = new PEIRelatorioDTO();
+        peiDTO.setTitulo("PEI - Plano Educacional Individualizado - VBMAPP");
+        peiDTO.setCabecario(new CabecalhoDTO(aprendiz.getNomeAprendiz(), "12/12/2025"));
+
+        List<List<PEIDadoDTO>> dados = new ArrayList<>();
+
+        for (List<VbMappColeta> list : todosResultListByNivel) {
+            dados.add(getPeiDadoDTO(list));
+        }
+
+        peiDTO.getDadosNiveisVbMapp().addAll(dados);
+
+        return relatorioApiService.postPEIRelatorioVBMAPP(peiDTO);
+    }
+
+    private List<PEIDadoDTO> getPeiDadoDTO(List<VbMappColeta> list) {
+        List<PEIDadoDTO> dados = new ArrayList<>();
+
+        if(list.isEmpty())
+            return dados;
+
+        if (list.stream().findFirst().get().getNivelColeta() == 1) {//Nível 1
+
+            for (VbMappColeta coleta : list) {
+                PEIDadoDTO peiDadoDTO = new PEIDadoDTO();
+                peiDadoDTO.setTitulo("Nível 1");
+
+                List<PEIObjetivoDTO> objetivosZero = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
+                List<PEIObjetivoDTO> objetivosMeio = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0.5).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
+
+                peiDadoDTO.setObjetivosZero(objetivosZero);
+                peiDadoDTO.setObjetivosMeio(objetivosMeio);
+                dados.add(peiDadoDTO);
+            }
+
+        }
+
+        if (list.stream().findFirst().get().getNivelColeta() == 2) {//Nível 2
+            for (VbMappColeta coleta : list) {
+                PEIDadoDTO peiDadoDTO = new PEIDadoDTO();
+                peiDadoDTO.setTitulo("Nível 2");
+
+                List<PEIObjetivoDTO> objetivosZero = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
+                List<PEIObjetivoDTO> objetivosMeio = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0.5).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
+
+                peiDadoDTO.setObjetivosZero(objetivosZero);
+                peiDadoDTO.setObjetivosMeio(objetivosMeio);
+                dados.add(peiDadoDTO);
+            }
+        }
+
+        if (list.stream().findFirst().get().getNivelColeta() == 3) {//Nível 3
+            for (VbMappColeta coleta : list) {
+                PEIDadoDTO peiDadoDTO = new PEIDadoDTO();
+                peiDadoDTO.setTitulo("Nível 3");
+
+                List<PEIObjetivoDTO> objetivosZero = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
+                List<PEIObjetivoDTO> objetivosMeio = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0.5).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
+
+                peiDadoDTO.setObjetivosZero(objetivosZero);
+                peiDadoDTO.setObjetivosMeio(objetivosMeio);
+                dados.add(peiDadoDTO);
+            }
+        }
+
+        return dados;
     }
 }

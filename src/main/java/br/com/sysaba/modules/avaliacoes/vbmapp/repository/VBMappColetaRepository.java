@@ -20,7 +20,7 @@ public interface VBMappColetaRepository extends TenantableRepository<VbMappColet
     @Query("delete from VbMappColeta v where v.vbmappColetaId = :vbmappColetaId")
     void deleteByVbmappColetaId(UUID vbmappColetaId);
 
-    List<VbMappColeta> findByVbMapp_vbMappId(UUID vbmappUuid);
+    List<VbMappColeta> findByAprendiz_aprendizId(UUID vbmappUuid);
 
     @Query("select v from VbMappColeta v where v.vbMapp.vbMappId = :vbmappUuid")
     List<VbMappColeta> findPontuacaoColetaAvaliacao(UUID vbmappUuid);
