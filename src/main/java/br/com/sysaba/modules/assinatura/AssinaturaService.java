@@ -1,12 +1,15 @@
 package br.com.sysaba.modules.assinatura;
 
 import br.com.sysaba.core.commons.service.GenericService;
-import br.com.sysaba.modules.usuario.Usuario;
+import br.com.sysaba.core.enums.TipoAssinaturaEnum;
+import br.com.sysaba.core.exception.RegistroNaoEncontradoException;
+import br.com.sysaba.modules.assinatura.dto.ConfirmacaoPagamentoDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -51,5 +54,17 @@ public class AssinaturaService implements GenericService<Assinatura, UUID> {
     @Override
     public void beforeSave() {
         GenericService.super.beforeSave();
+    }
+
+    public void autualizaAssinaturaPaga(ConfirmacaoPagamentoDTO pagamentoDTO, UUID usuarioId) {
+
+        Assinatura assinatura = assinaturaRepository.findByUsuario_usuarioId(usuarioId).orElseThrow(() -> new RegistroNaoEncontradoException("Não foi possível localizar o usuário para atualizar a assinatura de pagamento: " + pagamentoDTO.getEmail() + " + " + usuarioId));
+
+        assinatura.setAtivo(true);
+        assinatura.setTipoAssinatura(TipoAssinaturaEnum.ASSINANTE);
+        assinatura.setDataContratacao(LocalDateTime.now());
+        assinatura.setInvoiceStripeId(pagamentoDTO.getInvoiceId());
+
+        assinaturaRepository.save(assinatura);
     }
 }

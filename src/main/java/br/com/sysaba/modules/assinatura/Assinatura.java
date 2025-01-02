@@ -48,6 +48,9 @@ public class Assinatura {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
+    @Column(name = "invoice_stripe_id")
+    private String invoiceStripeId;
+
     public Assinatura(){}
 
     public Assinatura(String motivoCancelamento, TipoAssinaturaEnum tipoAssinatura, LocalDateTime dataCancelamento, LocalDateTime dataContratacao, LocalDateTime dataInicioAssinatura, LocalDateTime createdAt, Boolean ativo, UUID criadoPor, UUID tenantId, Usuario usuario) {
@@ -155,6 +158,14 @@ public class Assinatura {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.ativo = Boolean.TRUE;
+    }
+
+    public String getInvoiceStripeId() {
+        return invoiceStripeId;
+    }
+
+    public void setInvoiceStripeId(String invoiceStripeId) {
+        this.invoiceStripeId = invoiceStripeId;
     }
 
     public static Assinatura getInstance(Usuario usuario) {
