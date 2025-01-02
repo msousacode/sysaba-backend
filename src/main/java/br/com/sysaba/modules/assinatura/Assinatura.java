@@ -1,6 +1,5 @@
 package br.com.sysaba.modules.assinatura;
 
-import br.com.sysaba.core.commons.BaseEntity;
 import br.com.sysaba.core.enums.TipoAssinaturaEnum;
 import br.com.sysaba.modules.usuario.Usuario;
 import jakarta.persistence.*;
@@ -48,6 +47,8 @@ public class Assinatura {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
+    public Assinatura(){}
 
     public Assinatura(String motivoCancelamento, TipoAssinaturaEnum tipoAssinatura, LocalDateTime dataCancelamento, LocalDateTime dataContratacao, LocalDateTime dataInicioAssinatura, LocalDateTime createdAt, Boolean ativo, UUID criadoPor, UUID tenantId, Usuario usuario) {
         this.motivoCancelamento = motivoCancelamento;
@@ -160,7 +161,7 @@ public class Assinatura {
         //@formatter:off
         return new Assinatura(
                 null,
-                TipoAssinaturaEnum.FREE,
+                TipoAssinaturaEnum.NAO_ASSINANTE,
                 null,
                 null,
                 LocalDateTime.now(),

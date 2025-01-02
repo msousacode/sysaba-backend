@@ -1,5 +1,6 @@
 package br.com.sysaba.modules.usuario;
 
+import br.com.sysaba.modules.assinatura.Assinatura;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -26,9 +27,6 @@ public class Usuario {
     @Column(name = "avatar_url")
     private String avatarUrl;
 
-    @Column(name = "demontracao_restore")
-    private String demonstracaoRestore;
-
     @Column(name = "primeiro_acesso_realizado")
     private Boolean primeiroAcessoRealizado;
 
@@ -47,13 +45,15 @@ public class Usuario {
     @Column(name = "tentant_id")
     private UUID tenantId;
 
-    public Usuario(UUID usuarioId, String documento, String email, String fullName, String avatarUrl, String demonstracaoRestore, Boolean primeiroAcessoRealizado, String senha, LocalDateTime createdAt, Boolean ativo, UUID criadoPor, UUID tenantId) {
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
+    private Assinatura assinatura;
+
+    public Usuario(UUID usuarioId, String documento, String email, String fullName, String avatarUrl, Boolean primeiroAcessoRealizado, String senha, LocalDateTime createdAt, Boolean ativo, UUID criadoPor, UUID tenantId) {
         this.usuarioId = usuarioId;
         this.documento = documento;
         this.email = email;
         this.fullName = fullName;
         this.avatarUrl = avatarUrl;
-        this.demonstracaoRestore = demonstracaoRestore;
         this.primeiroAcessoRealizado = primeiroAcessoRealizado;
         this.senha = senha;
         this.createdAt = createdAt;
@@ -104,14 +104,6 @@ public class Usuario {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
-    }
-
-    public String getDemonstracaoRestore() {
-        return demonstracaoRestore;
-    }
-
-    public void setDemonstracaoRestore(String demonstracaoRestore) {
-        this.demonstracaoRestore = demonstracaoRestore;
     }
 
     public Boolean getPrimeiroAcessoRealizado() {
@@ -167,5 +159,13 @@ public class Usuario {
         this.createdAt = LocalDateTime.now();
         this.ativo = Boolean.TRUE;
         this.primeiroAcessoRealizado = Boolean.FALSE;
+    }
+
+    public Assinatura getAssinatura() {
+        return assinatura;
+    }
+
+    public void setAssinatura(Assinatura assinatura) {
+        this.assinatura = assinatura;
     }
 }

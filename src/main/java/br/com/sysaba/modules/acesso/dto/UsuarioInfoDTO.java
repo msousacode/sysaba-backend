@@ -9,6 +9,7 @@ public class UsuarioInfoDTO {
     private String email;
     private Boolean termoAceite;
     private String documento;
+    private AssinaturaDTO assinatura;
 
     public UsuarioInfoDTO() {
     }
@@ -59,5 +60,13 @@ public class UsuarioInfoDTO {
 
     public void setDocumento(String documento) {
         this.documento = documento;
+    }
+
+    public AssinaturaDTO getAssinatura() {
+        return assinatura;
+    }
+
+    public void setAssinatura(AssinaturaDTO assinatura) {
+        this.assinatura = assinatura;
     }
 }
