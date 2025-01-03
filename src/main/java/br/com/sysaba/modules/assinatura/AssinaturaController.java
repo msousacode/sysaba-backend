@@ -32,7 +32,7 @@ public class AssinaturaController {
     @PostMapping("/pago")
     public ResponseEntity<?> confirmarPagamento(@RequestBody ConfirmacaoPagamentoDTO pagamentoDTO) {
         try {
-            Usuario usuario = usuarioRepository.findByEmail(pagamentoDTO.getEmail()).orElseThrow(() -> new RegistroNaoEncontradoException("Não foi possível localizar email para confirmar o pagamento " + pagamentoDTO.getEmail()));
+            Usuario usuario = usuarioRepository.findByEmail(pagamentoDTO.getEmail().toLowerCase().trim()).orElseThrow(() -> new RegistroNaoEncontradoException("Não foi possível localizar email para confirmar o pagamento " + pagamentoDTO.getEmail()));
             assinaturaService.autualizaAssinaturaPaga(pagamentoDTO, usuario.getUsuarioId());
             return ResponseEntity.ok().build();
         } catch (Exception ex) {
