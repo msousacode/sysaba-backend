@@ -10,6 +10,8 @@ public class AvaliacaoDTO {
     private UUID id;
     private String tipo;
     private String protocolo;
+    private String coleta;
+    private String progresso;
 
     public AvaliacaoDTO() {}
 
@@ -49,5 +51,21 @@ public class AvaliacaoDTO {
 
     public static AvaliacaoDTO of(PortageAvaliacao v) {
         return new AvaliacaoDTO(v.getPortageId(), v.getIdadesColeta(), v.getProtocolo());
+    }
+
+    public String getColeta() {
+        return coleta;
+    }
+
+    public void setColeta(String coleta) {
+        this.coleta = coleta;
+    }
+
+    public String getProgresso() {
+        return progresso;
+    }
+
+    public void setProgresso(String progresso) {
+        this.progresso = progresso;
     }
 }

@@ -2,6 +2,7 @@ package br.com.sysaba.modules.avaliacoes.vbmapp;
 
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappColetaRepository;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class VBMappService {
             coletaPontuacoes = new ArrayList<>(List.of(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
         } else if (codigoNivelColeta == 2) {
             coletaPontuacoes = new ArrayList<>(List.of(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
-        }else {
+        } else {
             coletaPontuacoes = new ArrayList<>(List.of(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
         }
 
@@ -81,5 +82,9 @@ public class VBMappService {
         });
 
         return coletaPontuacoes;
+    }
+
+    public Integer findColetasRespondidas(UUID vbmappId) {
+        return vbMappColetaRepository.findColetasRespondidas(vbmappId);
     }
 }

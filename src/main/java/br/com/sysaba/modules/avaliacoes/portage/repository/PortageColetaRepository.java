@@ -19,4 +19,7 @@ public interface PortageColetaRepository extends TenantableRepository<PortageCol
     @Modifying
     @Query("delete from PortageColeta v where v.portageColetaId = :portageColetaId")
     void deleteByVbmappColetaId(@Param("portageColetaId") UUID portageColetaId);
+
+    @Query("select count(*) from PortageColeta v where v.portage.portageId = :portageId and v.resposta is not null")
+    Integer findColetasRespondidas(@Param("portageId") UUID portageId);
 }

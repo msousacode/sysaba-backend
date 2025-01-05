@@ -189,4 +189,8 @@ public class PortageService {
 
         return ((soma * 12) / pontosTotais) / 12;
     }
+
+    public Integer findColetasRespondidas(UUID portageId) {
+        return portageColetaRepository.findColetasRespondidas(portageId);
+    }
 }

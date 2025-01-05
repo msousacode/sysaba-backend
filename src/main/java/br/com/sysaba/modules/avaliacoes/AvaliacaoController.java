@@ -29,6 +29,10 @@ public class AvaliacaoController {
     public ResponseEntity<List<AvaliacaoDTO>> getAvaliacoes(@PathVariable("aprendizId") UUID aprendizId) {
         try {
             List<AvaliacaoDTO> vbMapp = avaliacaoService.findAvaliacoes(aprendizId);
+
+
+
+
             return ResponseEntity.ok(vbMapp);
         } catch (RuntimeException ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);

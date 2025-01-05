@@ -5,6 +5,7 @@ import br.com.sysaba.modules.avaliacoes.portage.PortageService;
 import br.com.sysaba.modules.avaliacoes.vbmapp.VBMappService;
 import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappAvaliacao;
 import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappColeta;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,11 +32,68 @@ public class AvaliacaoService {
         List<PortageAvaliacao> portages = portageService.findAllByAprendizId(aprendizId);
 
         if (!vbMapps.isEmpty())
-            avaliacoes.addAll(vbMapps.stream().map(v -> AvaliacaoDTO.of(v)).toList());
+            avaliacoes.addAll(getVbMappAvaliacoes(vbMapps));
 
         if (!portages.isEmpty())
-            avaliacoes.addAll(portages.stream().map(v -> AvaliacaoDTO.of(v)).toList());
+            avaliacoes.addAll(getPortageAvaliacoes(portages));
 
         return avaliacoes;
+    }
+
+    private List<AvaliacaoDTO> getVbMappAvaliacoes(List<VbMappAvaliacao> list) {
+        List<AvaliacaoDTO> dtos = new ArrayList<>();
+
+        for (VbMappAvaliacao vbMappAvaliacao : list) {
+            AvaliacaoDTO avaliacaoDTO = new AvaliacaoDTO();
+
+            avaliacaoDTO.setId(vbMappAvaliacao.getVbMappId());
+            avaliacaoDTO.setProtocolo(vbMappAvaliacao.getProtocolo());
+            avaliacaoDTO.setTipo(vbMappAvaliacao.getNiveisColeta());
+
+            Integer respondidas = vbMappService.findColetasRespondidas(vbMappAvaliacao.getVbMappId());
+
+            Integer totalObjetivos = 170;
+            Integer naoRespondidas = totalObjetivos - respondidas;
+
+            String porcentagem = calculaPorcentagem(respondidas, naoRespondidas);
+
+            avaliacaoDTO.setColeta(respondidas + "/" + totalObjetivos);
+            avaliacaoDTO.setProgresso(porcentagem);
+
+            dtos.add(avaliacaoDTO);
+        }
+        return dtos;
+    }
+
+    private List<AvaliacaoDTO> getPortageAvaliacoes(List<PortageAvaliacao> list) {
+        List<AvaliacaoDTO> dtos = new ArrayList<>();
+
+        for (PortageAvaliacao vbMappAvaliacao : list) {
+            AvaliacaoDTO avaliacaoDTO = new AvaliacaoDTO();
+
+            avaliacaoDTO.setId(vbMappAvaliacao.getPortageId());
+            avaliacaoDTO.setProtocolo(vbMappAvaliacao.getProtocolo());
+            avaliacaoDTO.setTipo(vbMappAvaliacao.getIdadesColeta());
+
+            Integer respondidas = portageService.findColetasRespondidas(vbMappAvaliacao.getPortageId());
+
+            Integer totalObjetivos = 488;
+            Integer naoRespondidas = totalObjetivos - respondidas;
+
+            String porcentagem = calculaPorcentagem(respondidas, naoRespondidas);
+
+            avaliacaoDTO.setColeta(respondidas + "/" + totalObjetivos);
+            avaliacaoDTO.setProgresso(porcentagem);
+
+            dtos.add(avaliacaoDTO);
+        }
+        return dtos;
+    }
+
+    private String calculaPorcentagem(Integer respondidas, Integer naoRespondidas) {
+        if (respondidas == 0) return "0%";
+        Integer totalObjetivos = respondidas + naoRespondidas;
+        Double resultado = Double.valueOf((respondidas * 100) / totalObjetivos);
+        return resultado + "%";
     }
 }

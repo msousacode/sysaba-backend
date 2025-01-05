@@ -26,4 +26,7 @@ public interface VBMappColetaRepository extends TenantableRepository<VbMappColet
 
     @Query("select v from VbMappColeta v where v.vbMapp.vbMappId = :vbmappUuid")
     List<VbMappColeta> findPontuacaoColetaAvaliacao(UUID vbmappUuid);
+
+    @Query("select count(*) from VbMappColeta v where v.vbMapp.vbMappId = :vbmappId and v.pontuacao is not null")
+    Integer findColetasRespondidas(UUID vbmappId);
 }
