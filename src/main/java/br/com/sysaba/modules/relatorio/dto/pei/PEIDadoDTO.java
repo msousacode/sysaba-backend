@@ -4,6 +4,7 @@ import java.util.List;
 
 public class PEIDadoDTO {
     private String titulo;
+    private Integer nivel;
     private List<PEIObjetivoDTO> objetivosZero;
     private List<PEIObjetivoDTO> objetivosMeio;
 
@@ -30,5 +31,13 @@ public class PEIDadoDTO {
 
     public void setObjetivosMeio(List<PEIObjetivoDTO> objetivosMeio) {
         this.objetivosMeio = objetivosMeio;
+    }
+
+    public Integer getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(Integer nivel) {
+        this.nivel = nivel;
     }
 }

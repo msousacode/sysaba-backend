@@ -12,6 +12,7 @@ public enum VBMappNivelUmEnum {
     TATO(6, "Tato"),
     BRINCAR(7, "Brincar"),
     SOCIAL(8, "Social"),
+    VOCAL(9, "Vocal"),
     ;
 
     private final Integer tipo;

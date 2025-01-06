@@ -186,7 +186,7 @@ public class RelatorioService {
         String dataFormatada = dataNascimento.format(formatter);
 
         // Constrói a mensagem
-        return "Data de nascimento " + dataFormatada + " - " + idade + " anos";
+        return dataFormatada + " - " + idade + " anos";
     }
 
     private String converterLocalDateTimeParaString(LocalDateTime localDateTime) {
@@ -329,6 +329,8 @@ public class RelatorioService {
             throw new RegistroNaoEncontradoException("Não foi localizado dados para gerar o relatório Portage.");
         }
 
+        Aprendiz aprendiz = aprendizService.findById(resultList.get(0).getAprendiz().getAprendizId());
+
         List<TabelaDTO> list = new ArrayList<>();
 
         List<TabelaDTO> socializacaoList = new ArrayList<>();
@@ -396,7 +398,7 @@ public class RelatorioService {
 
         PortageRelatorioDTO portageRelatorioDTO = new PortageRelatorioDTO();
         portageRelatorioDTO.setTitulo("Relatório Portage");
-        portageRelatorioDTO.setCabecalho(new CabecalhoDTO("zezinho", "12/12/2025"));
+        portageRelatorioDTO.setCabecalho(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
         portageRelatorioDTO.setDados(dadosDTOS);
 
         String chart;
@@ -500,7 +502,7 @@ public class RelatorioService {
 
         PEIRelatorioDTO peiDTO = new PEIRelatorioDTO();
         peiDTO.setTitulo("PEI - Plano Educacional Individualizado - Portage");
-        peiDTO.setCabecario(new CabecalhoDTO(aprendiz.getNomeAprendiz(), "12/12/2025"));
+        peiDTO.setCabecario(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
 
         List<PEIDadoDTO> dados = new ArrayList<>();
 
@@ -537,7 +539,7 @@ public class RelatorioService {
         List<VbMappColeta> resultList = vbMappColetaRepository.findByAprendiz_aprendizId(aprendizId);
 
         if (resultList.isEmpty()) {
-            throw new RegistroNaoEncontradoException("Não foi localizado dados para gerar o relatório PEI Portage.");
+            throw new RegistroNaoEncontradoException("Não foi localizado dados para gerar o relatório PEI VBMAPP.");
         }
 
         List<VbMappColeta> resultListNivel1 = resultList.stream().filter(i -> i.getNivelColeta() == 1).toList();
@@ -553,7 +555,7 @@ public class RelatorioService {
 
         PEIRelatorioDTO peiDTO = new PEIRelatorioDTO();
         peiDTO.setTitulo("PEI - Plano Educacional Individualizado - VBMAPP");
-        peiDTO.setCabecario(new CabecalhoDTO(aprendiz.getNomeAprendiz(), "12/12/2025"));
+        peiDTO.setCabecario(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
 
         List<List<PEIDadoDTO>> dados = new ArrayList<>();
 
@@ -569,13 +571,14 @@ public class RelatorioService {
     private List<PEIDadoDTO> getPeiDadoDTO(List<VbMappColeta> list) {
         List<PEIDadoDTO> dados = new ArrayList<>();
 
-        if(list.isEmpty())
+        if (list.isEmpty())
             return dados;
 
         if (list.stream().findFirst().get().getNivelColeta() == 1) {//Nível 1
 
             for (VbMappColeta coleta : list) {
                 PEIDadoDTO peiDadoDTO = new PEIDadoDTO();
+                peiDadoDTO.setNivel(list.stream().findFirst().get().getNivelColeta());
                 peiDadoDTO.setTitulo(VBMappNivelUmEnum.getByCod(coleta.getTipo()).getDescricao());
 
                 List<PEIObjetivoDTO> objetivosZero = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
@@ -591,6 +594,7 @@ public class RelatorioService {
         if (list.stream().findFirst().get().getNivelColeta() == 2) {//Nível 2
             for (VbMappColeta coleta : list) {
                 PEIDadoDTO peiDadoDTO = new PEIDadoDTO();
+                peiDadoDTO.setNivel(list.stream().findFirst().get().getNivelColeta());
                 peiDadoDTO.setTitulo(VBMappNivelUmEnum.getByCod(coleta.getTipo()).getDescricao());
 
                 List<PEIObjetivoDTO> objetivosZero = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
@@ -605,6 +609,7 @@ public class RelatorioService {
         if (list.stream().findFirst().get().getNivelColeta() == 3) {//Nível 3
             for (VbMappColeta coleta : list) {
                 PEIDadoDTO peiDadoDTO = new PEIDadoDTO();
+                peiDadoDTO.setNivel(list.stream().findFirst().get().getNivelColeta());
                 peiDadoDTO.setTitulo(VBMappNivelUmEnum.getByCod(coleta.getTipo()).getDescricao());
 
                 List<PEIObjetivoDTO> objetivosZero = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();

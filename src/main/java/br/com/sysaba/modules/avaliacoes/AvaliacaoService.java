@@ -52,7 +52,7 @@ public class AvaliacaoService {
 
             Integer respondidas = vbMappService.findColetasRespondidas(vbMappAvaliacao.getVbMappId());
 
-            Integer totalObjetivos = 170;
+            Integer totalObjetivos = "1".equals(vbMappAvaliacao.getNiveisColeta()) ? 45 : "2".equals(vbMappAvaliacao.getNiveisColeta()) ? 60 : "3".equals(vbMappAvaliacao.getNiveisColeta()) ? 70 : 0;
             Integer naoRespondidas = totalObjetivos - respondidas;
 
             String porcentagem = calculaPorcentagem(respondidas, naoRespondidas);
