@@ -2,6 +2,7 @@ package br.com.sysaba.modules.avaliacoes.vbmapp;
 
 import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
+import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappBarreiraDTO;
 import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappDTO;
 import jakarta.persistence.*;
 
@@ -26,12 +27,26 @@ public class VbMappBarreira extends Tenantable {
     @Column(name = "descricao", nullable = false)
     private String descricao;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
 
+    @Column(name = "codigo", nullable = false)
+    private Integer codigo;
+
     public VbMappBarreira() {
         super(LocalDateTime.now());
+    }
+
+    public static VbMappBarreira getInstance(VbMappBarreiraDTO dto, Aprendiz aprendiz) {
+        VbMappBarreira vbMappBarreira = new VbMappBarreira();
+
+        vbMappBarreira.setAprendiz(aprendiz);
+        vbMappBarreira.setDescricao(dto.getDescricao());
+        vbMappBarreira.setQuestao(dto.getQuestao());
+        vbMappBarreira.setResposta(dto.getResposta());
+        vbMappBarreira.setCodigo(dto.getCodigo());
+        return vbMappBarreira;
     }
 
     public UUID getVbMappBarreiraId() {
@@ -72,5 +87,13 @@ public class VbMappBarreira extends Tenantable {
 
     public void setAprendiz(Aprendiz aprendiz) {
         this.aprendiz = aprendiz;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 }

@@ -36,9 +36,6 @@ public class Aprendiz extends Tenantable {
     @Column(name = "observacao")
     private String observacao;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "aprendiz")
-    private VbMappBarreira vbMappBarreira;
-
     public Aprendiz(LocalDateTime createdAt, UUID aprendizId, String nomeAprendiz, LocalDate nascAprendiz, String nomeMae, String nomePai, String nomeResponsavel, String observacao) {
         super(createdAt);
         this.aprendizId = aprendizId;
@@ -108,13 +105,5 @@ public class Aprendiz extends Tenantable {
 
     public void setObservacao(String observacao) {
         this.observacao = observacao;
-    }
-
-    public VbMappBarreira getVbMappBarreira() {
-        return vbMappBarreira;
-    }
-
-    public void setVbMappBarreira(VbMappBarreira vbMappBarreira) {
-        this.vbMappBarreira = vbMappBarreira;
     }
 }

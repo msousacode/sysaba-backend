@@ -1,14 +1,15 @@
 package br.com.sysaba.modules.avaliacoes.vbmapp;
 
+import br.com.sysaba.modules.aprendiz.Aprendiz;
+import br.com.sysaba.modules.aprendiz.AprendizService;
+import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VBMappBarreiraColetaDTO;
+import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappBarreiraDTO;
+import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappBarreiraRepository;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappColetaRepository;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,9 +19,15 @@ public class VBMappService {
 
     private final VBMappColetaRepository vbMappColetaRepository;
 
-    public VBMappService(VBMappRepository vbMappRepository, VBMappColetaRepository vbMappColetaRepository) {
+    private final VBMappBarreiraRepository vbMappBarreiraRepository;
+
+    private final AprendizService aprendizService;
+
+    public VBMappService(VBMappRepository vbMappRepository, VBMappColetaRepository vbMappColetaRepository, VBMappBarreiraRepository vbMappBarreiraRepository, AprendizService aprendizService) {
         this.vbMappRepository = vbMappRepository;
         this.vbMappColetaRepository = vbMappColetaRepository;
+        this.vbMappBarreiraRepository = vbMappBarreiraRepository;
+        this.aprendizService = aprendizService;
     }
 
     public VbMappAvaliacao saveAvaliacao(VbMappAvaliacao vbMappAvaliacao) {
@@ -86,5 +93,30 @@ public class VBMappService {
 
     public Integer findColetasRespondidas(UUID vbmappId) {
         return vbMappColetaRepository.findColetasRespondidas(vbmappId);
+    }
+
+    public void salvarBarreiraColeta(VBMappBarreiraColetaDTO barreiraColetaDTO, UUID aprendizId) {
+
+        Aprendiz aprendiz = aprendizService.findById(aprendizId);
+
+        List<VbMappBarreira> vbMappBarreiras = new ArrayList<>();
+
+        for (VbMappBarreiraDTO coleta : barreiraColetaDTO.getColetas()) {
+            if (coleta.getVbMappBarreiraId() != null) {
+                Optional<VbMappBarreira> result = vbMappBarreiraRepository.findById(coleta.getVbMappBarreiraId());
+
+                if (result.isPresent()) {
+                    result.get().setDescricao(coleta.getDescricao());
+                    result.get().setResposta(coleta.getResposta());
+                    result.get().setQuestao(coleta.getQuestao());
+                    vbMappBarreiras.add(result.get());
+                }
+            } else {
+                VbMappBarreira instance = VbMappBarreira.getInstance(coleta, aprendiz);
+                vbMappBarreiras.add(instance);
+            }
+        }
+
+        vbMappBarreiraRepository.saveAll(vbMappBarreiras);
     }
 }
