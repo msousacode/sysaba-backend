@@ -1,6 +1,6 @@
 package br.com.sysaba.modules.avaliacoes.vbmapp.dto;
 
-import br.com.sysaba.modules.aprendiz.Aprendiz;
+import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappBarreira;
 
 import java.util.UUID;
 
@@ -15,6 +15,16 @@ public class VbMappBarreiraDTO {
     private String descricao;
 
     private Integer codigo;
+
+    public static VbMappBarreiraDTO of(VbMappBarreira barreira) {
+        VbMappBarreiraDTO dto = new VbMappBarreiraDTO();
+        dto.setQuestao(barreira.getQuestao());
+        dto.setCodigo(barreira.getCodigo());
+        dto.setVbMappBarreiraId(barreira.getVbMappBarreiraId());
+        dto.setDescricao(barreira.getDescricao());
+        dto.setResposta(barreira.getResposta());
+        return dto;
+    }
 
     public VbMappBarreiraDTO(){}
 

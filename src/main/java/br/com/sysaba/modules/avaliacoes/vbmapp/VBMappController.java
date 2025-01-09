@@ -84,6 +84,11 @@ public class VBMappController {
         }
     }
 
+    @GetMapping("/aprendiz/{aprendizId}/barreiras/coletas")
+    public ResponseEntity<VBMappBarreiraColetaDTO> getBarreiras(@PathVariable("aprendizId") UUID aprendizId) {;
+        return ResponseEntity.ok(vbMappService.findBarreirasRespondidas(aprendizId));
+    }
+
     @GetMapping("/config-tela/{vbmappId}")
     public ResponseEntity<VbMappAvaliacao> getConfigTela(@PathVariable("vbmappId") UUID vbmappId) {
         try {

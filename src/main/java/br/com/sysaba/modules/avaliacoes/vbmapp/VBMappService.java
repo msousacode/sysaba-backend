@@ -99,24 +99,21 @@ public class VBMappService {
 
         Aprendiz aprendiz = aprendizService.findById(aprendizId);
 
+        vbMappBarreiraRepository.deleteByAprendiz_aprendizId(aprendizId);
+
         List<VbMappBarreira> vbMappBarreiras = new ArrayList<>();
 
         for (VbMappBarreiraDTO coleta : barreiraColetaDTO.getColetas()) {
-            if (coleta.getVbMappBarreiraId() != null) {
-                Optional<VbMappBarreira> result = vbMappBarreiraRepository.findById(coleta.getVbMappBarreiraId());
-
-                if (result.isPresent()) {
-                    result.get().setDescricao(coleta.getDescricao());
-                    result.get().setResposta(coleta.getResposta());
-                    result.get().setQuestao(coleta.getQuestao());
-                    vbMappBarreiras.add(result.get());
-                }
-            } else {
-                VbMappBarreira instance = VbMappBarreira.getInstance(coleta, aprendiz);
-                vbMappBarreiras.add(instance);
-            }
+            VbMappBarreira instance = VbMappBarreira.getInstance(coleta, aprendiz);
+            vbMappBarreiras.add(instance);
         }
-
         vbMappBarreiraRepository.saveAll(vbMappBarreiras);
+    }
+
+    public VBMappBarreiraColetaDTO findBarreirasRespondidas(UUID aprendizId) {
+        VBMappBarreiraColetaDTO barreiraColetaDTO = new VBMappBarreiraColetaDTO();
+        List<VbMappBarreiraDTO> coletas = vbMappBarreiraRepository.findByAprendiz_aprendizId(aprendizId).stream().map(i -> VbMappBarreiraDTO.of(i)).toList();
+        barreiraColetaDTO.setColetas(coletas);
+        return barreiraColetaDTO;
     }
 }
