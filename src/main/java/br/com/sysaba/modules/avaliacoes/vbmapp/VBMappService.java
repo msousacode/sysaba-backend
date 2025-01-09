@@ -125,7 +125,13 @@ public class VBMappService {
 
         for (int cont = 0; cont < resultList.size() && cont < 24; cont++) {
             if (resultList.get(cont) != null && resultList.get(cont).getResposta() != null) {
-                coletaPontuacoes.set(cont, Double.valueOf(resultList.get(cont).getResposta()));
+                int posicao = resultList.get(cont).getCodigo();
+
+                // Verifica se a posição está dentro do limite de 0 a 23
+                if (posicao >= 0 && posicao < 24) {
+                    String resposta = resultList.get(cont).getResposta(); // Não precisa de stream aqui
+                    coletaPontuacoes.set(posicao, Double.valueOf(resposta));
+                }
             }
         }
         return coletaPontuacoes;
