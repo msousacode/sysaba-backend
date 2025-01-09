@@ -69,6 +69,26 @@ public class VBMappController {
         }
     }
 
+    @Transactional
+    @PostMapping("/barreiras/coletas")
+    public ResponseEntity<UUID> salvarBarreiraColeta(@RequestBody List<VbMappColetaDTO> vbMappColetaDTOs) {
+        try {
+            VbMappAvaliacao vbMappAvaliacao = vbMappService.findById(vbMappColetaDTOs.get(0).getVbmappUuidFk());
+
+            Aprendiz aprendiz = aprendizService.findById(vbMappColetaDTOs.get(0).getAprendizUuidFk());
+
+            List<VbMappColeta> vbMappColeta = vbMappColetaDTOs.stream().map(i -> VbMappColeta.of(i, vbMappAvaliacao, aprendiz)).toList();
+
+            vbMappService.saveColetaAvaliacao(vbMappColeta);
+
+            return ResponseEntity.ok(vbMappAvaliacao.getVbMappId());
+
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @GetMapping("/config-tela/{vbmappId}")
     public ResponseEntity<VbMappAvaliacao> getConfigTela(@PathVariable("vbmappId") UUID vbmappId) {
         try {
