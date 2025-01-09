@@ -85,7 +85,8 @@ public class VBMappController {
     }
 
     @GetMapping("/aprendiz/{aprendizId}/barreiras/coletas")
-    public ResponseEntity<VBMappBarreiraColetaDTO> getBarreiras(@PathVariable("aprendizId") UUID aprendizId) {;
+    public ResponseEntity<VBMappBarreiraColetaDTO> getBarreiras(@PathVariable("aprendizId") UUID aprendizId) {
+        ;
         return ResponseEntity.ok(vbMappService.findBarreirasRespondidas(aprendizId));
     }
 
@@ -123,6 +124,12 @@ public class VBMappController {
     @GetMapping("/chart/milestones/{vbmappUuid}")
     public ResponseEntity<List<Double>> getChartMilestones(@PathVariable("vbmappUuid") UUID vbmappUuid) {
         List<Double> coletaPontuacoes = vbMappService.findPontuacaoColetaAvaliacao(vbmappUuid);
+        return ResponseEntity.ok(coletaPontuacoes);
+    }
+
+    @GetMapping("/chart/aprendiz/{aprendizId}/barreiras")
+    public ResponseEntity<List<Double>> getChartBarreiras(@PathVariable("aprendizId") UUID aprendizId) {
+        List<Double> coletaPontuacoes = vbMappService.findPontuacaoBarreiraColeta(aprendizId);
         return ResponseEntity.ok(coletaPontuacoes);
     }
 }

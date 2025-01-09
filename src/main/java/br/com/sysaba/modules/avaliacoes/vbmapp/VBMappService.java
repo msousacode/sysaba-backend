@@ -116,4 +116,18 @@ public class VBMappService {
         barreiraColetaDTO.setColetas(coletas);
         return barreiraColetaDTO;
     }
+
+    public List<Double> findPontuacaoBarreiraColeta(UUID aprendizId) {
+        List<VbMappBarreira> resultList = vbMappBarreiraRepository.findPontuacaoBarreiraColeta(aprendizId);
+
+        // Inicializando a lista com 24 posições preenchidas com 0.0
+        List<Double> coletaPontuacoes = new ArrayList<>(Collections.nCopies(24, 0.0));
+
+        for (int cont = 0; cont < resultList.size() && cont < 24; cont++) {
+            if (resultList.get(cont) != null && resultList.get(cont).getResposta() != null) {
+                coletaPontuacoes.set(cont, Double.valueOf(resultList.get(cont).getResposta()));
+            }
+        }
+        return coletaPontuacoes;
+    }
 }

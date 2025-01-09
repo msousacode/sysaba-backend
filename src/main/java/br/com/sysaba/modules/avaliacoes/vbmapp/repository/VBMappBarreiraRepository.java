@@ -17,4 +17,8 @@ public interface VBMappBarreiraRepository extends TenantableRepository<VbMappBar
     @Modifying
     @Query("delete from VbMappBarreira v where v.aprendiz.aprendizId = :aprendizId")
     void deleteByAprendiz_aprendizId(@Param("aprendizId") UUID aprendizId);
+
+    @Query("select v from VbMappBarreira v where v.aprendiz.aprendizId = :aprendizId order by v.codigo asc")
+    List<VbMappBarreira> findPontuacaoBarreiraColeta(@Param("aprendizId") UUID aprendizId);
+
 }
