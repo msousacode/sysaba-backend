@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface VBMappBarreiraRepository extends TenantableRepository<VbMappBarreira> {
-    List<VbMappBarreira> findByAprendiz_aprendizId(UUID aprendizId);
+    List<VbMappBarreira> findByAprendiz_aprendizIdOrderByCodigoAsc(UUID aprendizId);
 
     @Modifying
     @Query("delete from VbMappBarreira v where v.aprendiz.aprendizId = :aprendizId")

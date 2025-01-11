@@ -112,7 +112,7 @@ public class VBMappService {
 
     public VBMappBarreiraColetaDTO findBarreirasRespondidas(UUID aprendizId) {
         VBMappBarreiraColetaDTO barreiraColetaDTO = new VBMappBarreiraColetaDTO();
-        List<VbMappBarreiraDTO> coletas = vbMappBarreiraRepository.findByAprendiz_aprendizId(aprendizId).stream().map(i -> VbMappBarreiraDTO.of(i)).toList();
+        List<VbMappBarreiraDTO> coletas = vbMappBarreiraRepository.findByAprendiz_aprendizIdOrderByCodigoAsc(aprendizId).stream().map(i -> VbMappBarreiraDTO.of(i)).toList();
         barreiraColetaDTO.setColetas(coletas);
         return barreiraColetaDTO;
     }

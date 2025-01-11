@@ -59,9 +59,9 @@ public class RelatorioController {
     }
 
 
-    @PostMapping("/vbmapp/aprendiz/{aprendizId}/barreiras")
-    public ResponseEntity<LinkDowloadResponseDTO> getChartBarreiras(@PathVariable("aprendizId") UUID aprendizId, @RequestBody ChartDTO chartDTO) {
-        LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.getRelatorioVbMappBarreiras(aprendizId, chartDTO);
+    @GetMapping("/vbmapp/aprendiz/{aprendizId}/barreiras")
+    public ResponseEntity<LinkDowloadResponseDTO> getChartBarreiras(@PathVariable("aprendizId") UUID aprendizId) {
+        LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.getRelatorioVbMappBarreiras(aprendizId);
 
         if (linkDowloadResponseDTO == null)
             return ResponseEntity.internalServerError().build();

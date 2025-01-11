@@ -6,19 +6,21 @@ import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.atendimento.Atendimento;
 import br.com.sysaba.modules.atendimento.AtendimentoService;
-import br.com.sysaba.modules.avaliacoes.ChartDTO;
 import br.com.sysaba.modules.avaliacoes.portage.PortageColeta;
 import br.com.sysaba.modules.avaliacoes.portage.PortageService;
 import br.com.sysaba.modules.avaliacoes.portage.enums.PortageAvaliacaoEnum;
 import br.com.sysaba.modules.avaliacoes.portage.enums.PortageFaixaEnum;
 import br.com.sysaba.modules.avaliacoes.portage.repository.PortageColetaRepository;
-import br.com.sysaba.modules.avaliacoes.vbmapp.VBMappService;
+import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappBarreira;
 import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappColeta;
 import br.com.sysaba.modules.avaliacoes.vbmapp.enums.VBMappNivelUmEnum;
+import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappBarreiraRepository;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappColetaRepository;
 import br.com.sysaba.modules.coleta.Coleta;
 import br.com.sysaba.modules.relatorio.client.RelatorioApiService;
 import br.com.sysaba.modules.relatorio.dto.*;
+import br.com.sysaba.modules.relatorio.dto.barreiras.TabelaBarreiraDTO;
+import br.com.sysaba.modules.relatorio.dto.barreiras.VBMappBarreiraRelatorioDTO;
 import br.com.sysaba.modules.relatorio.dto.pei.PEIDadoDTO;
 import br.com.sysaba.modules.relatorio.dto.pei.PEIObjetivoDTO;
 import br.com.sysaba.modules.relatorio.dto.pei.PEIRelatorioDTO;
@@ -29,8 +31,7 @@ import br.com.sysaba.modules.relatorio.dto.portage.TabelaDTO;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.axis.*;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -72,13 +73,16 @@ public class RelatorioService {
 
     private final VBMappColetaRepository vbMappColetaRepository;
 
-    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService, PortageService portageService, PortageColetaRepository portageColetaRepository, VBMappService vbMappService, VBMappColetaRepository vbMappColetaRepository) {
+    private final VBMappBarreiraRepository vbMappBarreiraRepository;
+
+    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService, PortageService portageService, PortageColetaRepository portageColetaRepository, VBMappColetaRepository vbMappColetaRepository, VBMappBarreiraRepository vbMappBarreiraRepository) {
         this.aprendizService = aprendizService;
         this.atendimentoService = atendimentoService;
         this.relatorioApiService = relatorioApiService;
         this.portageService = portageService;
         this.portageColetaRepository = portageColetaRepository;
         this.vbMappColetaRepository = vbMappColetaRepository;
+        this.vbMappBarreiraRepository = vbMappBarreiraRepository;
     }
 
     public LinkDowloadResponseDTO gerarRelatorio(UUID aprendizId, String dataInicio, String dataFinal) {
@@ -634,11 +638,72 @@ public class RelatorioService {
         return distinctList;
     }
 
-    public LinkDowloadResponseDTO getRelatorioVbMappBarreiras(UUID aprendizId, ChartDTO chartDTO) {
+    public LinkDowloadResponseDTO getRelatorioVbMappBarreiras(UUID aprendizId) {
 
-        LinkDowloadResponseDTO linkDowloadResponseDTO = new LinkDowloadResponseDTO();
+        List<VbMappBarreira> barreiras = vbMappBarreiraRepository.findByAprendiz_aprendizIdOrderByCodigoAsc(aprendizId);
 
+        if (barreiras.isEmpty()) {
+            throw new RegistroNaoEncontradoException("Não foi localizados registros para gerar o relatório de barreiras para o aprendiz: " + aprendizId);
+        }
 
-        return linkDowloadResponseDTO;
+        VBMappBarreiraRelatorioDTO vbMappBarreiraRelatorioDTO = new VBMappBarreiraRelatorioDTO();
+
+        String charImg;
+        try {
+            charImg = getVbMappBarreirasChartImg(barreiras);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<TabelaBarreiraDTO> tabelaBarreiraDTOS = new ArrayList<>();
+
+        for (VbMappBarreira barreira : barreiras) {
+            tabelaBarreiraDTOS.add(TabelaBarreiraDTO.convert(barreira));
+        }
+
+        Aprendiz aprendiz = barreiras.stream().findFirst().get().getAprendiz();
+
+        vbMappBarreiraRelatorioDTO.setTitulo("Relatório de Barreiras - VB-MAPP");
+        vbMappBarreiraRelatorioDTO.setCabecalhoDTO(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
+        vbMappBarreiraRelatorioDTO.setChartImg(charImg);
+        vbMappBarreiraRelatorioDTO.setTabela(tabelaBarreiraDTOS);
+
+        return relatorioApiService.postVBBarreiraRelatorioVBMAPP(vbMappBarreiraRelatorioDTO);
+    }
+
+    private String getVbMappBarreirasChartImg(List<VbMappBarreira> barreiras) throws IOException {
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        for (VbMappBarreira vb : barreiras) {
+            dataset.setValue(Double.valueOf(vb.getResposta()), vb.getCodigo(), vb.getCodigo());
+        }
+
+        JFreeChart chart = ChartFactory.createBarChart(
+                "",                      // Título
+                "Barreiras",            // Eixo X - permanece vazio para agrupar
+                "Pontos",                // Eixo Y
+                dataset,                // Dataset
+                PlotOrientation.HORIZONTAL, // Orientação
+                false,                   // Incluir legenda
+                true,                   // Tooltips
+                false                   // URLs
+        );
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        //BarRenderer renderer = (BarRenderer) plot.getRenderer();
+
+        BufferedImage bufferedImage = chart.createBufferedImage(800, 800);
+
+        // Convertendo a imagem em um formato Base64
+        String imgChart;
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            ImageIO.write(bufferedImage, "png", outputStream);
+            byte[] imageBytes = outputStream.toByteArray();
+            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+            imgChart = "data:image/png;base64," + base64Image;
+        }
+
+        return imgChart;
     }
 }
