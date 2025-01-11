@@ -4,6 +4,7 @@ import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizController;
 import br.com.sysaba.modules.aprendiz.AprendizService;
+import br.com.sysaba.modules.avaliacoes.ChartDTO;
 import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VBMappBarreiraColetaDTO;
 import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappBarreiraDTO;
 import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappColetaDTO;
@@ -86,8 +87,12 @@ public class VBMappController {
 
     @GetMapping("/aprendiz/{aprendizId}/barreiras/coletas")
     public ResponseEntity<VBMappBarreiraColetaDTO> getBarreiras(@PathVariable("aprendizId") UUID aprendizId) {
-        ;
         return ResponseEntity.ok(vbMappService.findBarreirasRespondidas(aprendizId));
+    }
+
+    @GetMapping("/chart/aprendiz/{aprendizId}/barreiras")
+    public ResponseEntity<List<Double>> getChartBarreiras(@PathVariable("aprendizId") UUID aprendizId) {
+        return ResponseEntity.ok(vbMappService.findPontuacaoBarreiraColeta(aprendizId));
     }
 
     @GetMapping("/config-tela/{vbmappId}")
@@ -127,9 +132,5 @@ public class VBMappController {
         return ResponseEntity.ok(coletaPontuacoes);
     }
 
-    @GetMapping("/chart/aprendiz/{aprendizId}/barreiras")
-    public ResponseEntity<List<Double>> getChartBarreiras(@PathVariable("aprendizId") UUID aprendizId) {
-        List<Double> coletaPontuacoes = vbMappService.findPontuacaoBarreiraColeta(aprendizId);
-        return ResponseEntity.ok(coletaPontuacoes);
-    }
+
 }

@@ -1,12 +1,11 @@
 package br.com.sysaba.modules.relatorio;
 
+import br.com.sysaba.modules.avaliacoes.ChartDTO;
 import br.com.sysaba.modules.relatorio.dto.LinkDowloadResponseDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,7 +22,7 @@ public class RelatorioController {
     public ResponseEntity<LinkDowloadResponseDTO> getRelatorio(@PathVariable("aprendizId") UUID aprendizId, @PathVariable("dataInicio") String dataInicio, @PathVariable("dataFinal") String dataFinal) {
         LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.gerarRelatorio(aprendizId, dataInicio, dataFinal);
 
-        if(linkDowloadResponseDTO == null)
+        if (linkDowloadResponseDTO == null)
             return ResponseEntity.internalServerError().build();
 
         return ResponseEntity.ok(linkDowloadResponseDTO);
@@ -33,7 +32,7 @@ public class RelatorioController {
     public ResponseEntity<LinkDowloadResponseDTO> getRelatorioPortage(@PathVariable("portageId") UUID portageId) {
         LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.gerarRelatorioPorgate(portageId);
 
-        if(linkDowloadResponseDTO == null)
+        if (linkDowloadResponseDTO == null)
             return ResponseEntity.internalServerError().build();
 
         return ResponseEntity.ok(linkDowloadResponseDTO);
@@ -43,7 +42,7 @@ public class RelatorioController {
     public ResponseEntity<LinkDowloadResponseDTO> getRelatorioPortagePEI(@PathVariable("portageId") UUID portageId) {
         LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.gerarRelatorioPorgatePEI(portageId);
 
-        if(linkDowloadResponseDTO == null)
+        if (linkDowloadResponseDTO == null)
             return ResponseEntity.internalServerError().build();
 
         return ResponseEntity.ok(linkDowloadResponseDTO);
@@ -53,7 +52,18 @@ public class RelatorioController {
     public ResponseEntity<LinkDowloadResponseDTO> getRelatorioVbMappPEI(@PathVariable("vbmappId") UUID vbmappId) {
         LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.getRelatorioVbMappPEI(vbmappId);
 
-        if(linkDowloadResponseDTO == null)
+        if (linkDowloadResponseDTO == null)
+            return ResponseEntity.internalServerError().build();
+
+        return ResponseEntity.ok(linkDowloadResponseDTO);
+    }
+
+
+    @PostMapping("/vbmapp/aprendiz/{aprendizId}/barreiras")
+    public ResponseEntity<LinkDowloadResponseDTO> getChartBarreiras(@PathVariable("aprendizId") UUID aprendizId, @RequestBody ChartDTO chartDTO) {
+        LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.getRelatorioVbMappBarreiras(aprendizId, chartDTO);
+
+        if (linkDowloadResponseDTO == null)
             return ResponseEntity.internalServerError().build();
 
         return ResponseEntity.ok(linkDowloadResponseDTO);

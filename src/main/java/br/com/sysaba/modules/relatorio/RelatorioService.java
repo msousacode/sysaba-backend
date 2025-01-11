@@ -6,6 +6,7 @@ import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.atendimento.Atendimento;
 import br.com.sysaba.modules.atendimento.AtendimentoService;
+import br.com.sysaba.modules.avaliacoes.ChartDTO;
 import br.com.sysaba.modules.avaliacoes.portage.PortageColeta;
 import br.com.sysaba.modules.avaliacoes.portage.PortageService;
 import br.com.sysaba.modules.avaliacoes.portage.enums.PortageAvaliacaoEnum;
@@ -631,5 +632,13 @@ public class RelatorioService {
         }
 
         return distinctList;
+    }
+
+    public LinkDowloadResponseDTO getRelatorioVbMappBarreiras(UUID aprendizId, ChartDTO chartDTO) {
+
+        LinkDowloadResponseDTO linkDowloadResponseDTO = new LinkDowloadResponseDTO();
+
+
+        return linkDowloadResponseDTO;
     }
 }
