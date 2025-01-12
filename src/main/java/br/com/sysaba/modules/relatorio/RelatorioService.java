@@ -671,12 +671,16 @@ public class RelatorioService {
         return relatorioApiService.postVBBarreiraRelatorioVBMAPP(vbMappBarreiraRelatorioDTO);
     }
 
-    private String getVbMappBarreirasChartImg(List<VbMappBarreira> barreiras) throws IOException {
+  private String getVbMappBarreirasChartImg(List<VbMappBarreira> barreiras) throws IOException {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         for (VbMappBarreira vb : barreiras) {
-            dataset.setValue(Double.valueOf(vb.getResposta()), vb.getCodigo(), vb.getCodigo());
+            Integer codY = vb.getCodigo() + 1;
+            if(codY > 24) {
+                break;
+            }
+            dataset.setValue(Integer.valueOf(vb.getResposta()), codY, codY);
         }
 
         JFreeChart chart = ChartFactory.createBarChart(
@@ -690,13 +694,10 @@ public class RelatorioService {
                 false                   // URLs
         );
 
-        CategoryPlot plot = chart.getCategoryPlot();
-        //BarRenderer renderer = (BarRenderer) plot.getRenderer();
+      BufferedImage bufferedImage = chart.createBufferedImage(500, 700);
 
-        BufferedImage bufferedImage = chart.createBufferedImage(800, 800);
-
-        // Convertendo a imagem em um formato Base64
         String imgChart;
+
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             ImageIO.write(bufferedImage, "png", outputStream);
             byte[] imageBytes = outputStream.toByteArray();
