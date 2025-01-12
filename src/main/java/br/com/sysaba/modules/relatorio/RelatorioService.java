@@ -29,6 +29,8 @@ import br.com.sysaba.modules.relatorio.dto.portage.DadosDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.PortageRelatorioDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.TabelaDTO;
 import br.com.sysaba.modules.treinamento.Treinamento;
+import br.com.sysaba.modules.usuario.Usuario;
+import br.com.sysaba.modules.usuario.UsuarioService;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.*;
@@ -75,7 +77,9 @@ public class RelatorioService {
 
     private final VBMappBarreiraRepository vbMappBarreiraRepository;
 
-    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService, PortageService portageService, PortageColetaRepository portageColetaRepository, VBMappColetaRepository vbMappColetaRepository, VBMappBarreiraRepository vbMappBarreiraRepository) {
+    private final UsuarioService usuarioService;
+
+    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService, PortageService portageService, PortageColetaRepository portageColetaRepository, VBMappColetaRepository vbMappColetaRepository, VBMappBarreiraRepository vbMappBarreiraRepository, UsuarioService usuarioService) {
         this.aprendizService = aprendizService;
         this.atendimentoService = atendimentoService;
         this.relatorioApiService = relatorioApiService;
@@ -83,6 +87,7 @@ public class RelatorioService {
         this.portageColetaRepository = portageColetaRepository;
         this.vbMappColetaRepository = vbMappColetaRepository;
         this.vbMappBarreiraRepository = vbMappBarreiraRepository;
+        this.usuarioService = usuarioService;
     }
 
     public LinkDowloadResponseDTO gerarRelatorio(UUID aprendizId, String dataInicio, String dataFinal) {
@@ -543,6 +548,9 @@ public class RelatorioService {
     public LinkDowloadResponseDTO getRelatorioVbMappPEI(UUID aprendizId) {
         List<VbMappColeta> resultList = vbMappColetaRepository.findByAprendiz_aprendizId(aprendizId);
 
+        UUID profissionalColetaId = resultList.stream().findFirst().get().getCriadoPor();
+        Usuario usuario = usuarioService.findById(profissionalColetaId);
+
         if (resultList.isEmpty()) {
             throw new RegistroNaoEncontradoException("Não foi localizado dados para gerar o relatório PEI VBMAPP.");
         }
@@ -558,9 +566,14 @@ public class RelatorioService {
 
         Aprendiz aprendiz = resultList.stream().findFirst().get().getAprendiz();
 
+        ProfissionalDTO profissionalDTO = new ProfissionalDTO();
+        profissionalDTO.setNome(usuario.getFullName());
+        profissionalDTO.setRegistro(usuario.getDocumento() == null ? "" : usuario.getDocumento());
+
         PEIRelatorioDTO peiDTO = new PEIRelatorioDTO();
         peiDTO.setTitulo("PEI - Plano Educacional Individualizado - VBMAPP");
         peiDTO.setCabecario(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
+        peiDTO.setProfissionais(List.of(profissionalDTO));
 
         List<List<PEIDadoDTO>> dados = new ArrayList<>();
 
@@ -663,21 +676,29 @@ public class RelatorioService {
 
         Aprendiz aprendiz = barreiras.stream().findFirst().get().getAprendiz();
 
+        UUID profissionalColetaId = barreiras.stream().findFirst().get().getCriadoPor();
+        Usuario usuario = usuarioService.findById(profissionalColetaId);
+
+        ProfissionalDTO profissionalDTO = new ProfissionalDTO();
+        profissionalDTO.setNome(usuario.getFullName());
+        profissionalDTO.setRegistro(usuario.getDocumento() == null ? "" : usuario.getDocumento());
+
         vbMappBarreiraRelatorioDTO.setTitulo("Relatório de Barreiras - VB-MAPP");
         vbMappBarreiraRelatorioDTO.setCabecalhoDTO(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
         vbMappBarreiraRelatorioDTO.setChartImg(charImg);
         vbMappBarreiraRelatorioDTO.setTabela(tabelaBarreiraDTOS);
+        vbMappBarreiraRelatorioDTO.setProfissionais(List.of(profissionalDTO));
 
         return relatorioApiService.postVBBarreiraRelatorioVBMAPP(vbMappBarreiraRelatorioDTO);
     }
 
-  private String getVbMappBarreirasChartImg(List<VbMappBarreira> barreiras) throws IOException {
+    private String getVbMappBarreirasChartImg(List<VbMappBarreira> barreiras) throws IOException {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         for (VbMappBarreira vb : barreiras) {
             Integer codY = vb.getCodigo() + 1;
-            if(codY > 24) {
+            if (codY > 24) {
                 break;
             }
             dataset.setValue(Integer.valueOf(vb.getResposta()), codY, codY);
@@ -694,7 +715,7 @@ public class RelatorioService {
                 false                   // URLs
         );
 
-      BufferedImage bufferedImage = chart.createBufferedImage(500, 700);
+        BufferedImage bufferedImage = chart.createBufferedImage(500, 700);
 
         String imgChart;
 

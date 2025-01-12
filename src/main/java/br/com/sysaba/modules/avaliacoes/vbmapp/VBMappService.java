@@ -7,6 +7,8 @@ import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappBarreiraDTO;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappBarreiraRepository;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappColetaRepository;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappRepository;
+import br.com.sysaba.modules.usuario.Usuario;
+import br.com.sysaba.modules.usuario.UsuarioService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -95,7 +97,7 @@ public class VBMappService {
         return vbMappColetaRepository.findColetasRespondidas(vbmappId);
     }
 
-    public void salvarBarreiraColeta(VBMappBarreiraColetaDTO barreiraColetaDTO, UUID aprendizId) {
+    public void salvarBarreiraColeta(VBMappBarreiraColetaDTO barreiraColetaDTO, UUID aprendizId, UUID usuarioId) {
 
         Aprendiz aprendiz = aprendizService.findById(aprendizId);
 
@@ -104,7 +106,7 @@ public class VBMappService {
         List<VbMappBarreira> vbMappBarreiras = new ArrayList<>();
 
         for (VbMappBarreiraDTO coleta : barreiraColetaDTO.getColetas()) {
-            VbMappBarreira instance = VbMappBarreira.getInstance(coleta, aprendiz);
+            VbMappBarreira instance = VbMappBarreira.getInstance(coleta, aprendiz, usuarioId);
             vbMappBarreiras.add(instance);
         }
         vbMappBarreiraRepository.saveAll(vbMappBarreiras);

@@ -5,8 +5,12 @@ import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappBarreiraDTO;
 import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappDTO;
 import jakarta.persistence.*;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
+import javax.swing.text.Utilities;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -38,7 +42,9 @@ public class VbMappBarreira extends Tenantable {
         super(LocalDateTime.now());
     }
 
-    public static VbMappBarreira getInstance(VbMappBarreiraDTO dto, Aprendiz aprendiz) {
+    public static VbMappBarreira getInstance(VbMappBarreiraDTO dto, Aprendiz aprendiz, UUID usuarioId) {
+        Objects.requireNonNull(usuarioId);
+
         VbMappBarreira vbMappBarreira = new VbMappBarreira();
 
         vbMappBarreira.setAprendiz(aprendiz);
@@ -46,6 +52,7 @@ public class VbMappBarreira extends Tenantable {
         vbMappBarreira.setQuestao(dto.getQuestao());
         vbMappBarreira.setResposta(dto.getResposta());
         vbMappBarreira.setCodigo(dto.getCodigo());
+        vbMappBarreira.setCriadoPor(usuarioId);
         return vbMappBarreira;
     }
 

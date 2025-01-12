@@ -53,14 +53,14 @@ public class VBMappController {
     }
 
     @Transactional
-    @PostMapping("/coletas")
-    public ResponseEntity<UUID> salvarColeta(@RequestBody List<VbMappColetaDTO> vbMappColetaDTOs) {
+    @PostMapping("/usuario/{usuarioId}/coletas")
+    public ResponseEntity<UUID> salvarColeta(@RequestBody List<VbMappColetaDTO> vbMappColetaDTOs, @PathVariable("usuarioId") UUID usuarioId) {
         try {
             VbMappAvaliacao vbMappAvaliacao = vbMappService.findById(vbMappColetaDTOs.get(0).getVbmappUuidFk());
 
             Aprendiz aprendiz = aprendizService.findById(vbMappColetaDTOs.get(0).getAprendizUuidFk());
 
-            List<VbMappColeta> vbMappColeta = vbMappColetaDTOs.stream().map(i -> VbMappColeta.of(i, vbMappAvaliacao, aprendiz)).toList();
+            List<VbMappColeta> vbMappColeta = vbMappColetaDTOs.stream().map(i -> VbMappColeta.of(i, vbMappAvaliacao, aprendiz, usuarioId)).toList();
 
             vbMappService.saveColetaAvaliacao(vbMappColeta);
 
@@ -73,10 +73,10 @@ public class VBMappController {
     }
 
     @Transactional
-    @PostMapping("/aprendiz/{aprendizId}/barreiras/coletas")
-    public ResponseEntity<?> salvarBarreiraColeta(@RequestBody VBMappBarreiraColetaDTO barreirasColeta, @PathVariable("aprendizId") UUID aprendizId) {
+    @PostMapping("/aprendiz/{aprendizId}/profissional/{usuarioId}/barreiras/coletas")
+    public ResponseEntity<?> salvarBarreiraColeta(@RequestBody VBMappBarreiraColetaDTO barreirasColeta, @PathVariable("aprendizId") UUID aprendizId, @PathVariable("usuarioId") UUID usuarioId) {
         try {
-            vbMappService.salvarBarreiraColeta(barreirasColeta, aprendizId);
+            vbMappService.salvarBarreiraColeta(barreirasColeta, aprendizId, usuarioId);
             return ResponseEntity.ok().build();
 
         } catch (RuntimeException ex) {

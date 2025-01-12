@@ -6,6 +6,7 @@ import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappColetaDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -46,9 +47,11 @@ public class VbMappColeta extends Tenantable {
     @Column(name = "descricao")
     private String descricao;
 
-    public static VbMappColeta of(VbMappColetaDTO dto, VbMappAvaliacao vbMappAvaliacao, Aprendiz aprendiz) {
+    public static VbMappColeta of(VbMappColetaDTO dto, VbMappAvaliacao vbMappAvaliacao, Aprendiz aprendiz, UUID usuarioId) {
         VbMappColeta vbMappColeta = new VbMappColeta();
 
+        Objects.requireNonNull(usuarioId);
+        vbMappColeta.setCriadoPor(usuarioId);
         vbMappColeta.setVbMapp(vbMappAvaliacao);
         vbMappColeta.setAprendiz(aprendiz);
         vbMappColeta.setNivelColeta(dto.getNivelColeta());
