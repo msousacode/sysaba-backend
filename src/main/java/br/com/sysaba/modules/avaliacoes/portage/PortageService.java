@@ -20,6 +20,11 @@ public class PortageService {
         this.portageColetaRepository = portageColetaRepository;
     }
 
+    public void deleteAvaliacao(UUID avaliacaoId) {
+        portageRepository.deleteAllByPortageId(avaliacaoId);
+        portageColetaRepository.deleteByPortageId(avaliacaoId);
+    }
+
     public PortageAvaliacao saveAvaliacao(PortageAvaliacao portageAvaliacao) {
         return portageRepository.save(portageAvaliacao);
     }
@@ -42,7 +47,7 @@ public class PortageService {
     }
 
     public List<PortageAvaliacao> findAllByAprendizId(UUID aprendizId) {
-        return portageRepository.findAllByAprendiz_aprendizId(aprendizId);
+        return portageRepository.findAllByAprendiz_aprendizIdAndAtivoIsTrue(aprendizId);
     }
 
     public List<PortageColeta> findByColetasRespondidas(UUID vbmappUuid) {

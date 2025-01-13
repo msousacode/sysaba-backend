@@ -7,8 +7,6 @@ import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappBarreiraDTO;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappBarreiraRepository;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappColetaRepository;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappRepository;
-import br.com.sysaba.modules.usuario.Usuario;
-import br.com.sysaba.modules.usuario.UsuarioService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,6 +28,11 @@ public class VBMappService {
         this.vbMappColetaRepository = vbMappColetaRepository;
         this.vbMappBarreiraRepository = vbMappBarreiraRepository;
         this.aprendizService = aprendizService;
+    }
+
+    public void deleteAvaliacao(UUID avaliacaoId) {
+        vbMappColetaRepository.deleteAllByVbMappId(avaliacaoId);
+        vbMappRepository.deleteByVbmappId(avaliacaoId);
     }
 
     public VbMappAvaliacao saveAvaliacao(VbMappAvaliacao vbMappAvaliacao) {
@@ -54,7 +57,7 @@ public class VBMappService {
     }
 
     public List<VbMappAvaliacao> findAllByAprendizId(UUID aprendizId) {
-        return vbMappRepository.findAllByAprendiz_aprendizId(aprendizId);
+        return vbMappRepository.findAllByAprendiz_aprendizIdAndAtivoIsTrue(aprendizId);
     }
 
     public List<VbMappColeta> findByColetasRespondidas(UUID vbmappUuid) {

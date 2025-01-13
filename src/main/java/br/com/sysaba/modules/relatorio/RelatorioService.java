@@ -34,11 +34,13 @@ import br.com.sysaba.modules.usuario.UsuarioService;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.*;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
@@ -51,6 +53,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -701,24 +704,43 @@ public class RelatorioService {
             if (codY > 24) {
                 break;
             }
-            dataset.setValue(Integer.valueOf(vb.getResposta()), codY, codY);
+            dataset.setValue(Integer.valueOf(vb.getResposta()), codY.toString(), codY.toString());
         }
 
         JFreeChart chart = ChartFactory.createBarChart(
-                "",                      // Título
-                "Barreiras",            // Eixo X - permanece vazio para agrupar
-                "Pontos",                // Eixo Y
-                dataset,                // Dataset
-                PlotOrientation.HORIZONTAL, // Orientação
-                false,                   // Incluir legenda
-                true,                   // Tooltips
-                false                   // URLs
+                "",    // Título
+                "",                   // Eixo X
+                "Pontos",                      // Eixo Y
+                dataset,                       // Dataset
+                PlotOrientation.HORIZONTAL,     // Orientação
+                false,                         // Incluir legenda
+                true,                          // Tooltips
+                false                          // URLs
         );
+
+        // Personalizando o gráfico
+        CategoryPlot plot = chart.getCategoryPlot();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+
+        // Definindo cores para cada barra
+        for (int i = 0; i < barreiras.size(); i++) {
+            renderer.setSeriesPaint(i, new Color((int)(Math.random() * 0x1000000))); // Cores aleatórias
+        }
+
+        renderer.setMaximumBarWidth(0.1); // Ajustar a largura máxima da barra
+        renderer.setItemMargin(0.1); // Ajuste de margem entre as barras
+
+        // Adicionando anotações como valores
+        plot.getRenderer().setDefaultItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        plot.getRenderer().setDefaultItemLabelsVisible(true);
+
+        // Adiciona linhas de grade
+        plot.setDomainGridlinesVisible(true);
+        plot.setRangeGridlinesVisible(true);
 
         BufferedImage bufferedImage = chart.createBufferedImage(500, 700);
 
         String imgChart;
-
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             ImageIO.write(bufferedImage, "png", outputStream);
             byte[] imageBytes = outputStream.toByteArray();
