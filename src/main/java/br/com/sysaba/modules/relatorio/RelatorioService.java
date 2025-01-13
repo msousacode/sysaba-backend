@@ -13,6 +13,8 @@ import br.com.sysaba.modules.avaliacoes.portage.enums.PortageFaixaEnum;
 import br.com.sysaba.modules.avaliacoes.portage.repository.PortageColetaRepository;
 import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappBarreira;
 import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappColeta;
+import br.com.sysaba.modules.avaliacoes.vbmapp.enums.VBMappNivelDoisEnum;
+import br.com.sysaba.modules.avaliacoes.vbmapp.enums.VBMappNivelTresEnum;
 import br.com.sysaba.modules.avaliacoes.vbmapp.enums.VBMappNivelUmEnum;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappBarreiraRepository;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappColetaRepository;
@@ -616,14 +618,14 @@ public class RelatorioService {
             for (VbMappColeta coleta : list) {
                 PEIDadoDTO peiDadoDTO = new PEIDadoDTO();
                 peiDadoDTO.setNivel(list.stream().findFirst().get().getNivelColeta());
-                peiDadoDTO.setTitulo(VBMappNivelUmEnum.getByCod(coleta.getTipo()).getDescricao());
+                peiDadoDTO.setTitulo(VBMappNivelDoisEnum.getByCod(coleta.getTipo()).getDescricao());
 
                 List<PEIObjetivoDTO> objetivosZero = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
                 List<PEIObjetivoDTO> objetivosMeio = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0.5).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
 
                 peiDadoDTO.setObjetivosZero(objetivosZero);
                 peiDadoDTO.setObjetivosMeio(objetivosMeio);
-                peiDadoDTO.setTitulo(VBMappNivelUmEnum.getByCod(coleta.getTipo()).getDescricao());
+                dados.add(peiDadoDTO);
             }
         }
 
@@ -631,7 +633,7 @@ public class RelatorioService {
             for (VbMappColeta coleta : list) {
                 PEIDadoDTO peiDadoDTO = new PEIDadoDTO();
                 peiDadoDTO.setNivel(list.stream().findFirst().get().getNivelColeta());
-                peiDadoDTO.setTitulo(VBMappNivelUmEnum.getByCod(coleta.getTipo()).getDescricao());
+                peiDadoDTO.setTitulo(VBMappNivelTresEnum.getByCod(coleta.getTipo()).getDescricao());
 
                 List<PEIObjetivoDTO> objetivosZero = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
                 List<PEIObjetivoDTO> objetivosMeio = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0.5).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
