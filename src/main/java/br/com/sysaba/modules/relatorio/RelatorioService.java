@@ -411,10 +411,18 @@ public class RelatorioService {
 
         List<DadosDTO> dadosDTOS = List.of(dadosDTOSocilizacao, dadosDTOCognicao, dadosDTOLinguagem, dadosDTOAutocuidado, dadosDTOMotor);
 
+        UUID profissionalColetaId = resultList.stream().findFirst().get().getCriadoPor();
+        Usuario usuario = usuarioService.findById(profissionalColetaId);
+
+        ProfissionalDTO profissionalDTO = new ProfissionalDTO();
+        profissionalDTO.setNome(usuario.getFullName());
+        profissionalDTO.setRegistro(usuario.getDocumento() == null ? "" : usuario.getDocumento());
+
         PortageRelatorioDTO portageRelatorioDTO = new PortageRelatorioDTO();
         portageRelatorioDTO.setTitulo("Relatório Portage");
         portageRelatorioDTO.setCabecalho(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
         portageRelatorioDTO.setDados(dadosDTOS);
+        portageRelatorioDTO.setProfissionais(List.of(profissionalDTO));
 
         String chart;
         try {
@@ -515,9 +523,17 @@ public class RelatorioService {
 
         Aprendiz aprendiz = resultList.stream().findFirst().get().getAprendiz();
 
+        UUID profissionalColetaId = resultList.stream().findFirst().get().getCriadoPor();
+        Usuario usuario = usuarioService.findById(profissionalColetaId);
+
+        ProfissionalDTO profissionalDTO = new ProfissionalDTO();
+        profissionalDTO.setNome(usuario.getFullName());
+        profissionalDTO.setRegistro(usuario.getDocumento() == null ? "" : usuario.getDocumento());
+
         PEIRelatorioDTO peiDTO = new PEIRelatorioDTO();
         peiDTO.setTitulo("PEI - Plano Educacional Individualizado - Portage");
         peiDTO.setCabecario(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
+        peiDTO.setProfissionais(List.of(profissionalDTO));
 
         List<PEIDadoDTO> dados = new ArrayList<>();
 

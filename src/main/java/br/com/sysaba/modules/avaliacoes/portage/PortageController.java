@@ -47,14 +47,14 @@ public class PortageController {
     }
 
     @Transactional
-    @PostMapping("/coletas")
-    public ResponseEntity<UUID> salvarColeta(@RequestBody List<PortageColetaDTO> portageDTOList) {
+    @PostMapping("/usuario/{usuarioId}/coletas")
+    public ResponseEntity<UUID> salvarColeta(@RequestBody List<PortageColetaDTO> portageDTOList, @PathVariable("usuarioId") UUID usuarioId) {
         try {
             PortageAvaliacao portageAvaliacao = portageService.findById(portageDTOList.get(0).getPortageUuidFk());
 
             Aprendiz aprendiz = aprendizService.findById(portageDTOList.get(0).getAprendizUuidFk());
 
-            List<PortageColeta> portageColetaList = portageDTOList.stream().map(i -> PortageColeta.of(i, portageAvaliacao, aprendiz)).toList();
+            List<PortageColeta> portageColetaList = portageDTOList.stream().map(i -> PortageColeta.of(i, portageAvaliacao, aprendiz, usuarioId)).toList();
 
             portageService.saveColetaAvaliacao(portageColetaList);
 

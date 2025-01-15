@@ -1,5 +1,7 @@
 package br.com.sysaba.modules.relatorio.dto.portage;
 
+import br.com.sysaba.modules.relatorio.dto.ProfissionalDTO;
+
 import java.util.List;
 
 public class PortageRelatorioDTO {
@@ -7,6 +9,7 @@ public class PortageRelatorioDTO {
     private CabecalhoDTO cabecalho;
     private String chart;
     private List<DadosDTO> dados;
+    private List<ProfissionalDTO> profissionais;
 
     public PortageRelatorioDTO() {
     }
@@ -48,5 +51,13 @@ public class PortageRelatorioDTO {
 
     public void setDados(List<DadosDTO> dados) {
         this.dados = dados;
+    }
+
+    public List<ProfissionalDTO> getProfissionais() {
+        return profissionais;
+    }
+
+    public void setProfissionais(List<ProfissionalDTO> profissionais) {
+        this.profissionais = profissionais;
     }
 }

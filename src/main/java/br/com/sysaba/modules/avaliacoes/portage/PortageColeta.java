@@ -6,6 +6,7 @@ import br.com.sysaba.modules.avaliacoes.portage.dto.PortageColetaDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -46,8 +47,11 @@ public class PortageColeta extends Tenantable {
     @Column(name = "descricao", nullable = false)
     private String descricao;
 
-    public static PortageColeta of(PortageColetaDTO dto, PortageAvaliacao portageAvaliacao, Aprendiz aprendiz) {
+    public static PortageColeta of(PortageColetaDTO dto, PortageAvaliacao portageAvaliacao, Aprendiz aprendiz, UUID usuarioId) {
         PortageColeta portageColeta = new PortageColeta();
+
+        Objects.requireNonNull(usuarioId, "Usuario que realiza a coleta não pode ser null");
+        portageColeta.setCriadoPor(usuarioId);
 
         portageColeta.setPortage(portageAvaliacao);
         portageColeta.setAprendiz(aprendiz);
