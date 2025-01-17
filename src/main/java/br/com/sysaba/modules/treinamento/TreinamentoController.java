@@ -2,7 +2,8 @@ package br.com.sysaba.modules.treinamento;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.AprendizController;
-import br.com.sysaba.modules.alvo.AlvoService;
+import br.com.sysaba.modules.treinamento.base.TreinamentoBase;
+import br.com.sysaba.modules.treinamento.dto.TreinamentoBaseDTO;
 import br.com.sysaba.modules.treinamento.dto.TreinamentoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,11 +26,11 @@ public class TreinamentoController {
 
     private final TreinamentoService treinamentoService;
 
-    private final AlvoService alvoService;
+    private final TreinamentoBaseRespository treinamentoBaseRespository;
 
-    public TreinamentoController(TreinamentoService treinamentoService, AlvoService alvoService) {
+    public TreinamentoController(TreinamentoService treinamentoService, TreinamentoBaseRespository treinamentoBaseRespository) {
         this.treinamentoService = treinamentoService;
-        this.alvoService = alvoService;
+        this.treinamentoBaseRespository = treinamentoBaseRespository;
     }
 
     @Transactional
@@ -75,5 +77,12 @@ public class TreinamentoController {
         var saved = treinamentoService.findById(id);
         TreinamentoDTO dto = MapperUtil.converte(saved, TreinamentoDTO.class);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @GetMapping("/base")
+    public ResponseEntity<List<TreinamentoBaseDTO>> getTreinamentosBase() {
+        List<TreinamentoBase> list = treinamentoBaseRespository.findAll();
+        List<TreinamentoBaseDTO> listDto = list.stream().map(i -> MapperUtil.converte(i, TreinamentoBaseDTO.class)).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(listDto);
     }
 }

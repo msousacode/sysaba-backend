@@ -44,7 +44,7 @@ public class VbMappColeta extends Tenantable {
     @Column(name = "codigo")
     private String codigo;
 
-    @Column(name = "descricao")
+    @Column(name = "descricao", length = 500)
     private String descricao;
 
     public static VbMappColeta of(VbMappColetaDTO dto, VbMappAvaliacao vbMappAvaliacao, Aprendiz aprendiz, UUID usuarioId) {
