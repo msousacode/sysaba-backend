@@ -1,10 +1,14 @@
 package br.com.sysaba.modules.relatorio.dto;
 
+import br.com.sysaba.modules.relatorio.dto.portage.CabecalhoDTO;
+
 import java.util.List;
 
 public class RelatorioDTO {
 
-    private CabecarioDTO cabecario;
+    private String titulo;
+
+    private CabecalhoDTO cabecalho;
 
     private List<ProfissionalDTO> profissional;
 
@@ -15,19 +19,20 @@ public class RelatorioDTO {
     public RelatorioDTO() {
     }
 
-    public RelatorioDTO(CabecarioDTO cabecario, List<ProfissionalDTO> profissional, AprendizDTO aprendiz, List<TreinamentoDTO> treinamentos) {
-        this.cabecario = cabecario;
+    public RelatorioDTO(String titulo, CabecalhoDTO cabecario, List<ProfissionalDTO> profissional, AprendizDTO aprendiz, List<TreinamentoDTO> treinamentos) {
+        this.titulo = titulo;
+        this.cabecalho = cabecario;
         this.profissional = profissional;
         this.aprendiz = aprendiz;
         this.treinamentos = treinamentos;
     }
 
-    public CabecarioDTO getCabecario() {
-        return cabecario;
+    public CabecalhoDTO getCabecalho() {
+        return cabecalho;
     }
 
-    public void setCabecario(CabecarioDTO cabecario) {
-        this.cabecario = cabecario;
+    public void setCabecalho(CabecalhoDTO cabecalho) {
+        this.cabecalho = cabecalho;
     }
 
     public List<ProfissionalDTO> getProfissional() {
@@ -52,5 +57,13 @@ public class RelatorioDTO {
 
     public void setTreinamentos(List<TreinamentoDTO> treinamentos) {
         this.treinamentos = treinamentos;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 }

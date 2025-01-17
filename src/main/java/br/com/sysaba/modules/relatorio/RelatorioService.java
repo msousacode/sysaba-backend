@@ -35,14 +35,14 @@ import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioService;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.*;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
@@ -55,8 +55,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -98,7 +96,6 @@ public class RelatorioService {
     public LinkDowloadResponseDTO gerarRelatorio(UUID aprendizId, String dataInicio, String dataFinal) {
         //TODO Dados dos profissionais envolvidos
         try {
-            CabecarioDTO cabecalho = getCabecalhoDTO();
             AprendizDTO aprendiz = getAprendizDTO(aprendizId);
             List<TreinamentoDTO> treinamentos = getTreinamentos(aprendizId, dataInicio, dataFinal);
 
@@ -106,22 +103,14 @@ public class RelatorioService {
                 return null;
             }
 
-            RelatorioDTO relatorioDTO = new RelatorioDTO(cabecalho, List.of(), aprendiz, treinamentos);
+            CabecalhoDTO cabecalho = new CabecalhoDTO(aprendiz.getNome(), aprendiz.getNascimento());
+            RelatorioDTO relatorioDTO = new RelatorioDTO("Relatório Geral - Intervenção", cabecalho, List.of(), aprendiz, treinamentos);
+
 
             return relatorioApiService.postRelatorioTreinamentos(relatorioDTO);
         } catch (RuntimeException ex) {
             throw new RuntimeException(RelatorioService.class.getName(), ex);
         }
-    }
-
-    private CabecarioDTO getCabecalhoDTO() {
-        // Obtém a data atual
-        Date dataAtual = new Date();
-        // Formata a data no padrão desejado
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        String dataFormatada = formato.format(dataAtual);
-        // Retorna a mensagem com a data formatada
-        return new CabecarioDTO("Relatório gerado em: " + dataFormatada);
     }
 
     private AprendizDTO getAprendizDTO(UUID aprendizId) {
@@ -742,7 +731,7 @@ public class RelatorioService {
 
         // Definindo cores para cada barra
         for (int i = 0; i < barreiras.size(); i++) {
-            renderer.setSeriesPaint(i, new Color((int)(Math.random() * 0x1000000))); // Cores aleatórias
+            renderer.setSeriesPaint(i, new Color((int) (Math.random() * 0x1000000))); // Cores aleatórias
         }
 
         renderer.setMaximumBarWidth(0.1); // Ajustar a largura máxima da barra
