@@ -13,24 +13,20 @@ public class TreinamentoObjetivosBase {
     @Column(name = "treinamento_objetivo_id")
     private UUID treinamentoObjetivoId;
 
-    @Column(name = "titulo", nullable = false)
-    private String titulo;
+    @Column(name = "descricao_alvo", length = 500)
+    private String descricaoAlvo;
 
-    @Column(name = "descricao", length = 500, nullable = false)
-    private String descricao;
+    @Column(name = "nome_alvo", nullable = false)
+    private String nomeAlvo;
+
+    @Column(name = "pergunta", length = 500)
+    private String pergunta;
 
     @JoinColumn(name = "treinamento_base_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private TreinamentoBase treinamentoBase;
 
     public TreinamentoObjetivosBase() {
-    }
-
-    public TreinamentoObjetivosBase(UUID treinamentoObjetivoId, String titulo, String descricao, TreinamentoBase treinamentoBase) {
-        this.treinamentoObjetivoId = treinamentoObjetivoId;
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.treinamentoBase = treinamentoBase;
     }
 
     public UUID getTreinamentoObjetivoId() {
@@ -41,12 +37,28 @@ public class TreinamentoObjetivosBase {
         this.treinamentoObjetivoId = treinamentoObjetivoId;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getDescricaoAlvo() {
+        return descricaoAlvo;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setDescricaoAlvo(String descricaoAlvo) {
+        this.descricaoAlvo = descricaoAlvo;
+    }
+
+    public String getNomeAlvo() {
+        return nomeAlvo;
+    }
+
+    public void setNomeAlvo(String nomeAlvo) {
+        this.nomeAlvo = nomeAlvo;
+    }
+
+    public String getPergunta() {
+        return pergunta;
+    }
+
+    public void setPergunta(String pergunta) {
+        this.pergunta = pergunta;
     }
 
     public TreinamentoBase getTreinamentoBase() {
@@ -55,13 +67,5 @@ public class TreinamentoObjetivosBase {
 
     public void setTreinamentoBase(TreinamentoBase treinamentoBase) {
         this.treinamentoBase = treinamentoBase;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
     }
 }

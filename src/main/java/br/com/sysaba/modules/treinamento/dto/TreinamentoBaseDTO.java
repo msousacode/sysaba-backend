@@ -9,7 +9,7 @@ public class TreinamentoBaseDTO {
     private String descricao;
     private String protocolo;
     private String habilidade;
-    private Boolean isImportado;
+    private Boolean isImportado = false;
 
     public TreinamentoBaseDTO() {
     }

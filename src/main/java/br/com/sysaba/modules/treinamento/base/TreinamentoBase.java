@@ -2,6 +2,7 @@ package br.com.sysaba.modules.treinamento.base;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,6 +27,9 @@ public class TreinamentoBase {
     @Enumerated(EnumType.STRING)
     @Column(name = "habilidade", nullable = false)
     private HabilidadeBaseEnum habilidade;
+
+    @OneToMany(mappedBy = "treinamentoBase")
+    private List<TreinamentoObjetivosBase> treinos;
 
     public TreinamentoBase() {
     }
@@ -76,5 +80,13 @@ public class TreinamentoBase {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public List<TreinamentoObjetivosBase> getTreinos() {
+        return treinos;
+    }
+
+    public void setTreinos(List<TreinamentoObjetivosBase> treinos) {
+        this.treinos = treinos;
     }
 }

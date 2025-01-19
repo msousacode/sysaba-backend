@@ -85,4 +85,16 @@ public class TreinamentoController {
         List<TreinamentoBaseDTO> listDto = list.stream().map(i -> MapperUtil.converte(i, TreinamentoBaseDTO.class)).toList();
         return ResponseEntity.status(HttpStatus.OK).body(listDto);
     }
+
+    @Transactional
+    @PostMapping("/base/aprendiz/{usuarioId}")
+    public ResponseEntity<TreinamentoDTO> importar(@RequestBody List<UUID> treinamentosIds, @PathVariable("usuarioId") UUID usuarioId) {
+        try {
+            treinamentoService.importar(treinamentosIds, usuarioId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }
