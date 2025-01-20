@@ -15,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -79,15 +81,27 @@ public class TreinamentoController {
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
-    @GetMapping("/base")
-    public ResponseEntity<List<TreinamentoBaseDTO>> getTreinamentosBase() {
+    @GetMapping("/base/usuario/{usuarioId}")
+    public ResponseEntity<List<TreinamentoBaseDTO>> getTreinamentosBase(@PathVariable("usuarioId") UUID usuarioId) {
+
         List<TreinamentoBase> list = treinamentoBaseRespository.findAll();
         List<TreinamentoBaseDTO> listDto = list.stream().map(i -> MapperUtil.converte(i, TreinamentoBaseDTO.class)).toList();
+
+        List<Treinamento> treinamentoList = treinamentoService.findByTenantId(usuarioId);
+
+        if (!treinamentoList.isEmpty()) {
+            for (TreinamentoBaseDTO dto : listDto) {
+                Optional<Treinamento> treinamento = treinamentoList.stream().filter(i -> dto.getTreinamentoBaseId().equals(i.getImportId())).findFirst();
+                if (treinamento.isPresent()) {
+                    dto.setImportado(true);
+                }
+            }
+        }
         return ResponseEntity.status(HttpStatus.OK).body(listDto);
     }
 
     @Transactional
-    @PostMapping("/base/aprendiz/{usuarioId}")
+    @PostMapping("/base/usuario/{usuarioId}")
     public ResponseEntity<TreinamentoDTO> importar(@RequestBody List<UUID> treinamentosIds, @PathVariable("usuarioId") UUID usuarioId) {
         try {
             treinamentoService.importar(treinamentosIds, usuarioId);

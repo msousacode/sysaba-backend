@@ -28,6 +28,9 @@ public class TreinamentoBase {
     @Column(name = "habilidade", nullable = false)
     private HabilidadeBaseEnum habilidade;
 
+    @Column(name = "importId")
+    private UUID importId;
+
     @OneToMany(mappedBy = "treinamentoBase")
     private List<TreinamentoObjetivosBase> treinos;
 
@@ -88,5 +91,13 @@ public class TreinamentoBase {
 
     public void setTreinos(List<TreinamentoObjetivosBase> treinos) {
         this.treinos = treinos;
+    }
+
+    public UUID getImportId() {
+        return importId;
+    }
+
+    public void setImportId(UUID importId) {
+        this.importId = importId;
     }
 }

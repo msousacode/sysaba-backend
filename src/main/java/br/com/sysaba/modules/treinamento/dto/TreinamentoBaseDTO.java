@@ -10,6 +10,7 @@ public class TreinamentoBaseDTO {
     private String protocolo;
     private String habilidade;
     private Boolean isImportado = false;
+    private UUID importId;
 
     public TreinamentoBaseDTO() {
     }
@@ -69,5 +70,13 @@ public class TreinamentoBaseDTO {
 
     public void setImportado(Boolean importado) {
         isImportado = importado;
+    }
+
+    public UUID getImportId() {
+        return importId;
+    }
+
+    public void setImportId(UUID importId) {
+        this.importId = importId;
     }
 }

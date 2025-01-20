@@ -8,7 +8,6 @@ import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
 import br.com.sysaba.modules.coleta.dto.ColetaDTO;
 import br.com.sysaba.modules.coleta.dto.RespostaDTO;
-import br.com.sysaba.modules.treinamento.Treinamento;
 import br.com.sysaba.modules.treinamento.TreinamentoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,11 +52,9 @@ public class ColetaController {
 
                 Alvo alvo = alvoService.findById(UUID.fromString(i.getAlvo().getAlvoId()));
                 Aprendiz aprendiz = aprendizService.findById(i.getAprendizUuidFk());
-                Treinamento treinamento = treinamentoService.findById(UUID.fromString(i.getAlvo().getTreinamentoUuidFk()));
 
                 coleta.setAlvo(alvo);
                 coleta.setAprendiz(aprendiz);
-                coleta.setTreinamento(treinamento);
 
                 coletaService.save(coleta);
             });

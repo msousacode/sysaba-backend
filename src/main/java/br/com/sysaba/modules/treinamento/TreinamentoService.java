@@ -73,6 +73,7 @@ public class TreinamentoService implements GenericService<Treinamento, UUID> {
             treinamento.setDescricao(tb.getDescricao());
             treinamento.setProtocolo(tb.getProtocolo().getDescricao());
             treinamento.setTenantId(usuarioId);
+            treinamento.setImportId(tb.getTreinamentoBaseId());
             treinamento.setAtivo(true);
 
             List<Alvo> alvos = tb.getTreinos().stream().map(i -> Alvo.convert(i, treinamento)).toList();
@@ -82,5 +83,9 @@ public class TreinamentoService implements GenericService<Treinamento, UUID> {
         }
         treinamentoRespository.saveAll(treinamentos);
 
+    }
+
+    public List<Treinamento> findByTenantId(UUID usuarioId) {
+        return treinamentoRespository.findByTenantId(usuarioId);
     }
 }
