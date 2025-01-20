@@ -1,8 +1,10 @@
 package br.com.sysaba.modules.coleta.dto;
 
 import br.com.sysaba.modules.alvo.dto.AlvoDTO;
+import br.com.sysaba.modules.coleta.Coleta;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.web.bind.annotation.Mapping;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -39,6 +41,9 @@ public class    ColetaDTO {
     private int semana;
     private boolean ativo;
 
+    @JsonProperty("treinamento_uuid_fk")
+    private UUID treinamentoId;
+
     public ColetaDTO() {
     }
 
@@ -59,6 +64,31 @@ public class    ColetaDTO {
         this.sab = sab;
         this.semana = semana;
         this.ativo = ativo;
+    }
+
+    public static ColetaDTO converte(Coleta coleta) {
+        ColetaDTO dto = new ColetaDTO();
+
+        AlvoDTO alvoDTO = new AlvoDTO();
+        alvoDTO.setAlvoId(String.valueOf(coleta.getAlvo().getAlvoId()));
+        alvoDTO.setDescricaoAlvo(coleta.getAlvo().getDescricaoAlvo());
+        alvoDTO.setNomeAlvo(coleta.getAlvo().getNomeAlvo());
+        alvoDTO.setPergunta(coleta.getAlvo().getPergunta());
+
+        dto.setColetaId(coleta.getColetaId());
+        dto.setDataColeta(coleta.getDataColeta() != null ? LocalDate.from(coleta.getDataColeta()) : null);
+        dto.setResposta(coleta.getResposta());
+        dto.setFoiRespondido(coleta.isFoiRespondido());
+        dto.setAlvo(alvoDTO);
+        dto.setSeg(coleta.isSeg());
+        dto.setTer(coleta.isTer());
+        dto.setQua(coleta.isQua());
+        dto.setQui(coleta.isQui());
+        dto.setSex(coleta.isSex());
+        dto.setSemana(coleta.getSemana());
+        dto.setTreinamentoId(coleta.getTreinamento().getTreinamentoId());
+
+        return dto;
     }
 
     public UUID getColetaId() {
@@ -187,6 +217,14 @@ public class    ColetaDTO {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public UUID getTreinamentoId() {
+        return treinamentoId;
+    }
+
+    public void setTreinamentoId(UUID treinamentoId) {
+        this.treinamentoId = treinamentoId;
     }
 }
 
