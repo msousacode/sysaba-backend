@@ -13,13 +13,12 @@ public class UsuarioDTO {
     @JsonProperty("senha")
     private String senha;
 
-    @JsonProperty("banco_demonstracao")
-    private String bancoDemonstracao;
+    private String perfil;
 
-    public UsuarioDTO(String fullName, String email, String bancoDemonstracao) {
+    public UsuarioDTO(String fullName, String email, String perfil) {
         this.fullName = fullName;
         this.email = email;
-        this.bancoDemonstracao = bancoDemonstracao;
+        this.perfil = perfil;
     }
 
     public String getFullName() {
@@ -38,19 +37,19 @@ public class UsuarioDTO {
         this.email = email;
     }
 
-    public String getBancoDemonstracao() {
-        return bancoDemonstracao;
-    }
-
-    public void setBancoDemonstracao(String bancoDemonstracao) {
-        this.bancoDemonstracao = bancoDemonstracao;
-    }
-
     public String getSenha() {
         return senha;
     }
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public String getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(String perfil) {
+        this.perfil = perfil;
     }
 }

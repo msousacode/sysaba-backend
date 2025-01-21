@@ -2,6 +2,7 @@ package br.com.sysaba.modules.usuario;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.acesso.AutenticacaoController;
+import br.com.sysaba.modules.acesso.PerfilEnum;
 import br.com.sysaba.modules.acesso.dto.AssinaturaDTO;
 import br.com.sysaba.modules.acesso.dto.UsuarioInfoDTO;
 import br.com.sysaba.modules.assinatura.Assinatura;
@@ -36,29 +37,40 @@ public class UsuarioController {
     }
 
     @Transactional
-    @PostMapping
-    public ResponseEntity<UsuarioInfoDTO> salvar(@RequestBody UsuarioDTO usuarioDTO) {
+    @PostMapping("/tenant/{usuarioId}")
+    public ResponseEntity<UsuarioInfoDTO> salvar(@RequestBody UsuarioDTO usuarioDTO, @PathVariable("usuarioId") UUID usuarioId) {
         try {
             Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
-            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha() == null ? UUID.randomUUID().toString() : usuario.getSenha()));
+            PerfilEnum perfil = PerfilEnum.getEnum(usuarioDTO.getPerfil());
+            usuario.setPerfil(perfil);
             Usuario result = usuarioService.save(usuario);
 
-            result.setTenantId(result.getUsuarioId());//Atualiza o tenantId corretamente.
-            usuarioService.update(result.getUsuarioId(), result);
+            if (!PerfilEnum.ADMIN.equals(perfil)) {
+                Usuario tentant = usuarioService.findById(usuarioId);
+                result.setTenantId(tentant.getUsuarioId());
+                result.setCriadoPor(tentant.getUsuarioId());
+                usuarioService.update(result.getUsuarioId(), result);
+            } else {
+                result.setTenantId(result.getUsuarioId());//Atualiza o tenantId corretamente.
+                usuarioService.update(result.getUsuarioId(), result);
+            }
 
-            Assinatura assinatura = Assinatura.getInstance(result);
-            Assinatura assinaturaResult = assinaturaService.save(assinatura);
+            if (PerfilEnum.ADMIN.equals(perfil)) {
+                Assinatura assinatura = Assinatura.getInstance(result);
+                Assinatura assinaturaResult = assinaturaService.save(assinatura);
 
-            UsuarioInfoDTO dto = new UsuarioInfoDTO();
+                UsuarioInfoDTO dto = new UsuarioInfoDTO();
 
-            dto.setUsuarioId(result.getUsuarioId());
-            dto.setFullName(result.getFullName());
-            dto.setEmail(result.getEmail());
+                dto.setUsuarioId(result.getUsuarioId());
+                dto.setFullName(result.getFullName());
+                dto.setEmail(result.getEmail());
+                AssinaturaDTO assinaturaDTO = new AssinaturaDTO(assinaturaResult.getAssinaturaId(), assinaturaResult.getTipoAssinatura().name(), assinaturaResult.getDataContratacao(), assinaturaResult.getAtivo());
+                dto.setAssinatura(assinaturaDTO);
+                return ResponseEntity.ok().body(dto);
+            }
 
-            AssinaturaDTO assinaturaDTO = new AssinaturaDTO(assinaturaResult.getAssinaturaId(), assinaturaResult.getTipoAssinatura().name(), assinaturaResult.getDataContratacao(), assinaturaResult.getAtivo());
-            dto.setAssinatura(assinaturaDTO);
-
-            return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().build();
 
         } catch (RuntimeException ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);

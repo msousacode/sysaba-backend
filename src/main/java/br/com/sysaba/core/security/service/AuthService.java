@@ -4,7 +4,6 @@ package br.com.sysaba.core.security.service;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioRepository;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -16,7 +15,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
