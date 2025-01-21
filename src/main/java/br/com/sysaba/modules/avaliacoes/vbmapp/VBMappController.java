@@ -4,6 +4,9 @@ import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizController;
 import br.com.sysaba.modules.aprendiz.AprendizService;
+import br.com.sysaba.modules.avaliacoes.ChartDTO;
+import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VBMappBarreiraColetaDTO;
+import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappBarreiraDTO;
 import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappColetaDTO;
 import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappDTO;
 import org.slf4j.Logger;
@@ -50,14 +53,14 @@ public class VBMappController {
     }
 
     @Transactional
-    @PostMapping("/coletas")
-    public ResponseEntity<UUID> salvarColeta(@RequestBody List<VbMappColetaDTO> vbMappColetaDTOs) {
+    @PostMapping("/usuario/{usuarioId}/coletas")
+    public ResponseEntity<UUID> salvarColeta(@RequestBody List<VbMappColetaDTO> vbMappColetaDTOs, @PathVariable("usuarioId") UUID usuarioId) {
         try {
             VbMappAvaliacao vbMappAvaliacao = vbMappService.findById(vbMappColetaDTOs.get(0).getVbmappUuidFk());
 
             Aprendiz aprendiz = aprendizService.findById(vbMappColetaDTOs.get(0).getAprendizUuidFk());
 
-            List<VbMappColeta> vbMappColeta = vbMappColetaDTOs.stream().map(i -> VbMappColeta.of(i, vbMappAvaliacao, aprendiz)).toList();
+            List<VbMappColeta> vbMappColeta = vbMappColetaDTOs.stream().map(i -> VbMappColeta.of(i, vbMappAvaliacao, aprendiz, usuarioId)).toList();
 
             vbMappService.saveColetaAvaliacao(vbMappColeta);
 
@@ -67,6 +70,29 @@ public class VBMappController {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @Transactional
+    @PostMapping("/aprendiz/{aprendizId}/profissional/{usuarioId}/barreiras/coletas")
+    public ResponseEntity<?> salvarBarreiraColeta(@RequestBody VBMappBarreiraColetaDTO barreirasColeta, @PathVariable("aprendizId") UUID aprendizId, @PathVariable("usuarioId") UUID usuarioId) {
+        try {
+            vbMappService.salvarBarreiraColeta(barreirasColeta, aprendizId, usuarioId);
+            return ResponseEntity.ok().build();
+
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/aprendiz/{aprendizId}/barreiras/coletas")
+    public ResponseEntity<VBMappBarreiraColetaDTO> getBarreiras(@PathVariable("aprendizId") UUID aprendizId) {
+        return ResponseEntity.ok(vbMappService.findBarreirasRespondidas(aprendizId));
+    }
+
+    @GetMapping("/chart/aprendiz/{aprendizId}/barreiras")
+    public ResponseEntity<List<Double>> getChartBarreiras(@PathVariable("aprendizId") UUID aprendizId) {
+        return ResponseEntity.ok(vbMappService.findPontuacaoBarreiraColeta(aprendizId));
     }
 
     @GetMapping("/config-tela/{vbmappId}")
@@ -105,4 +131,6 @@ public class VBMappController {
         List<Double> coletaPontuacoes = vbMappService.findPontuacaoColetaAvaliacao(vbmappUuid);
         return ResponseEntity.ok(coletaPontuacoes);
     }
+
+
 }

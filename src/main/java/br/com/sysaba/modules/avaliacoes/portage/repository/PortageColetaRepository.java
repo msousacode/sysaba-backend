@@ -14,7 +14,7 @@ public interface PortageColetaRepository extends TenantableRepository<PortageCol
     @Query("select v from PortageColeta v where v.coletaId in :coletaIds")
     List<PortageColeta> findAllColetasRespondidas(@Param("coletaIds") List<Integer> coletasIds);
 
-    List<PortageColeta> findByPortage_portageId(UUID vbmappUuid);
+    List<PortageColeta> findByPortage_portageId(UUID portageId);
 
     @Modifying
     @Query("delete from PortageColeta v where v.portageColetaId = :portageColetaId")
@@ -22,4 +22,9 @@ public interface PortageColetaRepository extends TenantableRepository<PortageCol
 
     @Query("select count(*) from PortageColeta v where v.portage.portageId = :portageId and v.resposta is not null")
     Integer findColetasRespondidas(@Param("portageId") UUID portageId);
+
+
+    @Modifying
+    @Query("update PortageColeta v set v.ativo = false where v.portage.portageId = :avaliacaoId")
+    void deleteByPortageId(@Param("avaliacaoId") UUID avaliacaoId);
 }

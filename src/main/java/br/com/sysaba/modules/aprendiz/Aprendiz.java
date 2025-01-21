@@ -1,6 +1,8 @@
 package br.com.sysaba.modules.aprendiz;
 
 import br.com.sysaba.core.models.Tenantable;
+import br.com.sysaba.modules.assinatura.Assinatura;
+import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappBarreira;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

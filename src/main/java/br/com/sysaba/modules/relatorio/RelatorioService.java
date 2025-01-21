@@ -11,13 +11,18 @@ import br.com.sysaba.modules.avaliacoes.portage.PortageService;
 import br.com.sysaba.modules.avaliacoes.portage.enums.PortageAvaliacaoEnum;
 import br.com.sysaba.modules.avaliacoes.portage.enums.PortageFaixaEnum;
 import br.com.sysaba.modules.avaliacoes.portage.repository.PortageColetaRepository;
-import br.com.sysaba.modules.avaliacoes.vbmapp.VBMappService;
+import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappBarreira;
 import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappColeta;
+import br.com.sysaba.modules.avaliacoes.vbmapp.enums.VBMappNivelDoisEnum;
+import br.com.sysaba.modules.avaliacoes.vbmapp.enums.VBMappNivelTresEnum;
 import br.com.sysaba.modules.avaliacoes.vbmapp.enums.VBMappNivelUmEnum;
+import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappBarreiraRepository;
 import br.com.sysaba.modules.avaliacoes.vbmapp.repository.VBMappColetaRepository;
 import br.com.sysaba.modules.coleta.Coleta;
 import br.com.sysaba.modules.relatorio.client.RelatorioApiService;
 import br.com.sysaba.modules.relatorio.dto.*;
+import br.com.sysaba.modules.relatorio.dto.barreiras.TabelaBarreiraDTO;
+import br.com.sysaba.modules.relatorio.dto.barreiras.VBMappBarreiraRelatorioDTO;
 import br.com.sysaba.modules.relatorio.dto.pei.PEIDadoDTO;
 import br.com.sysaba.modules.relatorio.dto.pei.PEIObjetivoDTO;
 import br.com.sysaba.modules.relatorio.dto.pei.PEIRelatorioDTO;
@@ -26,10 +31,13 @@ import br.com.sysaba.modules.relatorio.dto.portage.DadosDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.PortageRelatorioDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.TabelaDTO;
 import br.com.sysaba.modules.treinamento.Treinamento;
+import br.com.sysaba.modules.usuario.Usuario;
+import br.com.sysaba.modules.usuario.UsuarioService;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -47,7 +55,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -71,19 +78,24 @@ public class RelatorioService {
 
     private final VBMappColetaRepository vbMappColetaRepository;
 
-    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService, PortageService portageService, PortageColetaRepository portageColetaRepository, VBMappService vbMappService, VBMappColetaRepository vbMappColetaRepository) {
+    private final VBMappBarreiraRepository vbMappBarreiraRepository;
+
+    private final UsuarioService usuarioService;
+
+    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService, PortageService portageService, PortageColetaRepository portageColetaRepository, VBMappColetaRepository vbMappColetaRepository, VBMappBarreiraRepository vbMappBarreiraRepository, UsuarioService usuarioService) {
         this.aprendizService = aprendizService;
         this.atendimentoService = atendimentoService;
         this.relatorioApiService = relatorioApiService;
         this.portageService = portageService;
         this.portageColetaRepository = portageColetaRepository;
         this.vbMappColetaRepository = vbMappColetaRepository;
+        this.vbMappBarreiraRepository = vbMappBarreiraRepository;
+        this.usuarioService = usuarioService;
     }
 
     public LinkDowloadResponseDTO gerarRelatorio(UUID aprendizId, String dataInicio, String dataFinal) {
         //TODO Dados dos profissionais envolvidos
         try {
-            CabecarioDTO cabecalho = getCabecalhoDTO();
             AprendizDTO aprendiz = getAprendizDTO(aprendizId);
             List<TreinamentoDTO> treinamentos = getTreinamentos(aprendizId, dataInicio, dataFinal);
 
@@ -91,22 +103,14 @@ public class RelatorioService {
                 return null;
             }
 
-            RelatorioDTO relatorioDTO = new RelatorioDTO(cabecalho, List.of(), aprendiz, treinamentos);
+            CabecalhoDTO cabecalho = new CabecalhoDTO(aprendiz.getNome(), aprendiz.getNascimento());
+            RelatorioDTO relatorioDTO = new RelatorioDTO("Relatório Geral - Intervenção", cabecalho, List.of(), aprendiz, treinamentos);
+
 
             return relatorioApiService.postRelatorioTreinamentos(relatorioDTO);
         } catch (RuntimeException ex) {
             throw new RuntimeException(RelatorioService.class.getName(), ex);
         }
-    }
-
-    private CabecarioDTO getCabecalhoDTO() {
-        // Obtém a data atual
-        Date dataAtual = new Date();
-        // Formata a data no padrão desejado
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        String dataFormatada = formato.format(dataAtual);
-        // Retorna a mensagem com a data formatada
-        return new CabecarioDTO("Relatório gerado em: " + dataFormatada);
     }
 
     private AprendizDTO getAprendizDTO(UUID aprendizId) {
@@ -396,10 +400,18 @@ public class RelatorioService {
 
         List<DadosDTO> dadosDTOS = List.of(dadosDTOSocilizacao, dadosDTOCognicao, dadosDTOLinguagem, dadosDTOAutocuidado, dadosDTOMotor);
 
+        UUID profissionalColetaId = resultList.stream().findFirst().get().getCriadoPor();
+        Usuario usuario = usuarioService.findById(profissionalColetaId);
+
+        ProfissionalDTO profissionalDTO = new ProfissionalDTO();
+        profissionalDTO.setNome(usuario.getFullName());
+        profissionalDTO.setRegistro(usuario.getDocumento() == null ? "" : usuario.getDocumento());
+
         PortageRelatorioDTO portageRelatorioDTO = new PortageRelatorioDTO();
         portageRelatorioDTO.setTitulo("Relatório Portage");
         portageRelatorioDTO.setCabecalho(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
         portageRelatorioDTO.setDados(dadosDTOS);
+        portageRelatorioDTO.setProfissionais(List.of(profissionalDTO));
 
         String chart;
         try {
@@ -500,9 +512,17 @@ public class RelatorioService {
 
         Aprendiz aprendiz = resultList.stream().findFirst().get().getAprendiz();
 
+        UUID profissionalColetaId = resultList.stream().findFirst().get().getCriadoPor();
+        Usuario usuario = usuarioService.findById(profissionalColetaId);
+
+        ProfissionalDTO profissionalDTO = new ProfissionalDTO();
+        profissionalDTO.setNome(usuario.getFullName());
+        profissionalDTO.setRegistro(usuario.getDocumento() == null ? "" : usuario.getDocumento());
+
         PEIRelatorioDTO peiDTO = new PEIRelatorioDTO();
         peiDTO.setTitulo("PEI - Plano Educacional Individualizado - Portage");
         peiDTO.setCabecario(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
+        peiDTO.setProfissionais(List.of(profissionalDTO));
 
         List<PEIDadoDTO> dados = new ArrayList<>();
 
@@ -538,6 +558,9 @@ public class RelatorioService {
     public LinkDowloadResponseDTO getRelatorioVbMappPEI(UUID aprendizId) {
         List<VbMappColeta> resultList = vbMappColetaRepository.findByAprendiz_aprendizId(aprendizId);
 
+        UUID profissionalColetaId = resultList.stream().findFirst().get().getCriadoPor();
+        Usuario usuario = usuarioService.findById(profissionalColetaId);
+
         if (resultList.isEmpty()) {
             throw new RegistroNaoEncontradoException("Não foi localizado dados para gerar o relatório PEI VBMAPP.");
         }
@@ -553,9 +576,14 @@ public class RelatorioService {
 
         Aprendiz aprendiz = resultList.stream().findFirst().get().getAprendiz();
 
+        ProfissionalDTO profissionalDTO = new ProfissionalDTO();
+        profissionalDTO.setNome(usuario.getFullName());
+        profissionalDTO.setRegistro(usuario.getDocumento() == null ? "" : usuario.getDocumento());
+
         PEIRelatorioDTO peiDTO = new PEIRelatorioDTO();
         peiDTO.setTitulo("PEI - Plano Educacional Individualizado - VBMAPP");
         peiDTO.setCabecario(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
+        peiDTO.setProfissionais(List.of(profissionalDTO));
 
         List<List<PEIDadoDTO>> dados = new ArrayList<>();
 
@@ -595,14 +623,14 @@ public class RelatorioService {
             for (VbMappColeta coleta : list) {
                 PEIDadoDTO peiDadoDTO = new PEIDadoDTO();
                 peiDadoDTO.setNivel(list.stream().findFirst().get().getNivelColeta());
-                peiDadoDTO.setTitulo(VBMappNivelUmEnum.getByCod(coleta.getTipo()).getDescricao());
+                peiDadoDTO.setTitulo(VBMappNivelDoisEnum.getByCod(coleta.getTipo()).getDescricao());
 
                 List<PEIObjetivoDTO> objetivosZero = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
                 List<PEIObjetivoDTO> objetivosMeio = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0.5).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
 
                 peiDadoDTO.setObjetivosZero(objetivosZero);
                 peiDadoDTO.setObjetivosMeio(objetivosMeio);
-                peiDadoDTO.setTitulo(VBMappNivelUmEnum.getByCod(coleta.getTipo()).getDescricao());
+                dados.add(peiDadoDTO);
             }
         }
 
@@ -610,7 +638,7 @@ public class RelatorioService {
             for (VbMappColeta coleta : list) {
                 PEIDadoDTO peiDadoDTO = new PEIDadoDTO();
                 peiDadoDTO.setNivel(list.stream().findFirst().get().getNivelColeta());
-                peiDadoDTO.setTitulo(VBMappNivelUmEnum.getByCod(coleta.getTipo()).getDescricao());
+                peiDadoDTO.setTitulo(VBMappNivelTresEnum.getByCod(coleta.getTipo()).getDescricao());
 
                 List<PEIObjetivoDTO> objetivosZero = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
                 List<PEIObjetivoDTO> objetivosMeio = list.stream().filter(c -> c.getTipo() == coleta.getTipo()).filter(i -> Double.valueOf(i.getPontuacao()) == 0.5).map(k -> new PEIObjetivoDTO(k.getCodigo(), k.getDescricao(), k.getTipo())).toList();
@@ -631,5 +659,102 @@ public class RelatorioService {
         }
 
         return distinctList;
+    }
+
+    public LinkDowloadResponseDTO getRelatorioVbMappBarreiras(UUID aprendizId) {
+
+        List<VbMappBarreira> barreiras = vbMappBarreiraRepository.findByAprendiz_aprendizIdOrderByCodigoAsc(aprendizId);
+
+        if (barreiras.isEmpty()) {
+            throw new RegistroNaoEncontradoException("Não foi localizados registros para gerar o relatório de barreiras para o aprendiz: " + aprendizId);
+        }
+
+        VBMappBarreiraRelatorioDTO vbMappBarreiraRelatorioDTO = new VBMappBarreiraRelatorioDTO();
+
+        String charImg;
+        try {
+            charImg = getVbMappBarreirasChartImg(barreiras);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<TabelaBarreiraDTO> tabelaBarreiraDTOS = new ArrayList<>();
+
+        for (VbMappBarreira barreira : barreiras) {
+            tabelaBarreiraDTOS.add(TabelaBarreiraDTO.convert(barreira));
+        }
+
+        Aprendiz aprendiz = barreiras.stream().findFirst().get().getAprendiz();
+
+        UUID profissionalColetaId = barreiras.stream().findFirst().get().getCriadoPor();
+        Usuario usuario = usuarioService.findById(profissionalColetaId);
+
+        ProfissionalDTO profissionalDTO = new ProfissionalDTO();
+        profissionalDTO.setNome(usuario.getFullName());
+        profissionalDTO.setRegistro(usuario.getDocumento() == null ? "" : usuario.getDocumento());
+
+        vbMappBarreiraRelatorioDTO.setTitulo("Relatório de Barreiras - VB-MAPP");
+        vbMappBarreiraRelatorioDTO.setCabecalhoDTO(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
+        vbMappBarreiraRelatorioDTO.setChartImg(charImg);
+        vbMappBarreiraRelatorioDTO.setTabela(tabelaBarreiraDTOS);
+        vbMappBarreiraRelatorioDTO.setProfissionais(List.of(profissionalDTO));
+
+        return relatorioApiService.postVBBarreiraRelatorioVBMAPP(vbMappBarreiraRelatorioDTO);
+    }
+
+    private String getVbMappBarreirasChartImg(List<VbMappBarreira> barreiras) throws IOException {
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        for (VbMappBarreira vb : barreiras) {
+            Integer codY = vb.getCodigo() + 1;
+            if (codY > 24) {
+                break;
+            }
+            dataset.setValue(Integer.valueOf(vb.getResposta()), codY.toString(), codY.toString());
+        }
+
+        JFreeChart chart = ChartFactory.createBarChart(
+                "",    // Título
+                "",                   // Eixo X
+                "Pontos",                      // Eixo Y
+                dataset,                       // Dataset
+                PlotOrientation.HORIZONTAL,     // Orientação
+                false,                         // Incluir legenda
+                true,                          // Tooltips
+                false                          // URLs
+        );
+
+        // Personalizando o gráfico
+        CategoryPlot plot = chart.getCategoryPlot();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+
+        // Definindo cores para cada barra
+        for (int i = 0; i < barreiras.size(); i++) {
+            renderer.setSeriesPaint(i, new Color((int) (Math.random() * 0x1000000))); // Cores aleatórias
+        }
+
+        renderer.setMaximumBarWidth(0.1); // Ajustar a largura máxima da barra
+        renderer.setItemMargin(0.1); // Ajuste de margem entre as barras
+
+        // Adicionando anotações como valores
+        plot.getRenderer().setDefaultItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        plot.getRenderer().setDefaultItemLabelsVisible(true);
+
+        // Adiciona linhas de grade
+        plot.setDomainGridlinesVisible(true);
+        plot.setRangeGridlinesVisible(true);
+
+        BufferedImage bufferedImage = chart.createBufferedImage(500, 700);
+
+        String imgChart;
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            ImageIO.write(bufferedImage, "png", outputStream);
+            byte[] imageBytes = outputStream.toByteArray();
+            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+            imgChart = "data:image/png;base64," + base64Image;
+        }
+
+        return imgChart;
     }
 }

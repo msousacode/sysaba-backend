@@ -20,6 +20,11 @@ public class PortageService {
         this.portageColetaRepository = portageColetaRepository;
     }
 
+    public void deleteAvaliacao(UUID avaliacaoId) {
+        portageRepository.deleteAllByPortageId(avaliacaoId);
+        portageColetaRepository.deleteByPortageId(avaliacaoId);
+    }
+
     public PortageAvaliacao saveAvaliacao(PortageAvaliacao portageAvaliacao) {
         return portageRepository.save(portageAvaliacao);
     }
@@ -42,7 +47,7 @@ public class PortageService {
     }
 
     public List<PortageAvaliacao> findAllByAprendizId(UUID aprendizId) {
-        return portageRepository.findAllByAprendiz_aprendizId(aprendizId);
+        return portageRepository.findAllByAprendiz_aprendizIdAndAtivoIsTrue(aprendizId);
     }
 
     public List<PortageColeta> findByColetasRespondidas(UUID vbmappUuid) {
@@ -98,7 +103,8 @@ public class PortageService {
     }
 
     private static double somarRespostasColetadas(Map.Entry<Integer, List<PortageColeta>> coleta, PortageFaixaEnum portageEnum) {
-        return coleta.getValue().stream().filter(v -> portageEnum.getCod().equals(Integer.valueOf(v.getIdadeColeta()))).map(i -> Double.parseDouble(i.getResposta())).mapToDouble(Double::doubleValue).sum();
+        List<PortageColeta> coletaSemNumerosNegativos = coleta.getValue().stream().filter(i -> Double.parseDouble(i.getResposta()) != -1.0).toList();
+        return coletaSemNumerosNegativos.stream().filter(v -> portageEnum.getCod().equals(Integer.valueOf(v.getIdadeColeta()))).map(i -> Double.parseDouble(i.getResposta())).mapToDouble(Double::doubleValue).sum();
     }
 
     private Double calcularMediaIdadde(Double soma, Integer tipo, String idadeColeta) {

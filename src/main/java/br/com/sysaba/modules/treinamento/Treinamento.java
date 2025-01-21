@@ -28,7 +28,10 @@ public class Treinamento extends Tenantable {
     @Column(name = "descricao", nullable = false, length = 500)
     private String descricao;
 
-    @OneToMany(mappedBy = "treinamento")
+    @Column(name = "importId")
+    private UUID importId;
+
+    @OneToMany(mappedBy = "treinamento", cascade = CascadeType.PERSIST)
     private List<Alvo> alvos;
 
     @OneToMany(mappedBy = "treinamento")
@@ -116,5 +119,13 @@ public class Treinamento extends Tenantable {
 
     public void setTreinamentoAtendimentos(List<TreinamentoAtendimento> treinamentoAtendimentos) {
         this.treinamentoAtendimentos = treinamentoAtendimentos;
+    }
+
+    public UUID getImportId() {
+        return importId;
+    }
+
+    public void setImportId(UUID importId) {
+        this.importId = importId;
     }
 }

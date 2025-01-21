@@ -1,5 +1,6 @@
 package br.com.sysaba.modules.relatorio.dto.pei;
 
+import br.com.sysaba.modules.relatorio.dto.ProfissionalDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.CabecalhoDTO;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class PEIRelatorioDTO {
     private CabecalhoDTO cabecario;
     private List<PEIDadoDTO> dados;
     private List<List<PEIDadoDTO>> dadosNiveisVbMapp = new ArrayList<>();
+    private List<ProfissionalDTO> profissionais;
 
     public List<PEIDadoDTO> getDados() {
         return dados;
@@ -42,5 +44,13 @@ public class PEIRelatorioDTO {
 
     public void setDadosNiveisVbMapp(List<List<PEIDadoDTO>> dadosNiveisVbMapp) {
         this.dadosNiveisVbMapp = dadosNiveisVbMapp;
+    }
+
+    public List<ProfissionalDTO> getProfissionais() {
+        return profissionais;
+    }
+
+    public void setProfissionais(List<ProfissionalDTO> profissionais) {
+        this.profissionais = profissionais;
     }
 }

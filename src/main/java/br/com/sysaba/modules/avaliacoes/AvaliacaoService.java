@@ -96,4 +96,14 @@ public class AvaliacaoService {
         Double resultado = Double.valueOf((respondidas * 100) / totalObjetivos);
         return resultado + "%";
     }
+
+    public void deleteAvaliacao(UUID avaliacaoId, String protocolo) {
+        if ("vbmapp".equals(protocolo)) {
+            vbMappService.deleteAvaliacao(avaliacaoId);
+        }
+
+        if ("portage".equals(protocolo)) {
+            portageService.deleteAvaliacao(avaliacaoId);
+        }
+    }
 }

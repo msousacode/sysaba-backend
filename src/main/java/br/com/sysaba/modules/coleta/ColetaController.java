@@ -50,10 +50,9 @@ public class ColetaController {
         try {
             coletaDTO.stream().forEach(i -> {
                 Coleta coleta = MapperUtil.converte(i, Coleta.class);
-
+                Treinamento treinamento = treinamentoService.findById(i.getTreinamentoId());
                 Alvo alvo = alvoService.findById(UUID.fromString(i.getAlvo().getAlvoId()));
                 Aprendiz aprendiz = aprendizService.findById(i.getAprendizUuidFk());
-                Treinamento treinamento = treinamentoService.findById(UUID.fromString(i.getAlvo().getTreinamentoUuidFk()));
 
                 coleta.setAlvo(alvo);
                 coleta.setAprendiz(aprendiz);
@@ -91,7 +90,9 @@ public class ColetaController {
             @RequestParam(value = "direction", defaultValue = "DESC") String direction,
             @PathVariable("treinamentoId") UUID treinamentoId) {
         Page<Coleta> coletas = coletaService.findByTreinamentoTreinamentoId(treinamentoId, PageRequest.of(page, size, Sort.by("semana")));
-        Page<ColetaDTO> dtoList = coletas.map(i -> MapperUtil.converte(i, ColetaDTO.class));
+
+        Page<ColetaDTO> dtoList = coletas.map(i -> ColetaDTO.converte(i));
+
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
 

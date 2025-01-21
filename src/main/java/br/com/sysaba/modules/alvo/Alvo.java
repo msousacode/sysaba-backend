@@ -2,6 +2,7 @@ package br.com.sysaba.modules.alvo;
 
 import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.treinamento.Treinamento;
+import br.com.sysaba.modules.treinamento.base.TreinamentoObjetivosBase;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,16 @@ public class Alvo extends Tenantable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "treinamento_id", nullable = false)
     private Treinamento treinamento;
+
+
+    public static Alvo convert(TreinamentoObjetivosBase treinamentoObjetivosBase, Treinamento treinamento) {
+        Alvo alvo = new Alvo();
+        alvo.setDescricaoAlvo(treinamentoObjetivosBase.getDescricaoAlvo());
+        alvo.setPergunta(treinamentoObjetivosBase.getPergunta());
+        alvo.setNomeAlvo(treinamentoObjetivosBase.getNomeAlvo());
+        alvo.setTreinamento(treinamento);
+        return alvo;
+    }
 
     // Construtor padrão
     public Alvo() {
