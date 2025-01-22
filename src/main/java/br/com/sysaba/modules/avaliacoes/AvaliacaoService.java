@@ -1,11 +1,13 @@
 package br.com.sysaba.modules.avaliacoes;
 
+import br.com.sysaba.core.security.config.TenantAuthenticationToken;
 import br.com.sysaba.modules.avaliacoes.portage.PortageAvaliacao;
 import br.com.sysaba.modules.avaliacoes.portage.PortageService;
 import br.com.sysaba.modules.avaliacoes.vbmapp.VBMappService;
 import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappAvaliacao;
 import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappColeta;
 import org.checkerframework.checker.units.qual.A;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ public class AvaliacaoService {
 
     public List<AvaliacaoDTO> findAvaliacoes(UUID aprendizId) {
         List<AvaliacaoDTO> avaliacoes = new ArrayList<>();
+
+        var usuarioId = ((TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication());
 
         List<VbMappAvaliacao> vbMapps = vbMappService.findAllByAprendizId(aprendizId);
 

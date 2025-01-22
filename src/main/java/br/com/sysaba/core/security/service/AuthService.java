@@ -1,6 +1,7 @@
 package br.com.sysaba.core.security.service;
 
 
+import br.com.sysaba.modules.acesso.PerfilEnum;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioRepository;
 import org.springframework.security.core.Authentication;
@@ -37,7 +38,13 @@ public class AuthService {
 
         Map<String, Object> customClaims = new HashMap<>();
         customClaims.put("username", username);
-        customClaims.put("tenantId", usuario.getUsuarioId());
+
+        if(PerfilEnum.ADMIN.equals(usuario.getPerfil())) {
+            customClaims.put("tenantId", usuario.getUsuarioId());
+        } else {
+            customClaims.put("tenantId", usuario.getTenantId());
+        }
+
         customClaims.put("perfil", "ADMIN");//TODO depois implementar o perfil.
 
         Instant now = Instant.now();
