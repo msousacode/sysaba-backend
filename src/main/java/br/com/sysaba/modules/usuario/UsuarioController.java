@@ -41,7 +41,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioInfoDTO> salvar(@RequestBody UsuarioDTO usuarioDTO, @PathVariable("usuarioId") UUID usuarioId) {
         try {
             Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
-            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha() == null ? UUID.randomUUID().toString() : usuario.getSenha()));
+            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha() == null ? "123456" : usuario.getSenha()));
             PerfilEnum perfil = PerfilEnum.getEnum(usuarioDTO.getPerfil());
             usuario.setPerfil(perfil);
             Usuario result = usuarioService.save(usuario);
@@ -89,10 +89,14 @@ public class UsuarioController {
         dto.setFullName(usuario.getFullName());
 
         AssinaturaDTO assinaturaDTO = new AssinaturaDTO();
-        assinaturaDTO.setAssinaturaId(usuario.getAssinatura().getAssinaturaId());
-        assinaturaDTO.setTipoAssinatura(usuario.getAssinatura().getTipoAssinatura().name());
+
+        if(PerfilEnum.ADMIN.equals(usuario.getPerfil())) {
+            assinaturaDTO.setAssinaturaId(usuario.getAssinatura().getAssinaturaId());
+            assinaturaDTO.setTipoAssinatura(usuario.getAssinatura().getTipoAssinatura().name());
+            assinaturaDTO.setDataContratacao(usuario.getAssinatura().getDataContratacao());
+        }
+
         assinaturaDTO.setAtivo(usuario.getAtivo());
-        assinaturaDTO.setDataContratacao(usuario.getAssinatura().getDataContratacao());
 
         dto.setAssinatura(assinaturaDTO);
 

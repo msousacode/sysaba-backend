@@ -1,8 +1,8 @@
-package br.com.sysaba.modules.usuario.dtos;
+package br.com.sysaba.modules.profissional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UsuarioDTO {
+public class ProfissionalDTO {
 
     @JsonProperty("full_name")
     private String fullName;
@@ -10,17 +10,14 @@ public class UsuarioDTO {
     @JsonProperty("email")
     private String email;
 
-    @JsonProperty("senha")
-    private String senha;
-
     private String perfil;
 
-    public UsuarioDTO(){}
+    public ProfissionalDTO() {
+    }
 
-    public UsuarioDTO(String fullName, String email, String senha, String perfil) {
+    public ProfissionalDTO(String fullName, String email, String perfil) {
         this.fullName = fullName;
         this.email = email;
-        this.senha = senha;
         this.perfil = perfil;
     }
 
@@ -38,14 +35,6 @@ public class UsuarioDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
     }
 
     public String getPerfil() {
