@@ -28,7 +28,7 @@ public class ProfissionalController {
     @GetMapping("/tenant/{tenantId}")
     public ResponseEntity<List<ProfissionalDTO>> buscar(@PathVariable("tenantId") UUID tenantId) {
         try {
-            List<Usuario> usuarioList = usuarioService.findAllByTenantId(tenantId);
+            List<Usuario> usuarioList = usuarioService.findAllByTenantId(tenantId).stream().filter(i -> i.getPerfil() != PerfilEnum.ADMIN).toList();
             return ResponseEntity.status(HttpStatus.OK).body(usuarioList.stream().map(i -> MapperUtil.converte(i, ProfissionalDTO.class)).toList());
         } catch (Exception ex) {
             logger.error("erro ao carregar lista de profissionais", ex);

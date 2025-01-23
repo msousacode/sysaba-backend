@@ -135,6 +135,8 @@ public class RelatorioService {
                 treinamentoDTO.setProtocolo(treinamento.getTreinamento().getProtocolo());
                 treinamentoDTO.setDescricao(treinamento.getTreinamento().getDescricao());
 
+                /** TODO o gráfico foi desbilitado até encontrar uma maneira melhor de gerar esses gráficos
+                 * pois hoje os gráficos estão muito feios e estão quebrabdo o layout da impressão.
                 try {
 
                     if ("Protocolo ABC".equals(treinamento.getTreinamento().getProtocolo())) {
@@ -147,6 +149,9 @@ public class RelatorioService {
                 } catch (IOException e) {
                     throw new RuntimeException("Erro ao gerar o gráfico: ", e);
                 }
+                 **/
+
+                treinamentoDTO.setChartImageList(List.of());
 
                 List<AlvoColetadoDTO> alvos = new ArrayList<>();
 
