@@ -57,6 +57,9 @@ public class Coleta extends Tenantable {
     @Column(name = "semana", nullable = false)
     private int semana;
 
+    @Column(name = "criado_por_nome")
+    private String criadoNome;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aprendiz_id", nullable = false)
     private Aprendiz aprendiz;
@@ -218,5 +221,13 @@ public class Coleta extends Tenantable {
 
     public void setAnotacoes(List<Anotacao> anotacoes) {
         this.anotacoes = anotacoes;
+    }
+
+    public String getCriadoNome() {
+        return criadoNome;
+    }
+
+    public void setCriadoNome(String criadoNome) {
+        this.criadoNome = criadoNome;
     }
 }

@@ -100,8 +100,8 @@ public class AprendizController {
     }
 
     private PerfilEnum getPerfil() {
-        UUID usuarioId = ((TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getTenantId();
-        return usuarioService.findById(usuarioId).getPerfil();
+        String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        return usuarioService.getByEmail(email).getPerfil();
     }
 
     public Page<Aprendiz> transformarParaPage(List<AprendizProfissional> aprendizProfissionals, Pageable pageable) {

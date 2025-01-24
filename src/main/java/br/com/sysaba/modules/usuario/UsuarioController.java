@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 @RestController
@@ -36,17 +37,22 @@ public class UsuarioController {
         this.usuarioRepository = usuarioRepository;
     }
 
+    @PostMapping
+    public ResponseEntity<UsuarioInfoDTO> criarNovoUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+        return salvar(usuarioDTO, null);
+    }
+
     @Transactional
     @PostMapping("/tenant/{usuarioId}")
-    public ResponseEntity<UsuarioInfoDTO> salvar(@RequestBody UsuarioDTO usuarioDTO, @PathVariable("usuarioId") UUID usuarioId) {
+    public ResponseEntity<UsuarioInfoDTO> salvar(@RequestBody UsuarioDTO usuarioDTO, @Nullable @PathVariable(value = "usuarioId") UUID usuarioId) {
         try {
             Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
-            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha() == null ? "123456" : usuario.getSenha()));
+            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha() == null ? String.valueOf(UUID.randomUUID()) : usuario.getSenha()));
             PerfilEnum perfil = PerfilEnum.getEnum(usuarioDTO.getPerfil());
-            usuario.setPerfil(perfil);
+            usuario.setPerfil(perfil == null && usuarioId == null ? PerfilEnum.ADMIN : perfil);
             Usuario result = usuarioService.save(usuario);
 
-            if (!PerfilEnum.ADMIN.equals(perfil)) {
+            if (!PerfilEnum.ADMIN.equals(result.getPerfil())) {
                 Usuario tentant = usuarioService.findById(usuarioId);
                 result.setTenantId(tentant.getUsuarioId());
                 result.setCriadoPor(tentant.getUsuarioId());
@@ -56,7 +62,7 @@ public class UsuarioController {
                 usuarioService.update(result.getUsuarioId(), result);
             }
 
-            if (PerfilEnum.ADMIN.equals(perfil)) {
+            if (PerfilEnum.ADMIN.equals(result.getPerfil())) {
                 Assinatura assinatura = Assinatura.getInstance(result);
                 Assinatura assinaturaResult = assinaturaService.save(assinatura);
 
@@ -72,7 +78,7 @@ public class UsuarioController {
 
             return ResponseEntity.ok().build();
 
-        } catch (RuntimeException ex) {
+        } catch (Exception ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.internalServerError().build();
         }

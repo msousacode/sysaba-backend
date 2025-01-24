@@ -2,6 +2,7 @@ package br.com.sysaba.modules.avaliacoes.vbmapp.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -35,6 +36,9 @@ public class VbMappColetaDTO {
 
     @JsonProperty("codigo")
     private String codigo;
+
+    @JsonProperty("criado_por_nome")
+    private String criadoNome;
 
     public VbMappColetaDTO() {
     }
@@ -119,5 +123,13 @@ public class VbMappColetaDTO {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
+    }
+
+    public String getCriadoNome() {
+        return criadoNome;
+    }
+
+    public void setCriadoNome(String criadoNome) {
+        this.criadoNome = criadoNome;
     }
 }

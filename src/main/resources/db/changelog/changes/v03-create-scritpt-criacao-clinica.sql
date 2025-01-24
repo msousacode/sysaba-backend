@@ -3,6 +3,18 @@
 --changeset michael:3
 ALTER TABLE public.usuarios ADD perfil varchar(25);
 
+ALTER TABLE public.usuarios ADD redefinir_senha_key uuid;
+
+ALTER TABLE public.usuarios ADD link_redefinir_senha_exp TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE public.vbmapp_coletas ADD criado_por_nome varchar(255);
+
+ALTER TABLE public.portage_coletas ADD criado_por_nome varchar(255);
+
+ALTER TABLE public.vbmapp_barreiras ADD criado_por_nome varchar(255);
+
+ALTER TABLE public.coletas ADD criado_por_nome varchar(255);
+
 alter table if exists alvos alter column descricao_alvo set data type varchar(500);
 
 create table aprendizes_profissionais (

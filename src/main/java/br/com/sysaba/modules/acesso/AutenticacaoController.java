@@ -8,13 +8,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @CrossOrigin("*")
 @RestController
@@ -34,6 +38,9 @@ public class AutenticacaoController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthDTO.LoginRequest userLogin, HttpServletResponse response) {
@@ -62,5 +69,23 @@ public class AutenticacaoController {
         response.setHeader("Cache-Control", "no-store");
         response.setHeader("sysaba", "no-cache");
         return ResponseEntity.ok().body(auth.token());
+    }
+
+    @Modifying
+    @Transactional
+    @GetMapping("/esqueci/{email}")
+    public ResponseEntity<?> esqueciMinhaSenha(@PathVariable String email) {
+        try {
+
+            String response = emailService.forget(email);
+
+            if("NAO_ASSINANTE".equals(response)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            }
+
+            return "OK".equals(response) ? ResponseEntity.ok().body("Ok") : ResponseEntity.internalServerError().build();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

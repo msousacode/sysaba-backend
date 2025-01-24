@@ -4,6 +4,8 @@ import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.avaliacoes.portage.dto.PortageColetaDTO;
 import br.com.sysaba.modules.avaliacoes.portage.dto.PortageDTO;
+import br.com.sysaba.modules.usuario.Usuario;
+import br.com.sysaba.modules.usuario.UsuarioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,9 +26,12 @@ public class PortageController {
 
     private final AprendizService aprendizService;
 
-    public PortageController(PortageService portageService, AprendizService aprendizService) {
+    private final UsuarioService usuarioService;
+
+    public PortageController(PortageService portageService, AprendizService aprendizService, UsuarioService usuarioService) {
         this.portageService = portageService;
         this.aprendizService = aprendizService;
+        this.usuarioService = usuarioService;
     }
 
     @Transactional
@@ -54,7 +59,9 @@ public class PortageController {
 
             Aprendiz aprendiz = aprendizService.findById(portageDTOList.get(0).getAprendizUuidFk());
 
-            List<PortageColeta> portageColetaList = portageDTOList.stream().map(i -> PortageColeta.of(i, portageAvaliacao, aprendiz, usuarioId)).toList();
+            Usuario usuario = usuarioService.findById(usuarioId);
+
+            List<PortageColeta> portageColetaList = portageDTOList.stream().map(i -> PortageColeta.of(i, portageAvaliacao, aprendiz, usuario)).toList();
 
             portageService.saveColetaAvaliacao(portageColetaList);
 

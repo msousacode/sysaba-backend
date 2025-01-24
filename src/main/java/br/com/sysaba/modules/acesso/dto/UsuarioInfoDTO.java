@@ -13,6 +13,7 @@ public class UsuarioInfoDTO {
     private String documento;
     private AssinaturaDTO assinatura;
     private PerfilEnum perfil;
+    private Boolean ativo;
 
     public UsuarioInfoDTO() {
     }
@@ -79,5 +80,13 @@ public class UsuarioInfoDTO {
 
     public void setPerfil(PerfilEnum perfil) {
         this.perfil = perfil;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 }

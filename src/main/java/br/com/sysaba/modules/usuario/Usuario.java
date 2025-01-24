@@ -50,6 +50,9 @@ public class Usuario {
     @Column(name = "perfil", nullable = false)
     private PerfilEnum perfil;
 
+    @Column(name = "redefinir_senha_key")
+    private UUID redefinirSenhaKey;
+
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
     private Assinatura assinatura;
 
@@ -180,5 +183,13 @@ public class Usuario {
 
     public void setPerfil(PerfilEnum perfil) {
         this.perfil = perfil;
+    }
+
+    public UUID getRedefinirSenhaKey() {
+        return redefinirSenhaKey;
+    }
+
+    public void setRedefinirSenhaKey(UUID redefinirSenhaKey) {
+        this.redefinirSenhaKey = redefinirSenhaKey;
     }
 }
