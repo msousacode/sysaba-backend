@@ -2,6 +2,7 @@ package br.com.sysaba.modules.usuario;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.acesso.AutenticacaoController;
+import br.com.sysaba.modules.acesso.PerfilEnum;
 import br.com.sysaba.modules.acesso.dto.AssinaturaDTO;
 import br.com.sysaba.modules.acesso.dto.UsuarioInfoDTO;
 import br.com.sysaba.modules.assinatura.Assinatura;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 @RestController
@@ -35,32 +37,48 @@ public class UsuarioController {
         this.usuarioRepository = usuarioRepository;
     }
 
-    @Transactional
     @PostMapping
-    public ResponseEntity<UsuarioInfoDTO> salvar(@RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<UsuarioInfoDTO> criarNovoUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+        return salvar(usuarioDTO, null);
+    }
+
+    @Transactional
+    @PostMapping("/tenant/{usuarioId}")
+    public ResponseEntity<UsuarioInfoDTO> salvar(@RequestBody UsuarioDTO usuarioDTO, @Nullable @PathVariable(value = "usuarioId") UUID usuarioId) {
         try {
             Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
-            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha() == null ? String.valueOf(UUID.randomUUID()) : usuario.getSenha()));
+            PerfilEnum perfil = PerfilEnum.getEnum(usuarioDTO.getPerfil());
+            usuario.setPerfil(perfil == null && usuarioId == null ? PerfilEnum.ADMIN : perfil);
             Usuario result = usuarioService.save(usuario);
 
-            result.setTenantId(result.getUsuarioId());//Atualiza o tenantId corretamente.
-            usuarioService.update(result.getUsuarioId(), result);
+            if (!PerfilEnum.ADMIN.equals(result.getPerfil())) {
+                Usuario tentant = usuarioService.findById(usuarioId);
+                result.setTenantId(tentant.getUsuarioId());
+                result.setCriadoPor(tentant.getUsuarioId());
+                usuarioService.update(result.getUsuarioId(), result);
+            } else {
+                result.setTenantId(result.getUsuarioId());//Atualiza o tenantId corretamente.
+                usuarioService.update(result.getUsuarioId(), result);
+            }
 
-            Assinatura assinatura = Assinatura.getInstance(result);
-            Assinatura assinaturaResult = assinaturaService.save(assinatura);
+            if (PerfilEnum.ADMIN.equals(result.getPerfil())) {
+                Assinatura assinatura = Assinatura.getInstance(result);
+                Assinatura assinaturaResult = assinaturaService.save(assinatura);
 
-            UsuarioInfoDTO dto = new UsuarioInfoDTO();
+                UsuarioInfoDTO dto = new UsuarioInfoDTO();
 
-            dto.setUsuarioId(result.getUsuarioId());
-            dto.setFullName(result.getFullName());
-            dto.setEmail(result.getEmail());
+                dto.setUsuarioId(result.getUsuarioId());
+                dto.setFullName(result.getFullName());
+                dto.setEmail(result.getEmail());
+                AssinaturaDTO assinaturaDTO = new AssinaturaDTO(assinaturaResult.getAssinaturaId(), assinaturaResult.getTipoAssinatura().name(), assinaturaResult.getDataContratacao(), assinaturaResult.getAtivo());
+                dto.setAssinatura(assinaturaDTO);
+                return ResponseEntity.ok().body(dto);
+            }
 
-            AssinaturaDTO assinaturaDTO = new AssinaturaDTO(assinaturaResult.getAssinaturaId(), assinaturaResult.getTipoAssinatura().name(), assinaturaResult.getDataContratacao(), assinaturaResult.getAtivo());
-            dto.setAssinatura(assinaturaDTO);
+            return ResponseEntity.ok().build();
 
-            return ResponseEntity.ok().body(dto);
-
-        } catch (RuntimeException ex) {
+        } catch (Exception ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.internalServerError().build();
         }
@@ -77,10 +95,14 @@ public class UsuarioController {
         dto.setFullName(usuario.getFullName());
 
         AssinaturaDTO assinaturaDTO = new AssinaturaDTO();
-        assinaturaDTO.setAssinaturaId(usuario.getAssinatura().getAssinaturaId());
-        assinaturaDTO.setTipoAssinatura(usuario.getAssinatura().getTipoAssinatura().name());
+
+        if(PerfilEnum.ADMIN.equals(usuario.getPerfil())) {
+            assinaturaDTO.setAssinaturaId(usuario.getAssinatura().getAssinaturaId());
+            assinaturaDTO.setTipoAssinatura(usuario.getAssinatura().getTipoAssinatura().name());
+            assinaturaDTO.setDataContratacao(usuario.getAssinatura().getDataContratacao());
+        }
+
         assinaturaDTO.setAtivo(usuario.getAtivo());
-        assinaturaDTO.setDataContratacao(usuario.getAssinatura().getDataContratacao());
 
         dto.setAssinatura(assinaturaDTO);
 

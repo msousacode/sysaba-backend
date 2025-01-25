@@ -1,5 +1,7 @@
 package br.com.sysaba.modules.acesso.dto;
 
+import br.com.sysaba.modules.acesso.PerfilEnum;
+
 import java.util.UUID;
 
 public class UsuarioInfoDTO {
@@ -10,6 +12,8 @@ public class UsuarioInfoDTO {
     private Boolean termoAceite;
     private String documento;
     private AssinaturaDTO assinatura;
+    private PerfilEnum perfil;
+    private Boolean ativo;
 
     public UsuarioInfoDTO() {
     }
@@ -68,5 +72,21 @@ public class UsuarioInfoDTO {
 
     public void setAssinatura(AssinaturaDTO assinatura) {
         this.assinatura = assinatura;
+    }
+
+    public PerfilEnum getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(PerfilEnum perfil) {
+        this.perfil = perfil;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 }

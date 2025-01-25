@@ -1,5 +1,6 @@
 package br.com.sysaba.modules.usuario;
 
+import br.com.sysaba.modules.acesso.PerfilEnum;
 import br.com.sysaba.modules.assinatura.Assinatura;
 import jakarta.persistence.*;
 
@@ -44,6 +45,13 @@ public class Usuario {
 
     @Column(name = "tentant_id")
     private UUID tenantId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "perfil", nullable = false)
+    private PerfilEnum perfil;
+
+    @Column(name = "redefinir_senha_key")
+    private UUID redefinirSenhaKey;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
     private Assinatura assinatura;
@@ -167,5 +175,21 @@ public class Usuario {
 
     public void setAssinatura(Assinatura assinatura) {
         this.assinatura = assinatura;
+    }
+
+    public PerfilEnum getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(PerfilEnum perfil) {
+        this.perfil = perfil;
+    }
+
+    public UUID getRedefinirSenhaKey() {
+        return redefinirSenhaKey;
+    }
+
+    public void setRedefinirSenhaKey(UUID redefinirSenhaKey) {
+        this.redefinirSenhaKey = redefinirSenhaKey;
     }
 }

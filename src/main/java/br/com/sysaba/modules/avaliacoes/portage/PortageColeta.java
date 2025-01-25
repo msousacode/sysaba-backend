@@ -3,6 +3,7 @@ package br.com.sysaba.modules.avaliacoes.portage;
 import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.avaliacoes.portage.dto.PortageColetaDTO;
+import br.com.sysaba.modules.usuario.Usuario;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -47,12 +48,15 @@ public class PortageColeta extends Tenantable {
     @Column(name = "descricao", nullable = false)
     private String descricao;
 
-    public static PortageColeta of(PortageColetaDTO dto, PortageAvaliacao portageAvaliacao, Aprendiz aprendiz, UUID usuarioId) {
+    @Column(name = "criado_por_nome")
+    private String criadoNome;
+
+    public static PortageColeta of(PortageColetaDTO dto, PortageAvaliacao portageAvaliacao, Aprendiz aprendiz, Usuario usuario) {
         PortageColeta portageColeta = new PortageColeta();
 
-        Objects.requireNonNull(usuarioId, "Usuario que realiza a coleta não pode ser null");
-        portageColeta.setCriadoPor(usuarioId);
-
+        Objects.requireNonNull(usuario, "Usuario que realiza a coleta não pode ser null");
+        portageColeta.setCriadoPor(usuario.getUsuarioId());
+        portageColeta.setCriadoNome(usuario.getFullName());
         portageColeta.setPortage(portageAvaliacao);
         portageColeta.setAprendiz(aprendiz);
         portageColeta.setIdadeColeta(dto.getIdadeColeta());
@@ -150,5 +154,13 @@ public class PortageColeta extends Tenantable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public String getCriadoNome() {
+        return criadoNome;
+    }
+
+    public void setCriadoNome(String criadoNome) {
+        this.criadoNome = criadoNome;
     }
 }

@@ -1,11 +1,13 @@
 package br.com.sysaba.modules.usuario;
 
 import br.com.sysaba.core.commons.service.GenericService;
+import br.com.sysaba.core.exception.RegistroNaoEncontradoException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -49,5 +51,13 @@ public class UsuarioService implements GenericService<Usuario, UUID> {
 
     @Override
     public void beforeSave() {
+    }
+
+    public List<Usuario> findAllByTenantId(UUID tenantId) {
+        return repository.findAllByTenantId(tenantId);
+    }
+
+    public Usuario getByEmail(String email) {
+        return repository.findByEmail(email).orElseThrow(() -> new RegistroNaoEncontradoException("Não foi possível localizar usuario pelo email: " + email));
     }
 }

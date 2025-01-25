@@ -1,10 +1,14 @@
 package br.com.sysaba.modules.coleta;
 
 import br.com.sysaba.core.commons.service.GenericService;
+import br.com.sysaba.core.security.config.TenantAuthenticationToken;
 import br.com.sysaba.modules.coleta.dto.RespostaDTO;
+import br.com.sysaba.modules.usuario.Usuario;
+import br.com.sysaba.modules.usuario.UsuarioService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,8 +21,11 @@ public class ColetaService implements GenericService<Coleta, UUID> {
 
     private final ColetaRepository coletaRepository;
 
-    public ColetaService(ColetaRepository coletaRepository) {
+    private UsuarioService usuarioService;
+
+    public ColetaService(ColetaRepository coletaRepository, UsuarioService usuarioService) {
         this.coletaRepository = coletaRepository;
+        this.usuarioService = usuarioService;
     }
 
     @Override
@@ -61,6 +68,11 @@ public class ColetaService implements GenericService<Coleta, UUID> {
     }
 
     public void updateResposta(List<RespostaDTO> respostasDTOS) {
+
+        String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        Usuario usuario = usuarioService.getByEmail(email);
+
         List<Coleta> coletas = new ArrayList<>();
 
         respostasDTOS.forEach(i -> {
@@ -68,6 +80,8 @@ public class ColetaService implements GenericService<Coleta, UUID> {
             coleta.setResposta(i.getResposta());
             coleta.setDataColeta(LocalDateTime.now());
             coleta.setFoiRespondido(true);
+            coleta.setCriadoPor(usuario.getUsuarioId());
+            coleta.setCriadoNome(usuario.getFullName());
             coletas.add(coleta);
         });
 

@@ -3,6 +3,7 @@ package br.com.sysaba.modules.avaliacoes.vbmapp;
 import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.avaliacoes.vbmapp.dto.VbMappColetaDTO;
+import br.com.sysaba.modules.usuario.Usuario;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -47,11 +48,15 @@ public class VbMappColeta extends Tenantable {
     @Column(name = "descricao", length = 500)
     private String descricao;
 
-    public static VbMappColeta of(VbMappColetaDTO dto, VbMappAvaliacao vbMappAvaliacao, Aprendiz aprendiz, UUID usuarioId) {
+    @Column(name = "criado_por_nome")
+    private String criadoNome;
+
+    public static VbMappColeta of(VbMappColetaDTO dto, VbMappAvaliacao vbMappAvaliacao, Aprendiz aprendiz, Usuario usuario) {
         VbMappColeta vbMappColeta = new VbMappColeta();
 
-        Objects.requireNonNull(usuarioId);
-        vbMappColeta.setCriadoPor(usuarioId);
+        Objects.requireNonNull(usuario);
+        vbMappColeta.setCriadoPor(usuario.getUsuarioId());
+        vbMappColeta.setCriadoNome(usuario.getFullName());
         vbMappColeta.setVbMapp(vbMappAvaliacao);
         vbMappColeta.setAprendiz(aprendiz);
         vbMappColeta.setNivelColeta(dto.getNivelColeta());
@@ -163,4 +168,11 @@ public class VbMappColeta extends Tenantable {
         this.descricao = descricao;
     }
 
+    public String getCriadoNome() {
+        return criadoNome;
+    }
+
+    public void setCriadoNome(String criadoNome) {
+        this.criadoNome = criadoNome;
+    }
 }
