@@ -8,6 +8,7 @@ import br.com.sysaba.modules.usuario.UsuarioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @RestController
@@ -72,13 +74,13 @@ public class AprendizController {
 
         PerfilEnum perfilEnum = getPerfil();
 
-        if(PerfilEnum.ADMIN.equals(perfilEnum)) {
-            Page<Aprendiz> aprendizList = aprendizService.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
+        if (PerfilEnum.ADMIN.equals(perfilEnum)) {
+            Page<Aprendiz> aprendizList = aprendizService.findAllIsTrue(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
             Page<AprendizDTO> dtoList = aprendizList.map(i -> MapperUtil.converte(i, AprendizDTO.class));
             return ResponseEntity.status(HttpStatus.OK).body(dtoList);
         }
 
-        if(!PerfilEnum.ADMIN.equals(perfilEnum)) {
+        if (!PerfilEnum.ADMIN.equals(perfilEnum)) {
             UUID usuarioId = ((TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getTenantId();
 
             List<AprendizProfissional> aprendizProfissionals = aprendizProfissionalRespository.findAllByProfissional_usuarioId(usuarioId);
@@ -97,6 +99,18 @@ public class AprendizController {
         Aprendiz saved = aprendizService.findById(id);
         AprendizDTO dto = MapperUtil.converte(saved, AprendizDTO.class);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") UUID id) {
+        try {
+            aprendizService.inativar(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            logger.error("erro ao deletar", e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     private PerfilEnum getPerfil() {

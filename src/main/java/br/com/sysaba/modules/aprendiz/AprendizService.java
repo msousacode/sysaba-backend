@@ -2,12 +2,10 @@ package br.com.sysaba.modules.aprendiz;
 
 import br.com.sysaba.core.commons.service.GenericService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -49,8 +47,16 @@ public class AprendizService implements GenericService<Aprendiz, UUID> {
         return GenericService.super.findAll(pageable);
     }
 
+    public Page<Aprendiz> findAllIsTrue(Pageable pageable) {
+        return aprendizRespository.findAllByAtivoIsTrue(pageable);
+    }
+
     @Override
     public void beforeSave() {
         GenericService.super.beforeSave();
+    }
+
+    public void inativar(UUID id) {
+        aprendizRespository.inativar(id);
     }
 }
