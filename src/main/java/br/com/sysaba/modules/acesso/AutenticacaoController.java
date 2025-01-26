@@ -3,7 +3,10 @@ package br.com.sysaba.modules.acesso;
 import br.com.sysaba.core.security.CustomAuthenticationManager;
 import br.com.sysaba.core.security.service.AuthService;
 import br.com.sysaba.modules.acesso.dto.AuthDTO;
+import br.com.sysaba.modules.acesso.dto.NovaSenhaDTO;
+import br.com.sysaba.modules.acesso.dto.UsuarioInfoDTO;
 import br.com.sysaba.modules.usuario.UsuarioRepository;
+import br.com.sysaba.modules.usuario.dtos.UsuarioDTO;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,5 +90,10 @@ public class AutenticacaoController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @PostMapping("/nova-senha")
+    public ResponseEntity<?> criarNovaSenha(@RequestBody NovaSenhaDTO novaSenhaDTO) {
+        return authService.criarNovaSenha(novaSenhaDTO) ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
 }

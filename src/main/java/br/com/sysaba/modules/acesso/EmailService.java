@@ -78,6 +78,6 @@ public class EmailService {
     }
 
     private String criarLinkRedefinirSenha(UUID usuarioId, UUID randomKey) {
-        return String.format("%s/reset-password/?u=%s&k=%s", hostUrl, usuarioId, randomKey);
+        return String.format("%s/u/%s/k/%s", hostUrl, usuarioId, randomKey);
     }
 }
