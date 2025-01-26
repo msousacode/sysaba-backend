@@ -2,6 +2,7 @@ package br.com.sysaba.modules.usuario;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.acesso.AutenticacaoController;
+import br.com.sysaba.modules.acesso.EmailService;
 import br.com.sysaba.modules.acesso.PerfilEnum;
 import br.com.sysaba.modules.acesso.dto.AssinaturaDTO;
 import br.com.sysaba.modules.acesso.dto.UsuarioInfoDTO;
@@ -29,12 +30,14 @@ public class UsuarioController {
     private final AssinaturaService assinaturaService;
     private final PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
+    private final EmailService emailService;
 
-    public UsuarioController(UsuarioService usuarioService, AssinaturaService assinaturaService, PasswordEncoder passwordEncoder, UsuarioRepository usuarioRepository) {
+    public UsuarioController(UsuarioService usuarioService, AssinaturaService assinaturaService, PasswordEncoder passwordEncoder, UsuarioRepository usuarioRepository, EmailService emailService) {
         this.usuarioService = usuarioService;
         this.assinaturaService = assinaturaService;
         this.passwordEncoder = passwordEncoder;
         this.usuarioRepository = usuarioRepository;
+        this.emailService = emailService;
     }
 
     @PostMapping
@@ -57,6 +60,7 @@ public class UsuarioController {
                 result.setTenantId(tentant.getUsuarioId());
                 result.setCriadoPor(tentant.getUsuarioId());
                 usuarioService.update(result.getUsuarioId(), result);
+                emailService.forget(usuarioDTO.getEmail().trim());
             } else {
                 result.setTenantId(result.getUsuarioId());//Atualiza o tenantId corretamente.
                 usuarioService.update(result.getUsuarioId(), result);
