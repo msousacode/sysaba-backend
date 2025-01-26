@@ -28,7 +28,7 @@ public class Treinamento extends Tenantable {
     @Column(name = "descricao", nullable = false, length = 500)
     private String descricao;
 
-    @Column(name = "importId")
+    @Column(name = "import_id")
     private UUID importId;
 
     @OneToMany(mappedBy = "treinamento", cascade = CascadeType.PERSIST)

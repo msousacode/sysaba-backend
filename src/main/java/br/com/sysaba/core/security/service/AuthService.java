@@ -1,7 +1,9 @@
 package br.com.sysaba.core.security.service;
 
 
+import br.com.sysaba.core.exception.RegistroNaoEncontradoException;
 import br.com.sysaba.modules.acesso.PerfilEnum;
+import br.com.sysaba.modules.acesso.dto.NovaSenhaDTO;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioRepository;
 import org.springframework.security.core.Authentication;
@@ -39,7 +41,7 @@ public class AuthService {
         Map<String, Object> customClaims = new HashMap<>();
         customClaims.put("username", username);
 
-        if(PerfilEnum.ADMIN.equals(usuario.getPerfil())) {
+        if (PerfilEnum.ADMIN.equals(usuario.getPerfil())) {
             customClaims.put("tenantId", usuario.getUsuarioId());
         } else {
             customClaims.put("tenantId", usuario.getTenantId());
@@ -51,11 +53,11 @@ public class AuthService {
 
         /**
          * TODO usar quando for necessário não apagar
-        String scope = authentication.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
-        */
+         String scope = authentication.getAuthorities()
+         .stream()
+         .map(GrantedAuthority::getAuthority)
+         .collect(Collectors.joining(" "));
+         */
 
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("self")
@@ -69,4 +71,15 @@ public class AuthService {
         return jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
     }
 
+    public Boolean criarNovaSenha(NovaSenhaDTO novaSenhaDTO) {
+
+        Usuario usuario = usuarioRepository.findById(novaSenhaDTO.getUserId()).orElseThrow(() -> new RegistroNaoEncontradoException("Não foi localizado o usuario."));
+
+        if (usuario.getRedefinirSenhaKey().equals(novaSenhaDTO.getKeyId())) {
+            usuario.setSenha(passwordEncoder.encode(novaSenhaDTO.getSenha()));
+            usuarioRepository.save(usuario);
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
 }

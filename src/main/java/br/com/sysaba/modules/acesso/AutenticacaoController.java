@@ -3,7 +3,10 @@ package br.com.sysaba.modules.acesso;
 import br.com.sysaba.core.security.CustomAuthenticationManager;
 import br.com.sysaba.core.security.service.AuthService;
 import br.com.sysaba.modules.acesso.dto.AuthDTO;
+import br.com.sysaba.modules.acesso.dto.NovaSenhaDTO;
+import br.com.sysaba.modules.acesso.dto.UsuarioInfoDTO;
 import br.com.sysaba.modules.usuario.UsuarioRepository;
+import br.com.sysaba.modules.usuario.dtos.UsuarioDTO;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +31,9 @@ import java.io.IOException;
 public class AutenticacaoController {
 
     private static final Logger logger = LoggerFactory.getLogger(AutenticacaoController.class);
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private CustomAuthenticationManager customAuthenticationManager;
@@ -87,5 +95,10 @@ public class AutenticacaoController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @PostMapping("/nova-senha")
+    public ResponseEntity<?> criarNovaSenha(@RequestBody NovaSenhaDTO novaSenhaDTO) {
+        return authService.criarNovaSenha(novaSenhaDTO) ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
 }
