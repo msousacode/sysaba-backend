@@ -31,6 +31,9 @@ public class PortageColetaDTO {
     @JsonProperty("tipo")
     private int tipo;
 
+    @JsonProperty("criado_por_nome")
+    private String criadoNome;
+
     public PortageColetaDTO(){}
 
     public PortageColetaDTO(UUID portageUuidFk, UUID aprendizUuidFk, String idadeColeta, String resposta, Integer coletaId, Integer codigo, int tipo) {
@@ -51,6 +54,7 @@ public class PortageColetaDTO {
         portageColetaDTO.setResposta(portageColeta.getResposta());
         portageColetaDTO.setAprendizUuidFk(portageColeta.getAprendiz().getAprendizId());
         portageColetaDTO.setTipo(portageColeta.getTipo());
+        portageColetaDTO.setCriadoNome(portageColeta.getCriadoNome());
         return portageColetaDTO;
     }
 
@@ -116,5 +120,13 @@ public class PortageColetaDTO {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public String getCriadoNome() {
+        return criadoNome;
+    }
+
+    public void setCriadoNome(String criadoNome) {
+        this.criadoNome = criadoNome;
     }
 }

@@ -38,10 +38,6 @@ public class EmailService {
 
         Usuario usuario = usuarioService.getByEmail(email);
 
-        if (!TipoAssinaturaEnum.ASSINANTE.equals(usuario.getAssinatura().getTipoAssinatura())) {
-            return "NAO_ASSINANTE";
-        }
-
         usuario.setRedefinirSenhaKey(UUID.randomUUID());
         Usuario usuarioUpdated = usuarioService.save(usuario);
 
