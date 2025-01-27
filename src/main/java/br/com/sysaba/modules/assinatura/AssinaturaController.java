@@ -49,7 +49,7 @@ public class AssinaturaController {
         if (usuario.isEmpty())
             return ResponseEntity.notFound().build();
 
-        Assinatura assinatura = assinaturaService.findById(usuario.get().getUsuarioId());
+        Assinatura assinatura = usuario.get().getAssinatura();
 
         if (TipoAssinaturaEnum.ASSINANTE.equals(assinatura.getTipoAssinatura()))
             return ResponseEntity.ok().build();
