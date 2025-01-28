@@ -4,8 +4,11 @@ import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.avaliacoes.ablls.dto.AbllsDTO;
 import br.com.sysaba.modules.avaliacoes.ablls.dto.AbllsColetaDTO;
+import br.com.sysaba.modules.avaliacoes.portage.PortageColeta;
+import br.com.sysaba.modules.avaliacoes.portage.dto.PortageColetaDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -56,4 +59,10 @@ public class AbllsController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/coletas-respondidas/{abllsId}")
+    public ResponseEntity<List<AbllsColetaDTO>> getColetasRespondidas(@PathVariable("abllsId") UUID abllsId) {
+        List<AbllsColeta> coletas = abllsService.findByColetasRespondidas(abllsId);
+        List<AbllsColetaDTO> dtos = coletas.stream().map(AbllsColetaDTO::of).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(dtos);
+    }
 }

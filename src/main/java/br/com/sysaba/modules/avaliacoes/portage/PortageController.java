@@ -102,7 +102,6 @@ public class PortageController {
         return ResponseEntity.status(HttpStatus.OK).body(dtos);
     }
 
-
     @GetMapping("/chart/pontuacoes/{portageId}")
     public ResponseEntity<List<Double>> getDataSetPontuacaoPortage(@PathVariable("portageId") UUID portageId) {
         List<Double> coletaPontuacoes = portageService.findDataSetPontuacaoPortage(portageId);

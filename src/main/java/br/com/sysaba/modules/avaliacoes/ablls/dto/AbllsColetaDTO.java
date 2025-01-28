@@ -1,5 +1,6 @@
 package br.com.sysaba.modules.avaliacoes.ablls.dto;
 
+import br.com.sysaba.modules.avaliacoes.ablls.AbllsColeta;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AbllsColetaDTO {
@@ -18,6 +19,20 @@ public class AbllsColetaDTO {
 
     @JsonProperty("resposta")
     private int resposta;
+
+    @JsonProperty("criado_por_nome")
+    private String criadoNome;
+
+    public static AbllsColetaDTO of(AbllsColeta abllsColeta) {
+        AbllsColetaDTO ablls = new AbllsColetaDTO();
+        ablls.setId(abllsColeta.getColetaId());
+        ablls.setAprendizUuidFk(String.valueOf(abllsColeta.getAprendiz().getAprendizId()));
+        ablls.setCodigo(abllsColeta.getCodigo());
+        ablls.setResposta(abllsColeta.getResposta());
+        ablls.setCriadoNome(abllsColeta.getCriadoNome());
+        ablls.setDescricao(abllsColeta.getDescricao());
+        return ablls;
+    }
 
     // Getters e Setters
 
@@ -59,5 +74,13 @@ public class AbllsColetaDTO {
 
     public void setResposta(int resposta) {
         this.resposta = resposta;
+    }
+
+    public String getCriadoNome() {
+        return criadoNome;
+    }
+
+    public void setCriadoNome(String criadoNome) {
+        this.criadoNome = criadoNome;
     }
 }

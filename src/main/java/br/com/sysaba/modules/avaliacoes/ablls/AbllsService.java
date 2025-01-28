@@ -3,6 +3,7 @@ package br.com.sysaba.modules.avaliacoes.ablls;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.avaliacoes.ablls.dto.AbllsColetaDTO;
+import br.com.sysaba.modules.avaliacoes.portage.PortageColeta;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioService;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,5 +62,9 @@ public class AbllsService {
         }
 
         abllsColetaRepository.saveAll(list);
+    }
+
+    public List<AbllsColeta> findByColetasRespondidas(UUID abllsId) {
+        return abllsColetaRepository.findByAblls_abllsId(abllsId);
     }
 }
