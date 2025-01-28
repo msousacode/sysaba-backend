@@ -34,8 +34,6 @@ public class AbllsColetaDTO {
         return ablls;
     }
 
-    // Getters e Setters
-
     public String getAprendizUuidFk() {
         return aprendizUuidFk;
     }
