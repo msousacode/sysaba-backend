@@ -3,15 +3,14 @@ package br.com.sysaba.modules.avaliacoes.ablls;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.avaliacoes.ablls.dto.AbllsDTO;
+import br.com.sysaba.modules.avaliacoes.ablls.dto.AbllsColetaDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -47,4 +46,14 @@ public class AbllsController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @Transactional
+    @PostMapping("/usuario/{usuarioId}/avaliacao/{abllsId}/habilidade/{habilidade}")
+    public ResponseEntity<?> coletas(@RequestBody List<AbllsColetaDTO> abllsColetaDTO, @PathVariable("usuarioId") UUID usuarioId, @PathVariable("abllsId") UUID abllsId, @PathVariable("habilidade") Integer habilidade) {
+
+        abllsService.salvarColetas(abllsColetaDTO, usuarioId, abllsId, habilidade);
+
+        return ResponseEntity.ok().build();
+    }
+
 }
