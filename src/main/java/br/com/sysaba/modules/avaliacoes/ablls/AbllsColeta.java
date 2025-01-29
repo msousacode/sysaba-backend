@@ -52,7 +52,7 @@ public class AbllsColeta extends Tenantable {
         super(LocalDateTime.now());
     }
 
-    public static AbllsColeta of(Aprendiz aprendiz, AbllsAvaliacao abllsAvaliacao, AbllsColetaDTO dto, Integer habilidade, Usuario usuario) {
+    public static AbllsColeta of(Aprendiz aprendiz, AbllsAvaliacao abllsAvaliacao, AbllsColetaDTO dto, AbllsHabilidadeEnum habilidade, Usuario usuario) {
         AbllsColeta ablls = new AbllsColeta();
         ablls.setAblls(abllsAvaliacao);
         ablls.setAprendiz(aprendiz);
@@ -60,7 +60,7 @@ public class AbllsColeta extends Tenantable {
         ablls.setCodigo(dto.getCodigo());
         ablls.setDescricao(dto.getDescricao());
         ablls.setResposta(dto.getResposta());
-        ablls.setHabilidade(AbllsHabilidadeEnum.getByCod(habilidade));
+        ablls.setHabilidade(habilidade);
         ablls.setDataColeta(LocalDateTime.now());
         ablls.setCriadoNome(usuario.getFullName());
         ablls.setAtivo(true);

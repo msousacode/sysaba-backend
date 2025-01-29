@@ -1,7 +1,5 @@
 package br.com.sysaba.modules.avaliacoes.ablls.dto;
 
-import br.com.sysaba.modules.avaliacoes.vbmapp.enums.VBMappNivelUmEnum;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,22 +12,23 @@ public enum AbllsHabilidadeEnum {
     SOLICITACOES(6, "Solicitações"),
     NOMEACAO(7, "Nomeação"),
     INTRAVERBAL(8, "Intraverbal"),
-    VOCALIZACOES_SPONTANEAS(9, "Vocalizações Espontâneas"),
+    VOCALIZACOES_ESPONTANEAS(9, "Vocalizações Espontâneas"),
     GRAMATICA_E_SINTAXE(10, "Gramática e Sintaxe"),
     JOGOS_E_LAZER(11, "Jogos e Lazer"),
     INTERACAO_SOCIAL(12, "Interação Social"),
     INSTRUCOES_EM_GRUPO(13, "Instruções em Grupo"),
-    RESPOSTAS_GENERALIZADAS(14, "Respostas Generalizadas"),
-    LEITURA(15, "Leitura"),
-    MATEMATICA(16, "Matemática"),
-    ESCRITA(17, "Escrita"),
-    ORTOGRAFIA(18, "Ortografia"),
-    VESTIMENTA(19, "Vestimenta"),
-    ALIMENTACAO(20, "Alimentação"),
-    PREPARACAO(21, "Preparação"),
-    USO_DO_BANHEIRO(22, "Uso do Banheiro"),
-    HABILIDADES_MOTORAS_GROSSAS(23, "Habilidades Motoras Grossas"),
-    HABILIDADES_MOTORAS_FINAS(24, "Habilidades Motoras Finas");
+    ROTINAS_CLASSE(14, "Seguir Rotinas de Classe"),
+    RESPOSTAS_GENERALIZADAS(15, "Respostas Generalizadas"),
+    LEITURA(16, "Leitura"),
+    MATEMATICA(17, "Matemática"),
+    ESCRITA(18, "Escrita"),
+    ORTOGRAFIA(19, "Ortografia"),
+    VESTIMENTA(20, "Vestimenta"),
+    ALIMENTACAO(21, "Alimentação"),
+    PREPARACAO(22, "Preparação"),
+    USO_DO_BANHEIRO(23, "Uso do Banheiro"),
+    HABILIDADES_MOTORAS_GROSSAS(24, "Habilidades Motoras Grossas"),
+    HABILIDADES_MOTORAS_FINAS(25, "Habilidades Motoras Finas");
 
     private final int id;
     private final String name;

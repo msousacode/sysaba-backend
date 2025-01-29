@@ -1,6 +1,7 @@
 package br.com.sysaba.modules.avaliacoes.ablls;
 
 import br.com.sysaba.core.repository.TenantableRepository;
+import br.com.sysaba.modules.avaliacoes.ablls.dto.AbllsHabilidadeEnum;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +19,6 @@ public interface AbllsColetaRepository extends TenantableRepository<AbllsColeta>
     void deleteAllByColetaId(List<Integer> coletasIds);
 
     List<AbllsColeta> findByAblls_abllsId(UUID abllsId);
+
+    List<AbllsColeta> findByAblls_abllsIdAndHabilidade(UUID abllsId, AbllsHabilidadeEnum habilidade);
 }
