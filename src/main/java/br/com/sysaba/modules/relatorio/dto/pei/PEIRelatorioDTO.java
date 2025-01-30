@@ -13,6 +13,7 @@ public class PEIRelatorioDTO {
     private List<PEIDadoDTO> dados;
     private List<List<PEIDadoDTO>> dadosNiveisVbMapp = new ArrayList<>();
     private List<ProfissionalDTO> profissionais;
+    private List<PEIAbllsDadoDTO> dadosAblls;//usar somente para PEI ABLLS.
 
     public List<PEIDadoDTO> getDados() {
         return dados;
@@ -52,5 +53,13 @@ public class PEIRelatorioDTO {
 
     public void setProfissionais(List<ProfissionalDTO> profissionais) {
         this.profissionais = profissionais;
+    }
+
+    public List<PEIAbllsDadoDTO> getDadosAblls() {
+        return dadosAblls;
+    }
+
+    public void setDadosAblls(List<PEIAbllsDadoDTO> dadosAblls) {
+        this.dadosAblls = dadosAblls;
     }
 }

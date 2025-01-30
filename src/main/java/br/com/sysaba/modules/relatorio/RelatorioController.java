@@ -1,11 +1,12 @@
 package br.com.sysaba.modules.relatorio;
 
-import br.com.sysaba.modules.avaliacoes.ChartDTO;
 import br.com.sysaba.modules.relatorio.dto.LinkDowloadResponseDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -58,6 +59,15 @@ public class RelatorioController {
         return ResponseEntity.ok(linkDowloadResponseDTO);
     }
 
+    @GetMapping("/ablls/{abllsId}/pei")
+    public ResponseEntity<LinkDowloadResponseDTO> getRelatorioAbllsPEI(@PathVariable("abllsId") UUID abllsId) {
+        LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.getRelatorioAbllsPEI(abllsId);
+
+        if (linkDowloadResponseDTO == null)
+            return ResponseEntity.internalServerError().build();
+
+        return ResponseEntity.ok(linkDowloadResponseDTO);
+    }
 
     @GetMapping("/vbmapp/aprendiz/{aprendizId}/barreiras")
     public ResponseEntity<LinkDowloadResponseDTO> getChartBarreiras(@PathVariable("aprendizId") UUID aprendizId) {

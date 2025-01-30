@@ -39,6 +39,9 @@ public class AbllsColeta extends Tenantable {
     @Column(name = "coleta_id", nullable = false)
     private Integer coletaId;
 
+    @Column(name = "pontuacao_max", nullable = false)
+    private Integer pontuacaoMax;
+
     @Column(name = "codigo")
     private String codigo;
 
@@ -62,7 +65,9 @@ public class AbllsColeta extends Tenantable {
         ablls.setResposta(dto.getResposta());
         ablls.setHabilidade(habilidade);
         ablls.setDataColeta(LocalDateTime.now());
+        ablls.setCriadoPor(usuario.getUsuarioId());
         ablls.setCriadoNome(usuario.getFullName());
+        ablls.setPontuacaoMax(dto.getPontos());
         ablls.setAtivo(true);
 
         return ablls;
@@ -146,5 +151,13 @@ public class AbllsColeta extends Tenantable {
 
     public void setCriadoNome(String criadoNome) {
         this.criadoNome = criadoNome;
+    }
+
+    public Integer getPontuacaoMax() {
+        return pontuacaoMax;
+    }
+
+    public void setPontuacaoMax(Integer pontuacaoMax) {
+        this.pontuacaoMax = pontuacaoMax;
     }
 }

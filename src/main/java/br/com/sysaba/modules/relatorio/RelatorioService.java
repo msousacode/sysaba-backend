@@ -6,6 +6,9 @@ import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.atendimento.Atendimento;
 import br.com.sysaba.modules.atendimento.AtendimentoService;
+import br.com.sysaba.modules.avaliacoes.ablls.AbllsColeta;
+import br.com.sysaba.modules.avaliacoes.ablls.AbllsColetaRepository;
+import br.com.sysaba.modules.avaliacoes.ablls.dto.AbllsHabilidadeEnum;
 import br.com.sysaba.modules.avaliacoes.portage.PortageColeta;
 import br.com.sysaba.modules.avaliacoes.portage.PortageService;
 import br.com.sysaba.modules.avaliacoes.portage.enums.PortageAvaliacaoEnum;
@@ -23,6 +26,7 @@ import br.com.sysaba.modules.relatorio.client.RelatorioApiService;
 import br.com.sysaba.modules.relatorio.dto.*;
 import br.com.sysaba.modules.relatorio.dto.barreiras.TabelaBarreiraDTO;
 import br.com.sysaba.modules.relatorio.dto.barreiras.VBMappBarreiraRelatorioDTO;
+import br.com.sysaba.modules.relatorio.dto.pei.PEIAbllsDadoDTO;
 import br.com.sysaba.modules.relatorio.dto.pei.PEIDadoDTO;
 import br.com.sysaba.modules.relatorio.dto.pei.PEIObjetivoDTO;
 import br.com.sysaba.modules.relatorio.dto.pei.PEIRelatorioDTO;
@@ -31,6 +35,7 @@ import br.com.sysaba.modules.relatorio.dto.portage.DadosDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.PortageRelatorioDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.TabelaDTO;
 import br.com.sysaba.modules.treinamento.Treinamento;
+import br.com.sysaba.modules.treinamento.base.HabilidadeBaseEnum;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioService;
 import org.jfree.chart.ChartFactory;
@@ -80,9 +85,11 @@ public class RelatorioService {
 
     private final VBMappBarreiraRepository vbMappBarreiraRepository;
 
+    private final AbllsColetaRepository abllsColetaRepository;
+
     private final UsuarioService usuarioService;
 
-    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService, PortageService portageService, PortageColetaRepository portageColetaRepository, VBMappColetaRepository vbMappColetaRepository, VBMappBarreiraRepository vbMappBarreiraRepository, UsuarioService usuarioService) {
+    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService, PortageService portageService, PortageColetaRepository portageColetaRepository, VBMappColetaRepository vbMappColetaRepository, VBMappBarreiraRepository vbMappBarreiraRepository, AbllsColetaRepository abllsColetaRepository, UsuarioService usuarioService) {
         this.aprendizService = aprendizService;
         this.atendimentoService = atendimentoService;
         this.relatorioApiService = relatorioApiService;
@@ -90,6 +97,7 @@ public class RelatorioService {
         this.portageColetaRepository = portageColetaRepository;
         this.vbMappColetaRepository = vbMappColetaRepository;
         this.vbMappBarreiraRepository = vbMappBarreiraRepository;
+        this.abllsColetaRepository = abllsColetaRepository;
         this.usuarioService = usuarioService;
     }
 
@@ -137,18 +145,18 @@ public class RelatorioService {
 
                 /** TODO o gráfico foi desbilitado até encontrar uma maneira melhor de gerar esses gráficos
                  * pois hoje os gráficos estão muito feios e estão quebrabdo o layout da impressão.
-                try {
+                 try {
 
-                    if ("Protocolo ABC".equals(treinamento.getTreinamento().getProtocolo())) {
-                        treinamentoDTO.setChartImage(createPieChart(treinamento.getTreinamento()));
-                    } else {
-                        List<String> imgChartList = createLineChart(treinamento.getTreinamento());
-                        treinamentoDTO.setChartImageList(imgChartList);
-                    }
+                 if ("Protocolo ABC".equals(treinamento.getTreinamento().getProtocolo())) {
+                 treinamentoDTO.setChartImage(createPieChart(treinamento.getTreinamento()));
+                 } else {
+                 List<String> imgChartList = createLineChart(treinamento.getTreinamento());
+                 treinamentoDTO.setChartImageList(imgChartList);
+                 }
 
-                } catch (IOException e) {
-                    throw new RuntimeException("Erro ao gerar o gráfico: ", e);
-                }
+                 } catch (IOException e) {
+                 throw new RuntimeException("Erro ao gerar o gráfico: ", e);
+                 }
                  **/
 
                 treinamentoDTO.setChartImageList(List.of());
@@ -761,5 +769,82 @@ public class RelatorioService {
         }
 
         return imgChart;
+    }
+
+    public LinkDowloadResponseDTO getRelatorioAbllsPEI(UUID abllsId) {
+
+        List<AbllsColeta> resultList = abllsColetaRepository.findByAblls_abllsId(abllsId);
+
+        UUID profissionalColetaId = resultList.stream().findFirst().get().getCriadoPor();
+        Usuario usuario = usuarioService.findById(profissionalColetaId);
+
+        if (resultList.isEmpty()) {
+            throw new RegistroNaoEncontradoException("Não foi localizado dados para gerar o relatório PEI ABLLS.");
+        }
+
+        Aprendiz aprendiz = resultList.stream().findFirst().get().getAprendiz();
+
+        ProfissionalDTO profissionalDTO = new ProfissionalDTO();
+        profissionalDTO.setNome(usuario.getFullName());
+        profissionalDTO.setRegistro(usuario.getDocumento() == null ? "" : usuario.getDocumento());
+
+        PEIRelatorioDTO peiDTO = new PEIRelatorioDTO();
+        peiDTO.setTitulo("PEI - Plano Educacional Individualizado - ABLLS-R");
+        peiDTO.setCabecario(new CabecalhoDTO(aprendiz.getNomeAprendiz(), calcularIdade(aprendiz.getNascAprendiz())));
+        peiDTO.setProfissionais(List.of(profissionalDTO));
+
+        List<PEIAbllsDadoDTO> dados = new ArrayList<>();
+
+        List<List<AbllsColeta>> listaGeral = new ArrayList<>();
+
+        for (AbllsHabilidadeEnum habilidadeEnum : AbllsHabilidadeEnum.getLookup()) {
+            listaGeral.add(resultList.stream().filter(i -> habilidadeEnum.equals(i.getHabilidade())).toList());
+        }
+
+        for (List<AbllsColeta> list : listaGeral) {
+            if (!list.isEmpty()) {
+                dados.add(getAbllsDadoDTO(list));
+            }
+        }
+
+        peiDTO.setDadosAblls(dados);
+
+        return relatorioApiService.postPEIRelatorioVBMAPP(peiDTO);
+    }
+
+    private PEIAbllsDadoDTO getAbllsDadoDTO(List<AbllsColeta> list) {
+        PEIAbllsDadoDTO peiAbllsDadoDTO = new PEIAbllsDadoDTO();
+        peiAbllsDadoDTO.setHabilidade(list.stream().findFirst().get().getHabilidade().name());
+        peiAbllsDadoDTO.setTitulo("Teste");
+
+        List<AbllsColeta> priorioritarioAteDoisPontosList = list.stream().filter(i -> i.getPontuacaoMax() == 2 && i.getResposta() == 1).toList();
+        List<AbllsColeta> demaisAteDoisPontosList = list.stream().filter(i -> i.getPontuacaoMax() == 2 && i.getResposta() == 0).toList();
+
+        List<AbllsColeta> priorioritarioAteQuatroPontosList = list.stream().filter(i -> i.getPontuacaoMax() == 4 && (i.getResposta() == 2 || i.getResposta() == 3)).toList();
+        List<AbllsColeta> demaisAteQuatroPontosList = list.stream().filter(i -> i.getPontuacaoMax() == 4 && (i.getResposta() == 0 || i.getResposta() == 1)).toList();
+
+        //Até dois
+        if (!priorioritarioAteDoisPontosList.isEmpty()) {
+            List<PEIObjetivoDTO> objsPrioritarios = priorioritarioAteDoisPontosList.stream().map(PEIObjetivoDTO::of).toList();
+            peiAbllsDadoDTO.setObjetivosPrioritariosAteDoisPontos(objsPrioritarios);
+        }
+
+        if (!demaisAteDoisPontosList.isEmpty()) {
+            List<PEIObjetivoDTO> demaisObjetivos = demaisAteDoisPontosList.stream().map(PEIObjetivoDTO::of).toList();
+            peiAbllsDadoDTO.setObjetivosZeroPontosAteDoisPontos(demaisObjetivos);
+        }
+
+        //Até 4 pontos
+        if (!priorioritarioAteQuatroPontosList.isEmpty()) {
+            List<PEIObjetivoDTO> objsPrioritarios = priorioritarioAteQuatroPontosList.stream().map(PEIObjetivoDTO::of).toList();
+            peiAbllsDadoDTO.setObjetivosPrioritariosAteQuatroPontos(objsPrioritarios);
+        }
+
+        if (!demaisAteQuatroPontosList.isEmpty()) {
+            List<PEIObjetivoDTO> demaisObjetivos = demaisAteQuatroPontosList.stream().map(PEIObjetivoDTO::of).toList();
+            peiAbllsDadoDTO.setObjetivosZeroAteUmPntoAteQuatroPontos(demaisObjetivos);
+        }
+
+        return peiAbllsDadoDTO;
     }
 }

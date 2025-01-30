@@ -27,6 +27,7 @@ create table ablls_coletas (
         tenant_id uuid not null,
         codigo varchar(255),
         coleta_id integer not null,
+        pontuacao_max integer not null,
         criado_por_nome varchar(255),
         data_coleta timestamp(6) not null,
         descricao varchar(500),

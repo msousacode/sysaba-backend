@@ -51,9 +51,7 @@ public class AbllsController {
     @Transactional
     @PostMapping("/usuario/{usuarioId}/avaliacao/{abllsId}/habilidade/{habilidade}")
     public ResponseEntity<?> coletas(@RequestBody List<AbllsColetaDTO> abllsColetaDTO, @PathVariable("usuarioId") UUID usuarioId, @PathVariable("abllsId") UUID abllsId, @PathVariable("habilidade") Integer habilidade) {
-
         abllsService.salvarColetas(abllsColetaDTO, usuarioId, abllsId, habilidade);
-
         return ResponseEntity.ok().build();
     }
 

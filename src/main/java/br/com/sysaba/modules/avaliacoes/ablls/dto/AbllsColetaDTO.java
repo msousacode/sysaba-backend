@@ -23,6 +23,9 @@ public class AbllsColetaDTO {
     @JsonProperty("criado_por_nome")
     private String criadoNome;
 
+    @JsonProperty("pontos")
+    private Integer pontos;
+
     public static AbllsColetaDTO of(AbllsColeta abllsColeta) {
         AbllsColetaDTO ablls = new AbllsColetaDTO();
         ablls.setId(abllsColeta.getColetaId());
@@ -80,5 +83,13 @@ public class AbllsColetaDTO {
 
     public void setCriadoNome(String criadoNome) {
         this.criadoNome = criadoNome;
+    }
+
+    public Integer getPontos() {
+        return pontos;
+    }
+
+    public void setPontos(Integer pontos) {
+        this.pontos = pontos;
     }
 }

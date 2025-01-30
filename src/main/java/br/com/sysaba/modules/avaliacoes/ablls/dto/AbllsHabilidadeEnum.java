@@ -1,5 +1,6 @@
 package br.com.sysaba.modules.avaliacoes.ablls.dto;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +48,10 @@ public enum AbllsHabilidadeEnum {
 
     public static AbllsHabilidadeEnum getByCod(Integer cod) {
         return lookup.get(cod);
+    }
+
+    public static Collection<AbllsHabilidadeEnum> getLookup() {
+        return lookup.values();
     }
 
     public int getId() {

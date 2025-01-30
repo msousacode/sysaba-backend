@@ -44,7 +44,6 @@ public class AbllsService {
         AbllsAvaliacao abllsAvaliacao = abllsRespository.findById(abllsId).get();
 
         String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-
         Usuario usuario = usuarioService.getByEmail(email);
 
         AbllsHabilidadeEnum habilidadeEnum = AbllsHabilidadeEnum.getByCod(habilidade);

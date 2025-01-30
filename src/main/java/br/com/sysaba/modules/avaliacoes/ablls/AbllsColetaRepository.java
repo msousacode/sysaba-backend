@@ -21,4 +21,6 @@ public interface AbllsColetaRepository extends TenantableRepository<AbllsColeta>
     List<AbllsColeta> findByAblls_abllsId(UUID abllsId);
 
     List<AbllsColeta> findByAblls_abllsIdAndHabilidade(UUID abllsId, AbllsHabilidadeEnum habilidade);
+
+    List<AbllsColeta> findByAprendiz_aprendizId(UUID abllsId);
 }
