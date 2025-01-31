@@ -31,7 +31,7 @@ public class RelatorioController {
 
     @GetMapping("/portage/{portageId}")
     public ResponseEntity<LinkDowloadResponseDTO> getRelatorioPortage(@PathVariable("portageId") UUID portageId) {
-        LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.gerarRelatorioPorgate(portageId);
+        LinkDowloadResponseDTO linkDowloadResponseDTO = relatorioService.gerarRelatorioPortage(portageId);
 
         if (linkDowloadResponseDTO == null)
             return ResponseEntity.internalServerError().build();

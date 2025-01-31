@@ -35,7 +35,6 @@ import br.com.sysaba.modules.relatorio.dto.portage.DadosDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.PortageRelatorioDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.TabelaDTO;
 import br.com.sysaba.modules.treinamento.Treinamento;
-import br.com.sysaba.modules.treinamento.base.HabilidadeBaseEnum;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioService;
 import org.jfree.chart.ChartFactory;
@@ -332,13 +331,13 @@ public class RelatorioService {
         List<PortageColeta> idadeFilter = areaFilter.stream().filter(i -> faixaEtaria.getCod().equals(Integer.valueOf(i.getIdadeColeta()))).toList();
 
         tabelaSocializacao.setFaixaEtaria(faixaEtaria.getDescricao());
-        tabelaSocializacao.setPontuacaoAtingida(idadeFilter.stream().map(i -> Double.valueOf(i.getResposta())).reduce(0.0, Double::sum));
+        tabelaSocializacao.setPontuacaoAtingida(idadeFilter.stream().map(i -> Double.valueOf(i.getResposta()) == -1.0 ? 0 : Double.valueOf(i.getResposta())).reduce(0.0, Double::sum));
         tabelaSocializacao.setTipo(avaliacaoArea.getCod());
 
         return tabelaSocializacao;
     }
 
-    public LinkDowloadResponseDTO gerarRelatorioPorgate(UUID portageId) {
+    public LinkDowloadResponseDTO gerarRelatorioPortage(UUID portageId) {
 
         List<PortageColeta> resultList = portageColetaRepository.findByPortage_portageId(portageId);
 
@@ -809,13 +808,13 @@ public class RelatorioService {
 
         peiDTO.setDadosAblls(dados);
 
-        return relatorioApiService.postPEIRelatorioVBMAPP(peiDTO);
+        return relatorioApiService.postPEIRelatorioABLLS(peiDTO);
     }
 
     private PEIAbllsDadoDTO getAbllsDadoDTO(List<AbllsColeta> list) {
         PEIAbllsDadoDTO peiAbllsDadoDTO = new PEIAbllsDadoDTO();
         peiAbllsDadoDTO.setHabilidade(list.stream().findFirst().get().getHabilidade().name());
-        peiAbllsDadoDTO.setTitulo("Teste");
+        peiAbllsDadoDTO.setTitulo(list.stream().findFirst().get().getHabilidade().getName());
 
         List<AbllsColeta> priorioritarioAteDoisPontosList = list.stream().filter(i -> i.getPontuacaoMax() == 2 && i.getResposta() == 1).toList();
         List<AbllsColeta> demaisAteDoisPontosList = list.stream().filter(i -> i.getPontuacaoMax() == 2 && i.getResposta() == 0).toList();

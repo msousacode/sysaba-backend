@@ -71,7 +71,7 @@ public class PortageService {
         coletasAgrupadas.forEach((idx, coletas) -> {
             Double soma = 0.0;
             for (PortageColeta num : coletas) {
-                soma += Double.parseDouble(num.getResposta()) == -1 ? 0 : Double.parseDouble(num.getResposta());
+                soma += Double.parseDouble(num.getResposta()) == -1.0 ? 0 : Double.parseDouble(num.getResposta());
             }
             coletaPontuacoes.set((idx - 1), soma);
         });

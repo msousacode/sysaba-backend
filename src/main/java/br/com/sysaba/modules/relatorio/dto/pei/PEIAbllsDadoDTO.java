@@ -1,5 +1,6 @@
 package br.com.sysaba.modules.relatorio.dto.pei;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,11 +12,11 @@ public class PEIAbllsDadoDTO {
     private String titulo;
     private String habilidade;
 
-    private List<PEIObjetivoDTO> objetivosPrioritariosAteDoisPontos;//Aqui estão os objetivos em que a criança marcou 1 ponto, quase 2 pontos.
-    private List<PEIObjetivoDTO> objetivosPrioritariosAteQuatroPontos;//Aqui estão os objetivos em que a crinça marcou 2 ou 3 pontos, quase 4 pontos.
+    private List<PEIObjetivoDTO> objetivosPrioritariosAteDoisPontos = new ArrayList<>();//Aqui estão os objetivos em que a criança marcou 1 ponto, quase 2 pontos.
+    private List<PEIObjetivoDTO> objetivosPrioritariosAteQuatroPontos = new ArrayList<>();//Aqui estão os objetivos em que a crinça marcou 2 ou 3 pontos, quase 4 pontos.
 
-    private List<PEIObjetivoDTO> objetivosZeroPontosAteDoisPontos;//Aqui estão os objetivos que a criança marcou 0 pontos.
-    private List<PEIObjetivoDTO> objetivosZeroAteUmPntoAteQuatroPontos;//Aqui estão os objetivos que a criança marcou 0 ou 1 ponto.
+    private List<PEIObjetivoDTO> objetivosZeroPontosAteDoisPontos = new ArrayList<>();//Aqui estão os objetivos que a criança marcou 0 pontos.
+    private List<PEIObjetivoDTO> objetivosZeroAteUmPntoAteQuatroPontos = new ArrayList<>();//Aqui estão os objetivos que a criança marcou 0 ou 1 ponto.
 
     public String getTitulo() {
         return titulo;

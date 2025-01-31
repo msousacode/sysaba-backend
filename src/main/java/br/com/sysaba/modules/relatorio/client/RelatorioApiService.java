@@ -102,6 +102,25 @@ public class RelatorioApiService {
         }
     }
 
+    public LinkDowloadResponseDTO postPEIRelatorioABLLS(PEIRelatorioDTO dto) {
+        try {
+            String url = relatorioHost + "/print/relatorios/ablls/pei";
+            String responseObject = restTemplate.postForObject(url, dto, String.class);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            LinkDowloadResponseDTO mapper = objectMapper.readValue(responseObject, LinkDowloadResponseDTO.class);
+
+            return mapper;
+
+        } catch (RuntimeException ex) {
+            throw new RuntimeException(RelatorioService.class.getName(), ex);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public LinkDowloadResponseDTO postVBBarreiraRelatorioVBMAPP(VBMappBarreiraRelatorioDTO dto) {
         try {
             String url = relatorioHost + "/print/relatorios/vbmapp/barreiras";
