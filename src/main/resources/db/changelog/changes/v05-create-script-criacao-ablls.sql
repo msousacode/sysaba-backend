@@ -1,6 +1,6 @@
 --liquibase formatted create table vbmapp_barreira
 
---changeset michael:5
+--changeset michael:6
  create table ablls_avaliacoes (
         ablls_id uuid not null,
         ativo boolean not null,
