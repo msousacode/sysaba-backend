@@ -69,7 +69,7 @@ public class TreinamentoController {
             @RequestParam(defaultValue = "100") int size,
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
-        Page<Treinamento> list = treinamentoService.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
+        Page<Treinamento> list = treinamentoService.findAllAtivoIsTrue(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
         Page<TreinamentoDTO> dtoList = list.map(i -> MapperUtil.converte(i, TreinamentoDTO.class));
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
@@ -105,6 +105,18 @@ public class TreinamentoController {
     public ResponseEntity<TreinamentoDTO> importar(@RequestBody List<UUID> treinamentosIds, @PathVariable("usuarioId") UUID usuarioId) {
         try {
             treinamentoService.importar(treinamentosIds, usuarioId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @Transactional
+    @DeleteMapping("/{treinamentoId}")
+    public ResponseEntity<?> delete(@PathVariable("treinamentoId") UUID treinamentoId) {
+        try {
+            treinamentoService.deleteTreinamento(treinamentoId);
             return ResponseEntity.ok().build();
         } catch (RuntimeException ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);

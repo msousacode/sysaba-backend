@@ -5,6 +5,7 @@ import br.com.sysaba.modules.alvo.Alvo;
 import br.com.sysaba.modules.alvo.AlvoRespository;
 import br.com.sysaba.modules.treinamento.base.TreinamentoBase;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -87,5 +88,13 @@ public class TreinamentoService implements GenericService<Treinamento, UUID> {
 
     public List<Treinamento> findByTenantId(UUID usuarioId) {
         return treinamentoRespository.findByTenantId(usuarioId);
+    }
+
+    public void deleteTreinamento(UUID treinamentoId) {
+        treinamentoRespository.deleteTreinamento(treinamentoId);
+    }
+
+    public Page<Treinamento> findAllAtivoIsTrue(PageRequest of) {
+        return treinamentoRespository.findAllByAtivoIsTrue(of);
     }
 }
