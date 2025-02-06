@@ -17,6 +17,8 @@ public class TreinamentoDTO {
 
     private boolean ativo;
 
+    private String habilidade;
+
     public TreinamentoDTO() {}
 
     public TreinamentoDTO(String treinamentoId, String treinamento, String protocolo, String descricao, boolean sync, boolean ativo) {
@@ -74,5 +76,13 @@ public class TreinamentoDTO {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public String getHabilidade() {
+        return habilidade;
+    }
+
+    public void setHabilidade(String habilidade) {
+        this.habilidade = habilidade;
     }
 }

@@ -4,6 +4,7 @@ import br.com.sysaba.core.models.Tenantable;
 import br.com.sysaba.modules.anotacao.Anotacao;
 import br.com.sysaba.modules.alvo.Alvo;
 import br.com.sysaba.modules.coleta.Coleta;
+import br.com.sysaba.modules.treinamento.base.HabilidadeBaseEnum;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -30,6 +31,10 @@ public class Treinamento extends Tenantable {
 
     @Column(name = "import_id")
     private UUID importId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "habilidade", nullable = false)
+    private HabilidadeBaseEnum habilidade;
 
     @OneToMany(mappedBy = "treinamento", cascade = CascadeType.PERSIST)
     private List<Alvo> alvos;
@@ -127,5 +132,13 @@ public class Treinamento extends Tenantable {
 
     public void setImportId(UUID importId) {
         this.importId = importId;
+    }
+
+    public HabilidadeBaseEnum getHabilidade() {
+        return habilidade;
+    }
+
+    public void setHabilidade(HabilidadeBaseEnum habilidade) {
+        this.habilidade = habilidade;
     }
 }
