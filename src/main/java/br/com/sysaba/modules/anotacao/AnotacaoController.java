@@ -8,6 +8,8 @@ import br.com.sysaba.modules.coleta.Coleta;
 import br.com.sysaba.modules.coleta.ColetaService;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import br.com.sysaba.modules.treinamento.TreinamentoService;
+import br.com.sysaba.modules.usuario.Usuario;
+import br.com.sysaba.modules.usuario.UsuarioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,11 +37,14 @@ public class AnotacaoController {
 
     private final ColetaService coletaService;
 
-    public AnotacaoController(AnotacaoService anotacaoService, ColetaService coletaService, AtendimentoService atendimentoService, TreinamentoService treinamentoService) {
+    private final UsuarioService usuarioService;
+
+    public AnotacaoController(AnotacaoService anotacaoService, ColetaService coletaService, AtendimentoService atendimentoService, TreinamentoService treinamentoService, UsuarioService usuarioService) {
         this.anotacaoService = anotacaoService;
         this.coletaService = coletaService;
         this.atendimentoService = atendimentoService;
         this.treinamentoService = treinamentoService;
+        this.usuarioService = usuarioService;
     }
 
     @Transactional
@@ -50,8 +56,12 @@ public class AnotacaoController {
             Treinamento treinamento = treinamentoService.findById(anotacaoDTO.getTreinamentoId());
             Coleta coleta = coletaService.findColetaId(anotacaoDTO.getColetaId());
 
+            String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            Usuario usuario = usuarioService.getByEmail(email);
+
             anotacao.setAtendimento(atendimento);
             anotacao.setTreinamento(treinamento);
+            anotacao.setCriadoNome(usuario.getFullName());
             anotacao.setColeta(coleta);
 
             anotacaoService.save(anotacao);

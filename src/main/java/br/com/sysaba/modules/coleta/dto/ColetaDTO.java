@@ -32,6 +32,9 @@ public class    ColetaDTO {
     @JsonProperty("data_final_coleta")
     private LocalDate dataFinalColeta;
 
+    @JsonProperty("respondido_por")
+    private String respondidoPor;
+
     private boolean seg;
     private boolean ter;
     private boolean qua;
@@ -87,6 +90,7 @@ public class    ColetaDTO {
         dto.setSex(coleta.isSex());
         dto.setSemana(coleta.getSemana());
         dto.setTreinamentoId(coleta.getTreinamento().getTreinamentoId());
+        dto.setRespondidoPor(coleta.getCriadoNome());
 
         return dto;
     }
@@ -225,6 +229,14 @@ public class    ColetaDTO {
 
     public void setTreinamentoId(UUID treinamentoId) {
         this.treinamentoId = treinamentoId;
+    }
+
+    public String getRespondidoPor() {
+        return respondidoPor;
+    }
+
+    public void setRespondidoPor(String respondidoPor) {
+        this.respondidoPor = respondidoPor;
     }
 }
 

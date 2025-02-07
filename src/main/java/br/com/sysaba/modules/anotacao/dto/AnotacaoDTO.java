@@ -3,6 +3,7 @@ package br.com.sysaba.modules.anotacao.dto;
 import br.com.sysaba.modules.anotacao.Anotacao;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -33,6 +34,9 @@ public class AnotacaoDTO {
 
     @JsonProperty("imprimirRelatorio")
     private boolean imprimirRelatorio;
+
+    @Column(name = "criado_por_nome")
+    private String criadoNome;
 
     public AnotacaoDTO() {
         this.ativo = true;
@@ -105,6 +109,7 @@ public class AnotacaoDTO {
         anotacaoDTO.setAnotacaoId(anotacao.getAnotacaoId());
         anotacaoDTO.setAtivo(anotacao.getAtivo());
         anotacaoDTO.setColetaId(anotacao.getColeta().getColetaId());
+        anotacaoDTO.setCriadoNome(anotacao.getCriadoNome());
 
         return anotacaoDTO;
     }
@@ -123,5 +128,13 @@ public class AnotacaoDTO {
 
     public void setImprimirRelatorio(boolean imprimirRelatorio) {
         this.imprimirRelatorio = imprimirRelatorio;
+    }
+
+    public String getCriadoNome() {
+        return criadoNome;
+    }
+
+    public void setCriadoNome(String criadoNome) {
+        this.criadoNome = criadoNome;
     }
 }

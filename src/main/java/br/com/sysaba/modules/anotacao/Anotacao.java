@@ -40,6 +40,9 @@ public class Anotacao extends Tenantable {
     @Column(name = "imprimir_relatorio")
     private Boolean imprimirRelatorio;
 
+    @Column(name = "criado_por_nome")
+    private String criadoNome;
+
     public Anotacao() {
         super(LocalDateTime.now());
         this.imprimirRelatorio = true;
@@ -110,5 +113,13 @@ public class Anotacao extends Tenantable {
 
     public void setImprimirRelatorio(Boolean imprimirRelatorio) {
         this.imprimirRelatorio = imprimirRelatorio;
+    }
+
+    public String getCriadoNome() {
+        return criadoNome;
+    }
+
+    public void setCriadoNome(String criadoNome) {
+        this.criadoNome = criadoNome;
     }
 }
