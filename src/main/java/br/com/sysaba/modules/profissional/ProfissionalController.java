@@ -64,4 +64,23 @@ public class ProfissionalController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @DeleteMapping("/{email}")
+    public ResponseEntity<?> deleteProfessional(@PathVariable("email") String email) {
+
+        try {
+            Usuario usuario = usuarioService.getByEmail(email.trim());
+
+            usuario.setEmail(usuario.getEmail() + "_old");
+            usuario.setAtivo(false);
+
+            usuarioService.save(usuario);
+
+            return ResponseEntity.ok().build();
+
+        } catch (Exception ex) {
+            logger.error("Erro ao deletar profissional", ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

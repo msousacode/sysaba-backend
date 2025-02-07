@@ -54,7 +54,7 @@ public class UsuarioService implements GenericService<Usuario, UUID> {
     }
 
     public List<Usuario> findAllByTenantId(UUID tenantId) {
-        return repository.findAllByTenantId(tenantId);
+        return repository.findAllByTenantIdAndAtivoIsTrue(tenantId);
     }
 
     public Usuario getByEmail(String email) {
