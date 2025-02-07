@@ -61,4 +61,8 @@ public class AtendimentoService implements GenericService<Atendimento, UUID> {
         }
         return atendimentos;
     }
+
+    public Atendimento findByAprendiz_aprendizId(UUID aprendizId) {
+        return atendimentoRepository.findByAprendiz_aprendizId(aprendizId);
+    }
 }

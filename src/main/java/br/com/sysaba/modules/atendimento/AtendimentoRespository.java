@@ -9,4 +9,6 @@ import java.util.UUID;
 @Repository
 public interface AtendimentoRespository extends TenantableRepository<Atendimento> {
     List<Atendimento> findAllByAprendiz_aprendizIdAndAtivoTrue(UUID aprendizId);
+
+    Atendimento findByAprendiz_aprendizId(UUID aprendizId);
 }

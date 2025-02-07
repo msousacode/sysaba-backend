@@ -1,26 +1,31 @@
 package br.com.sysaba.modules.atendimento;
 
+import br.com.sysaba.core.security.config.TenantAuthenticationToken;
 import br.com.sysaba.core.util.MapperUtil;
+import br.com.sysaba.modules.acesso.PerfilEnum;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
+import br.com.sysaba.modules.aprendiz.AprendizProfissional;
+import br.com.sysaba.modules.aprendiz.AprendizProfissionalRespository;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
 import br.com.sysaba.modules.atendimento.dto.AtendimentoDTO;
 import br.com.sysaba.modules.atendimento.dto.ConfiguracoesDTO;
 import br.com.sysaba.modules.atendimento.dto.TreinamentoItemDTO;
 import br.com.sysaba.modules.treinamento.*;
+import br.com.sysaba.modules.usuario.UsuarioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/atendimentos")
@@ -38,12 +43,18 @@ public class AtendimentoController {
 
     private final ConfiguracoesRepository configuracoesRepository;
 
-    public AtendimentoController(AtendimentoService atendimentoService, AprendizService aprendizService, TreinamentoService treinamentoService, TreinamentoAtendimentoRepository treinamentoAtendimentoRepository, ConfiguracoesRepository configuracoesRepository) {
+    private final AprendizProfissionalRespository aprendizProfissionalRespository;
+
+    private final UsuarioService usuarioService;
+
+    public AtendimentoController(AtendimentoService atendimentoService, AprendizService aprendizService, TreinamentoService treinamentoService, TreinamentoAtendimentoRepository treinamentoAtendimentoRepository, ConfiguracoesRepository configuracoesRepository, AprendizProfissionalRespository aprendizProfissionalRespository, UsuarioService usuarioService) {
         this.atendimentoService = atendimentoService;
         this.aprendizService = aprendizService;
         this.treinamentoService = treinamentoService;
         this.treinamentoAtendimentoRepository = treinamentoAtendimentoRepository;
         this.configuracoesRepository = configuracoesRepository;
+        this.aprendizProfissionalRespository = aprendizProfissionalRespository;
+        this.usuarioService = usuarioService;
     }
 
     @Transactional
@@ -103,11 +114,30 @@ public class AtendimentoController {
             @RequestParam(defaultValue = "100") int size,
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
-        Page<Atendimento> atendimentoList = atendimentoService.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
 
-        Page<AtendimentoDTO> fromList = atendimentoList.map(AtendimentoDTO::fromAtendimentoList);
+        PerfilEnum perfilEnum = getPerfil();
 
-        return ResponseEntity.status(HttpStatus.OK).body(fromList);
+        if (PerfilEnum.ADMIN.equals(perfilEnum)) {
+            Page<Atendimento> atendimentoList = atendimentoService.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
+
+            Page<AtendimentoDTO> fromList = atendimentoList.map(AtendimentoDTO::fromAtendimentoList);
+
+            return ResponseEntity.status(HttpStatus.OK).body(fromList);
+        }
+
+        if (!PerfilEnum.ADMIN.equals(perfilEnum)) {
+            UUID usuarioId = ((TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getTenantId();
+
+            List<AprendizProfissional> aprendizProfissionals = aprendizProfissionalRespository.findAllByProfissional_usuarioId(usuarioId);
+
+            Page<Atendimento> atendimentos = transformarParaPage(aprendizProfissionals, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
+
+            Page<AtendimentoDTO> dtoList = atendimentos.map(i -> MapperUtil.converte(i, AtendimentoDTO.class));
+
+            return ResponseEntity.status(HttpStatus.OK).body(dtoList);
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/{id}")
@@ -125,5 +155,32 @@ public class AtendimentoController {
         dto.setTreinamentos(treinamentoItemDTOArrayList);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    private PerfilEnum getPerfil() {
+        String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        return usuarioService.getByEmail(email).getPerfil();
+    }
+
+    public Page<Atendimento> transformarParaPage(List<AprendizProfissional> aprendizProfissionals, Pageable pageable) {
+        List<Atendimento> aprendizes = aprendizProfissionals.stream()
+                .map(this::converterParaAprendiz) // Método que você deve implementar
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(aprendizes, pageable, aprendizProfissionals.size());
+    }
+
+    private Atendimento converterParaAprendiz(AprendizProfissional profissional) {
+        Atendimento atendimento = new Atendimento();
+        atendimento.setAprendiz(profissional.getAprendiz());
+
+        Atendimento atendimentoResult = atendimentoService.findByAprendiz_aprendizId(profissional.getAprendiz().getAprendizId());
+
+        atendimento.setAtendimentoId(atendimentoResult.getAtendimentoId());
+        atendimento.setDataInicio(atendimentoResult.getDataInicio());
+        atendimento.setAnotacoes(atendimentoResult.getAnotacoes());
+        atendimento.setTreinamentoAtendimentos(atendimentoResult.getTreinamentoAtendimentos());
+
+        return atendimento;
     }
 }
