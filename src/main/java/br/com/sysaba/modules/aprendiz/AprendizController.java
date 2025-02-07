@@ -4,20 +4,21 @@ import br.com.sysaba.core.security.config.TenantAuthenticationToken;
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.acesso.PerfilEnum;
 import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
+import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioService;
+import br.com.sysaba.modules.usuario.dtos.UsuarioDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @RestController
@@ -58,10 +59,32 @@ public class AprendizController {
             Aprendiz aprendiz = MapperUtil.converte(aprendizDTO, Aprendiz.class);
             Aprendiz saved = aprendizService.update(aprendizDTO.getAprendizId(), aprendiz);
             AprendizDTO dto = MapperUtil.converte(saved, AprendizDTO.class);
+
+            salvarProfissionaisVinculo(aprendizDTO.getProfissionais(), aprendiz);
+
             return ResponseEntity.ok().body(dto);
         } catch (RuntimeException ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    private void salvarProfissionaisVinculo(List<String> profissionais, Aprendiz aprendiz) {
+        List<Usuario> usuarioList = new ArrayList<>();
+
+        for (String email : profissionais) {
+            usuarioList.add(usuarioService.getByEmail(email));
+        }
+
+        for (Usuario usuario : usuarioList) {
+            AprendizProfissional aprendizProfissional = new AprendizProfissional();
+            aprendizProfissional.setAprendiz(aprendiz);
+            aprendizProfissional.setProfissional(usuario);
+
+            Integer isVinculo = aprendizProfissionalRespository.verificaSeExisteVinculo(aprendiz.getAprendizId(), usuario.getUsuarioId());
+
+            if(isVinculo == 0)
+                aprendizProfissionalRespository.save(aprendizProfissional);
         }
     }
 
@@ -81,7 +104,9 @@ public class AprendizController {
         }
 
         if (!PerfilEnum.ADMIN.equals(perfilEnum)) {
-            UUID usuarioId = ((TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getTenantId();
+            String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            UUID usuarioId = usuarioService.getByEmail(email).getUsuarioId();
 
             List<AprendizProfissional> aprendizProfissionals = aprendizProfissionalRespository.findAllByProfissional_usuarioId(usuarioId);
 
@@ -99,6 +124,13 @@ public class AprendizController {
         Aprendiz saved = aprendizService.findById(id);
         AprendizDTO dto = MapperUtil.converte(saved, AprendizDTO.class);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @GetMapping("/{id}/profissionais")
+    public ResponseEntity<List<UsuarioDTO>> getProfissionais(@PathVariable("id") UUID id) {
+        List<AprendizProfissional> aprendizProfissionals = aprendizProfissionalRespository.findAllByAprendiz_aprendizId(id);
+        List<UsuarioDTO> profissionaisVinculados = aprendizProfissionals.stream().map(i -> MapperUtil.converte(i.getProfissional(), UsuarioDTO.class)).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(profissionaisVinculados);
     }
 
     @Transactional

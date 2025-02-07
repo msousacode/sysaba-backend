@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class AprendizDTO {
@@ -33,6 +35,8 @@ public class AprendizDTO {
 
     @JsonProperty("ativo")
     private boolean ativo;
+
+    private List<String> profissionais = new ArrayList<>();
 
     // Construtor padrão
     public AprendizDTO() {
@@ -108,5 +112,13 @@ public class AprendizDTO {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public List<String> getProfissionais() {
+        return profissionais;
+    }
+
+    public void setProfissionais(List<String> profissionais) {
+        this.profissionais = profissionais;
     }
 }

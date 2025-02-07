@@ -126,15 +126,17 @@ public class AtendimentoController {
         }
 
         if (!PerfilEnum.ADMIN.equals(perfilEnum)) {
-            UUID usuarioId = ((TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getTenantId();
+            String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            UUID usuarioId = usuarioService.getByEmail(email).getUsuarioId();
 
             List<AprendizProfissional> aprendizProfissionals = aprendizProfissionalRespository.findAllByProfissional_usuarioId(usuarioId);
 
-            Page<Atendimento> atendimentos = transformarParaPage(aprendizProfissionals, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
+            Page<Atendimento> atendimentoList = transformarParaPage(aprendizProfissionals, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
 
-            Page<AtendimentoDTO> dtoList = atendimentos.map(i -> MapperUtil.converte(i, AtendimentoDTO.class));
+            Page<AtendimentoDTO> fromList = atendimentoList.map(AtendimentoDTO::fromAtendimentoList);
 
-            return ResponseEntity.status(HttpStatus.OK).body(dtoList);
+            return ResponseEntity.status(HttpStatus.OK).body(fromList);
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
