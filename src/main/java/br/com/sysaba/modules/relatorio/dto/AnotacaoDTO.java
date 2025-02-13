@@ -7,6 +7,7 @@ public class AnotacaoDTO {
     private UUID anotacaoId;
     private String data;
     private String descricao;
+    private String anotadoPor;
 
     public AnotacaoDTO() {
     }
@@ -39,5 +40,13 @@ public class AnotacaoDTO {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public String getAnotadoPor() {
+        return anotadoPor;
+    }
+
+    public void setAnotadoPor(String anotadoPor) {
+        this.anotadoPor = anotadoPor;
     }
 }

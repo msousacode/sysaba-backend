@@ -167,6 +167,7 @@ public class RelatorioService {
                     alvoColetadoDTO.setDataColeta(converterLocalDateTimeParaString(coleta.getDataColeta()));
                     alvoColetadoDTO.setDescricaoAlvo(coleta.getAlvo().getDescricaoAlvo());
                     alvoColetadoDTO.setResposta(coleta.getResposta());
+                    alvoColetadoDTO.setColetadoPor(coleta.getCriadoNome());
 
                     List<AnotacaoDTO> anotacoes = new ArrayList<>();
 
@@ -175,6 +176,7 @@ public class RelatorioService {
                         anotacaoDTO.setAnotacaoId(anotacao.getAnotacaoId());
                         anotacaoDTO.setData(converterLocalDateParaString(anotacao.getDataAnotacao()));
                         anotacaoDTO.setDescricao(anotacao.getAnotacao());
+                        anotacaoDTO.setAnotadoPor(anotacao.getCriadoNome());
                         anotacoes.add(anotacaoDTO);
                     });
 
