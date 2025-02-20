@@ -8,6 +8,7 @@ public class AlvoColetadoDTO {
     private String pergunta;
     private String descricaoAlvo;
     private String resposta;
+    private String coletadoPor;
     private List<AnotacaoDTO> anotacoes;
 
     public AlvoColetadoDTO() {
@@ -68,5 +69,13 @@ public class AlvoColetadoDTO {
 
     public void setAnotacoes(List<AnotacaoDTO> anotacoes) {
         this.anotacoes = anotacoes;
+    }
+
+    public String getColetadoPor() {
+        return coletadoPor;
+    }
+
+    public void setColetadoPor(String coletadoPor) {
+        this.coletadoPor = coletadoPor;
     }
 }
