@@ -2,8 +2,8 @@ package br.com.sysaba.modules.treinamento;
 
 import br.com.sysaba.core.commons.service.GenericService;
 import br.com.sysaba.modules.alvo.Alvo;
-import br.com.sysaba.modules.alvo.AlvoRespository;
 import br.com.sysaba.modules.treinamento.base.TreinamentoBase;
+import br.com.sysaba.modules.treinamento.base.TreinamentoObjetivosBase;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +19,10 @@ public class TreinamentoService implements GenericService<Treinamento, UUID> {
 
     private final TreinamentoRespository treinamentoRespository;
 
-    private final AlvoRespository alvoRespository;
-
     private final TreinamentoBaseRespository treinamentoBaseRespository;
 
-    public TreinamentoService(TreinamentoRespository treinamentoRespository, AlvoRespository alvoRespository, TreinamentoBaseRespository treinamentoBaseRespository) {
+    public TreinamentoService(TreinamentoRespository treinamentoRespository, TreinamentoBaseRespository treinamentoBaseRespository) {
         this.treinamentoRespository = treinamentoRespository;
-        this.alvoRespository = alvoRespository;
         this.treinamentoBaseRespository = treinamentoBaseRespository;
     }
 
@@ -97,5 +94,9 @@ public class TreinamentoService implements GenericService<Treinamento, UUID> {
 
     public Page<Treinamento> findAllAtivoIsTrue(PageRequest of) {
         return treinamentoRespository.findAllByAtivoIsTrue(of);
+    }
+
+    public List<TreinamentoObjetivosBase> findAllTreinamentosBase(UUID id) {
+        return treinamentoBaseRespository.findAllByTreinamentoBaseId(id).getTreinos();
     }
 }

@@ -6,6 +6,7 @@ public class TreinamentoBaseDTO {
 
     private UUID treinamentoBaseId;
     private String titulo;
+    private String nomeAlvo;
     private String descricao;
     private String protocolo;
     private String habilidade;
@@ -78,5 +79,13 @@ public class TreinamentoBaseDTO {
 
     public void setImportId(UUID importId) {
         this.importId = importId;
+    }
+
+    public String getNomeAlvo() {
+        return nomeAlvo;
+    }
+
+    public void setNomeAlvo(String nomeAlvo) {
+        this.nomeAlvo = nomeAlvo;
     }
 }
