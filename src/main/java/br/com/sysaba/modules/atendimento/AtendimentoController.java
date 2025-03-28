@@ -1,5 +1,6 @@
 package br.com.sysaba.modules.atendimento;
 
+import br.com.sysaba.core.exception.RegistroNaoEncontradoException;
 import br.com.sysaba.core.security.config.TenantAuthenticationToken;
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.acesso.PerfilEnum;
@@ -165,11 +166,17 @@ public class AtendimentoController {
     }
 
     public Page<Atendimento> transformarParaPage(List<AprendizProfissional> aprendizProfissionals, Pageable pageable) {
-        List<Atendimento> aprendizes = aprendizProfissionals.stream()
-                .map(this::converterParaAprendiz) // Método que você deve implementar
-                .collect(Collectors.toList());
+        try {
+            List<Atendimento> aprendizes = aprendizProfissionals.stream()
+                    .map(this::converterParaAprendiz) // Método que você deve implementar
+                    .collect(Collectors.toList());
 
-        return new PageImpl<>(aprendizes, pageable, aprendizProfissionals.size());
+            return new PageImpl<>(aprendizes, pageable, aprendizProfissionals.size());
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+
+        return new PageImpl<>(null, pageable, aprendizProfissionals.size());
     }
 
     private Atendimento converterParaAprendiz(AprendizProfissional profissional) {

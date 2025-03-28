@@ -76,7 +76,13 @@ public class AnotacaoController {
     @PutMapping
     public ResponseEntity<AnotacaoDTO> atualizar(@RequestBody AnotacaoDTO anotacaoDTO) {
         try {
+
+            String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            Usuario usuario = usuarioService.getByEmail(email);
+
             Anotacao anotacao = MapperUtil.converte(anotacaoDTO, Anotacao.class);
+            anotacao.setCriadoNome(usuario.getFullName());
+
             anotacaoService.update(anotacaoDTO.getAnotacaoId(), anotacao);
             return ResponseEntity.ok().build();
         } catch (RuntimeException ex) {
