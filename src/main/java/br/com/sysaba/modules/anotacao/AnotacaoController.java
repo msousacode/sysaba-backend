@@ -76,7 +76,13 @@ public class AnotacaoController {
     @PutMapping
     public ResponseEntity<AnotacaoDTO> atualizar(@RequestBody AnotacaoDTO anotacaoDTO) {
         try {
+
+            String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            Usuario usuario = usuarioService.getByEmail(email);
+
             Anotacao anotacao = MapperUtil.converte(anotacaoDTO, Anotacao.class);
+            anotacao.setCriadoNome(usuario.getFullName());
+
             anotacaoService.update(anotacaoDTO.getAnotacaoId(), anotacao);
             return ResponseEntity.ok().build();
         } catch (RuntimeException ex) {
@@ -103,5 +109,17 @@ public class AnotacaoController {
         Anotacao saved = anotacaoService.findById(id);
         AnotacaoDTO dto = MapperUtil.converte(saved, AnotacaoDTO.class);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAnotacao(@PathVariable("id") UUID id) {
+        try {
+            anotacaoService.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

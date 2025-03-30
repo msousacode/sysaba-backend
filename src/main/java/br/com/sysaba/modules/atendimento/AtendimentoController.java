@@ -1,6 +1,5 @@
 package br.com.sysaba.modules.atendimento;
 
-import br.com.sysaba.core.security.config.TenantAuthenticationToken;
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.acesso.PerfilEnum;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
@@ -11,6 +10,7 @@ import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
 import br.com.sysaba.modules.atendimento.dto.AtendimentoDTO;
 import br.com.sysaba.modules.atendimento.dto.ConfiguracoesDTO;
 import br.com.sysaba.modules.atendimento.dto.TreinamentoItemDTO;
+import br.com.sysaba.modules.profissional.ProfissionalDTO;
 import br.com.sysaba.modules.treinamento.*;
 import br.com.sysaba.modules.usuario.UsuarioService;
 import org.slf4j.Logger;
@@ -147,6 +147,11 @@ public class AtendimentoController {
         Atendimento saved = atendimentoService.findById(id);
         AtendimentoDTO dto = AtendimentoDTO.fromAtendimento(saved);
 
+        List<AprendizProfissional> treinamentoAtendimentos = aprendizProfissionalRespository.findAllByAprendiz_aprendizId(saved.getAprendiz().getAprendizId());
+        List<ProfissionalDTO> profissionalDTOS = new ArrayList<>();
+
+        profissionalDTOS.addAll(treinamentoAtendimentos.stream().map(i -> new ProfissionalDTO(i.getProfissional().getFullName(), i.getProfissional().getEmail(), i.getProfissional().getPerfil().name())).toList());
+
         List<TreinamentoItemDTO> treinamentoItemDTOArrayList = new ArrayList<>();
         saved.getTreinamentoAtendimentos().forEach(i -> {
             TreinamentoItemDTO treinamentoItemDTOS = MapperUtil.converte(i.getTreinamento(), TreinamentoItemDTO.class);
@@ -155,6 +160,7 @@ public class AtendimentoController {
             treinamentoItemDTOArrayList.add(treinamentoItemDTOS);
         });
         dto.setTreinamentos(treinamentoItemDTOArrayList);
+        dto.setProfissionais(profissionalDTOS);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
@@ -165,11 +171,17 @@ public class AtendimentoController {
     }
 
     public Page<Atendimento> transformarParaPage(List<AprendizProfissional> aprendizProfissionals, Pageable pageable) {
-        List<Atendimento> aprendizes = aprendizProfissionals.stream()
-                .map(this::converterParaAprendiz) // Método que você deve implementar
-                .collect(Collectors.toList());
+        try {
+            List<Atendimento> aprendizes = aprendizProfissionals.stream()
+                    .map(this::converterParaAprendiz) // Método que você deve implementar
+                    .collect(Collectors.toList());
 
-        return new PageImpl<>(aprendizes, pageable, aprendizProfissionals.size());
+            return new PageImpl<>(aprendizes.stream().filter(i -> i.getAtendimentoId() != null).toList(), pageable, aprendizProfissionals.size());
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+
+        return new PageImpl<>(null, pageable, aprendizProfissionals.size());
     }
 
     private Atendimento converterParaAprendiz(AprendizProfissional profissional) {
@@ -177,6 +189,9 @@ public class AtendimentoController {
         atendimento.setAprendiz(profissional.getAprendiz());
 
         Atendimento atendimentoResult = atendimentoService.findByAprendiz_aprendizId(profissional.getAprendiz().getAprendizId());
+
+        if(atendimentoResult == null)
+            return new Atendimento();
 
         atendimento.setAtendimentoId(atendimentoResult.getAtendimentoId());
         atendimento.setDataInicio(atendimentoResult.getDataInicio());

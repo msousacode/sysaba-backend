@@ -3,6 +3,7 @@ package br.com.sysaba.modules.treinamento;
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.AprendizController;
 import br.com.sysaba.modules.treinamento.base.TreinamentoBase;
+import br.com.sysaba.modules.treinamento.base.TreinamentoObjetivosBase;
 import br.com.sysaba.modules.treinamento.dto.TreinamentoBaseDTO;
 import br.com.sysaba.modules.treinamento.dto.TreinamentoDTO;
 import org.slf4j.Logger;
@@ -122,5 +123,12 @@ public class TreinamentoController {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping("/base/view/{id}")
+    public ResponseEntity<List<TreinamentoBaseDTO>> getTreinamentoBaseView(@PathVariable("id") UUID id) {
+        List<TreinamentoObjetivosBase> list = treinamentoService.findAllTreinamentosBase(id);
+        List<TreinamentoBaseDTO> listDto = list.stream().map(i -> MapperUtil.converte(i, TreinamentoBaseDTO.class)).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(listDto);
     }
 }
