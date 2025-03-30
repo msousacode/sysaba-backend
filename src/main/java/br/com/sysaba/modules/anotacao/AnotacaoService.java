@@ -4,6 +4,7 @@ import br.com.sysaba.core.commons.service.GenericService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -54,5 +55,9 @@ public class AnotacaoService implements GenericService<Anotacao, UUID> {
 
     public Page<Anotacao> findByAtendimento_atendimentoId(UUID atendimentoId, UUID treinamentoId, Pageable pageable) {
         return anotacaoRepository.findByAtendimento_atendimentoIdAndTreinamento_treinamentoId(atendimentoId, treinamentoId, pageable);
+    }
+
+    public void deleteById(UUID id) {
+        anotacaoRepository.deleteByAnotacaoId(id);
     }
 }

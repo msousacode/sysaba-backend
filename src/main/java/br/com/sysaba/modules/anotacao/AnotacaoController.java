@@ -110,4 +110,16 @@ public class AnotacaoController {
         AnotacaoDTO dto = MapperUtil.converte(saved, AnotacaoDTO.class);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
+
+    @Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAnotacao(@PathVariable("id") UUID id) {
+        try {
+            anotacaoService.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }
