@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -171,7 +172,7 @@ public class AtendimentoController {
                     .map(this::converterParaAprendiz) // Método que você deve implementar
                     .collect(Collectors.toList());
 
-            return new PageImpl<>(aprendizes, pageable, aprendizProfissionals.size());
+            return new PageImpl<>(aprendizes.stream().filter(i -> i.getAtendimentoId() != null).toList(), pageable, aprendizProfissionals.size());
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
@@ -184,6 +185,9 @@ public class AtendimentoController {
         atendimento.setAprendiz(profissional.getAprendiz());
 
         Atendimento atendimentoResult = atendimentoService.findByAprendiz_aprendizId(profissional.getAprendiz().getAprendizId());
+
+        if(atendimentoResult == null)
+            return new Atendimento();
 
         atendimento.setAtendimentoId(atendimentoResult.getAtendimentoId());
         atendimento.setDataInicio(atendimentoResult.getDataInicio());
