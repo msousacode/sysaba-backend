@@ -1,7 +1,5 @@
 package br.com.sysaba.modules.atendimento;
 
-import br.com.sysaba.core.exception.RegistroNaoEncontradoException;
-import br.com.sysaba.core.security.config.TenantAuthenticationToken;
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.acesso.PerfilEnum;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
@@ -12,6 +10,7 @@ import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
 import br.com.sysaba.modules.atendimento.dto.AtendimentoDTO;
 import br.com.sysaba.modules.atendimento.dto.ConfiguracoesDTO;
 import br.com.sysaba.modules.atendimento.dto.TreinamentoItemDTO;
+import br.com.sysaba.modules.profissional.ProfissionalDTO;
 import br.com.sysaba.modules.treinamento.*;
 import br.com.sysaba.modules.usuario.UsuarioService;
 import org.slf4j.Logger;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -149,6 +147,11 @@ public class AtendimentoController {
         Atendimento saved = atendimentoService.findById(id);
         AtendimentoDTO dto = AtendimentoDTO.fromAtendimento(saved);
 
+        List<AprendizProfissional> treinamentoAtendimentos = aprendizProfissionalRespository.findAllByAprendiz_aprendizId(saved.getAprendiz().getAprendizId());
+        List<ProfissionalDTO> profissionalDTOS = new ArrayList<>();
+
+        profissionalDTOS.addAll(treinamentoAtendimentos.stream().map(i -> new ProfissionalDTO(i.getProfissional().getFullName(), i.getProfissional().getEmail(), i.getProfissional().getPerfil().name())).toList());
+
         List<TreinamentoItemDTO> treinamentoItemDTOArrayList = new ArrayList<>();
         saved.getTreinamentoAtendimentos().forEach(i -> {
             TreinamentoItemDTO treinamentoItemDTOS = MapperUtil.converte(i.getTreinamento(), TreinamentoItemDTO.class);
@@ -157,6 +160,7 @@ public class AtendimentoController {
             treinamentoItemDTOArrayList.add(treinamentoItemDTOS);
         });
         dto.setTreinamentos(treinamentoItemDTOArrayList);
+        dto.setProfissionais(profissionalDTOS);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }

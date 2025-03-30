@@ -2,6 +2,7 @@ package br.com.sysaba.modules.atendimento.dto;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.atendimento.Atendimento;
+import br.com.sysaba.modules.profissional.ProfissionalDTO;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,6 +27,8 @@ public class AtendimentoDTO {
     private List<TreinamentoItemDTO> treinamentos;
 
     private String aprendizUuidFk;
+
+    private List<ProfissionalDTO> profissionais;
 
     // Getters e Setters
     public String getUuid() {
@@ -114,11 +117,18 @@ public class AtendimentoDTO {
         aprendizDTO.setValue(String.valueOf(saved.getAprendiz().getAprendizId()));
         atendimentoDTO.setAprendiz(aprendizDTO);
 
-
         atendimentoDTO.setUuid(String.valueOf(saved.getAtendimentoId()));
         atendimentoDTO.setAprendizUuidFk(String.valueOf(saved.getAprendiz().getAprendizId()));
         atendimentoDTO.setTreinamentos(List.of(treinamentoItem));
 
         return atendimentoDTO;
+    }
+
+    public List<ProfissionalDTO> getProfissionais() {
+        return profissionais;
+    }
+
+    public void setProfissionais(List<ProfissionalDTO> profissionais) {
+        this.profissionais = profissionais;
     }
 }
