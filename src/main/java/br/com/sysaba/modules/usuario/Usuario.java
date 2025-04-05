@@ -2,6 +2,7 @@ package br.com.sysaba.modules.usuario;
 
 import br.com.sysaba.modules.acesso.PerfilEnum;
 import br.com.sysaba.modules.assinatura.Assinatura;
+import br.com.sysaba.modules.cargo.Cargo;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -56,7 +57,12 @@ public class Usuario {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
     private Assinatura assinatura;
 
-    public Usuario(UUID usuarioId, String documento, String email, String fullName, String avatarUrl, Boolean primeiroAcessoRealizado, String senha, LocalDateTime createdAt, Boolean ativo, UUID criadoPor, UUID tenantId) {
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cargo_id")
+    private Cargo cargo;
+
+    public Usuario(UUID usuarioId, String documento, String email, String fullName, String avatarUrl, Boolean primeiroAcessoRealizado, String senha, LocalDateTime createdAt, Boolean ativo, UUID criadoPor, UUID tenantId, Cargo cargo) {
+        this.cargo = cargo;
         this.usuarioId = usuarioId;
         this.documento = documento;
         this.email = email;
@@ -191,5 +197,13 @@ public class Usuario {
 
     public void setRedefinirSenhaKey(UUID redefinirSenhaKey) {
         this.redefinirSenhaKey = redefinirSenhaKey;
+    }
+
+    public Cargo getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(Cargo cargo) {
+        this.cargo = cargo;
     }
 }

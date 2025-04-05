@@ -83,7 +83,7 @@ public class AprendizController {
 
             Integer isVinculo = aprendizProfissionalRespository.verificaSeExisteVinculo(aprendiz.getAprendizId(), usuario.getUsuarioId());
 
-            if(isVinculo == 0)
+            if (isVinculo == 0)
                 aprendizProfissionalRespository.save(aprendizProfissional);
         }
     }
@@ -97,13 +97,13 @@ public class AprendizController {
 
         PerfilEnum perfilEnum = getPerfil();
 
-        if (PerfilEnum.ADMIN.equals(perfilEnum)) {
+        if (PerfilEnum.ADMIN.equals(perfilEnum) || PerfilEnum.ADMIN_CHECKIN.equals(perfilEnum)) {
             Page<Aprendiz> aprendizList = aprendizService.findAllIsTrue(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
             Page<AprendizDTO> dtoList = aprendizList.map(i -> MapperUtil.converte(i, AprendizDTO.class));
             return ResponseEntity.status(HttpStatus.OK).body(dtoList);
         }
 
-        if (!PerfilEnum.ADMIN.equals(perfilEnum)) {
+        if (!PerfilEnum.ADMIN.equals(perfilEnum) || PerfilEnum.ADMIN_CHECKIN.equals(perfilEnum)) {
             String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             UUID usuarioId = usuarioService.getByEmail(email).getUsuarioId();

@@ -8,6 +8,8 @@ import br.com.sysaba.modules.acesso.dto.AssinaturaDTO;
 import br.com.sysaba.modules.acesso.dto.UsuarioInfoDTO;
 import br.com.sysaba.modules.assinatura.Assinatura;
 import br.com.sysaba.modules.assinatura.AssinaturaService;
+import br.com.sysaba.modules.cargo.Cargo;
+import br.com.sysaba.modules.cargo.CargoRespository;
 import br.com.sysaba.modules.usuario.dtos.UsuarioDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +33,15 @@ public class UsuarioController {
     private final PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
     private final EmailService emailService;
+    private final CargoRespository cargoRespository;
 
-    public UsuarioController(UsuarioService usuarioService, AssinaturaService assinaturaService, PasswordEncoder passwordEncoder, UsuarioRepository usuarioRepository, EmailService emailService) {
+    public UsuarioController(UsuarioService usuarioService, AssinaturaService assinaturaService, PasswordEncoder passwordEncoder, UsuarioRepository usuarioRepository, EmailService emailService, CargoRespository cargoRespository) {
         this.usuarioService = usuarioService;
         this.assinaturaService = assinaturaService;
         this.passwordEncoder = passwordEncoder;
         this.usuarioRepository = usuarioRepository;
         this.emailService = emailService;
+        this.cargoRespository = cargoRespository;
     }
 
     @PostMapping
@@ -55,10 +59,14 @@ public class UsuarioController {
             usuario.setPerfil(perfil == null && usuarioId == null ? PerfilEnum.ADMIN : perfil);
             Usuario result = usuarioService.save(usuario);
 
-            if (!PerfilEnum.ADMIN.equals(result.getPerfil())) {
+            if (!PerfilEnum.ADMIN.equals(result.getPerfil()) || !PerfilEnum.ADMIN_CHECKIN.equals(result.getPerfil())) {
                 Usuario tentant = usuarioService.findById(usuarioId);
+                Cargo cargo = cargoRespository.findById(usuarioDTO.getCargoId()).get();
+
                 result.setTenantId(tentant.getUsuarioId());
                 result.setCriadoPor(tentant.getUsuarioId());
+                result.setCargo(cargo);
+
                 usuarioService.update(result.getUsuarioId(), result);
                 emailService.forget(usuarioDTO.getEmail().trim());
             } else {
@@ -66,7 +74,7 @@ public class UsuarioController {
                 usuarioService.update(result.getUsuarioId(), result);
             }
 
-            if (PerfilEnum.ADMIN.equals(result.getPerfil())) {
+            if (PerfilEnum.ADMIN.equals(result.getPerfil()) || !PerfilEnum.ADMIN_CHECKIN.equals(result.getPerfil())) {
                 Assinatura assinatura = Assinatura.getInstance(result);
                 Assinatura assinaturaResult = assinaturaService.save(assinatura);
 

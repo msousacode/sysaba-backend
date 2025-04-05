@@ -1,6 +1,9 @@
 package br.com.sysaba.modules.usuario.dtos;
 
+import br.com.sysaba.modules.cargo.CargoDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.UUID;
 
 public class UsuarioDTO {
 
@@ -15,13 +18,18 @@ public class UsuarioDTO {
 
     private String perfil;
 
-    public UsuarioDTO(){}
+    @JsonProperty("cargo")
+    private UUID cargoId;
 
-    public UsuarioDTO(String fullName, String email, String senha, String perfil) {
+    public UsuarioDTO() {
+    }
+
+    public UsuarioDTO(String fullName, String email, String senha, String perfil, UUID cargoId) {
         this.fullName = fullName;
         this.email = email;
         this.senha = senha;
         this.perfil = perfil;
+        this.cargoId = cargoId;
     }
 
     public String getFullName() {
@@ -54,5 +62,13 @@ public class UsuarioDTO {
 
     public void setPerfil(String perfil) {
         this.perfil = perfil;
+    }
+
+    public UUID getCargoId() {
+        return cargoId;
+    }
+
+    public void setCargoId(UUID cargoId) {
+        this.cargoId = cargoId;
     }
 }

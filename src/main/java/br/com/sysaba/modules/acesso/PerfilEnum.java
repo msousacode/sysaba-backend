@@ -6,7 +6,10 @@ import java.util.Map;
 public enum PerfilEnum {
     ADMIN("Administrador"),
     ESPECIALISTA("Especialista"),
-    AT("AT");
+    AT("AT"),
+    CHECKIN("CHECKIN"),
+    ADMIN_CHECKIN("ADMIN_CHECKIN"),
+    ;
 
     private String perfil;
 
