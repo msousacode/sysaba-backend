@@ -150,7 +150,7 @@ public class AtendimentoController {
         List<AprendizProfissional> treinamentoAtendimentos = aprendizProfissionalRespository.findAllByAprendiz_aprendizId(saved.getAprendiz().getAprendizId());
         List<ProfissionalDTO> profissionalDTOS = new ArrayList<>();
 
-        profissionalDTOS.addAll(treinamentoAtendimentos.stream().map(i -> new ProfissionalDTO(i.getProfissional().getFullName(), i.getProfissional().getEmail(), i.getProfissional().getPerfil().name())).toList());
+        profissionalDTOS.addAll(treinamentoAtendimentos.stream().map(i -> new ProfissionalDTO(i.getProfissional().getFullName(), i.getProfissional().getEmail(), i.getProfissional().getPerfil().name(), i.getProfissional().getCargo().getCargoId())).toList());
 
         List<TreinamentoItemDTO> treinamentoItemDTOArrayList = new ArrayList<>();
         saved.getTreinamentoAtendimentos().forEach(i -> {

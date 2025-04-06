@@ -2,6 +2,8 @@ package br.com.sysaba.modules.profissional;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.acesso.PerfilEnum;
+import br.com.sysaba.modules.cargo.Cargo;
+import br.com.sysaba.modules.cargo.CargoRespository;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioService;
 import org.slf4j.Logger;
@@ -21,8 +23,11 @@ public class ProfissionalController {
 
     private final UsuarioService usuarioService;
 
-    public ProfissionalController(UsuarioService usuarioService) {
+    private final CargoRespository cargoRespository;
+
+    public ProfissionalController(UsuarioService usuarioService, CargoRespository cargoRespository) {
         this.usuarioService = usuarioService;
+        this.cargoRespository = cargoRespository;
     }
 
     @GetMapping("/tenant/{tenantId}")
@@ -52,9 +57,12 @@ public class ProfissionalController {
         try {
             Usuario usuario = usuarioService.getByEmail(email);
 
+            Cargo cargo = cargoRespository.findById(profissionalDTO.getCargo()).get();
+
             usuario.setPerfil(PerfilEnum.getEnum(profissionalDTO.getPerfil()));
             usuario.setFullName(profissionalDTO.getFullName());
             usuario.setEmail(profissionalDTO.getEmail());
+            usuario.setCargo(cargo);
 
             usuarioService.save(usuario);
 
