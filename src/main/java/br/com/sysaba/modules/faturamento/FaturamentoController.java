@@ -10,6 +10,7 @@ import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,7 +66,7 @@ public class FaturamentoController {
             faturamento.setAprendizId(aprendiz.getAprendizId());
             faturamento.setNomeAprendiz(aprendiz.getNomeAprendiz());
 
-            if(faturamentoDTO.getPresente() == null)
+            if (faturamentoDTO.getPresente() == null)
                 throw new RuntimeException("É obrigatório informar se o aprendiz está ou não presente na sessão.");
 
             faturamento.setPresente(faturamentoDTO.getPresente());
@@ -104,5 +105,25 @@ public class FaturamentoController {
         List<FaturamentoGeral> faturamentos = faturamentoRepository.findAllByAtivoIsTrue();
         List<FaturamentoDTO> dtoList = faturamentos.stream().map(i -> MapperUtil.converte(i, FaturamentoDTO.class)).toList();
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<FaturamentoBuscarDTO>> buscar(
+            @RequestParam(required = false) String nomeAprendiz
+    ) {
+
+        Specification<FaturamentoGeral> spec = Specification.where(null);
+
+        if (nomeAprendiz != null) {
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("nomeAprendiz")), "%" + nomeAprendiz.toLowerCase() + "%"));
+        }
+
+        List<FaturamentoGeral> todosRegistros = faturamentoRepository.findAllByAtivoIsTrue();
+
+        List<FaturamentoGeral> faturamentoList = faturamentoRepository.findAll(spec);
+
+        List<FaturamentoBuscarDTO> response = faturamentoList.stream().map(i -> FaturamentoBuscarDTO.of(i, 10, 2, 3, "R$ 5.000,00")).toList();
+
+        return ResponseEntity.ok(response);
     }
 }
