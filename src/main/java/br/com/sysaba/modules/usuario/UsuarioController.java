@@ -56,10 +56,15 @@ public class UsuarioController {
             Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
             usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha() == null ? String.valueOf(UUID.randomUUID()) : usuario.getSenha()));
             PerfilEnum perfil = PerfilEnum.getEnum(usuarioDTO.getPerfil());
-            usuario.setPerfil(perfil == null && usuarioId == null ? PerfilEnum.ADMIN : perfil);
+            usuario.setPerfil(perfil == null && usuarioId == null ? PerfilEnum.ADMIN_CHECKIN : perfil);
             Usuario result = usuarioService.save(usuario);
 
-            if (!PerfilEnum.ADMIN.equals(result.getPerfil()) || !PerfilEnum.ADMIN_CHECKIN.equals(result.getPerfil())) {
+            if(result == null) {
+                logger.error("Erro ao criar conta de usuário");
+                throw new RuntimeException("Erro ao criar conta de usuário");
+            }
+
+            if (usuarioId != null) {
                 Usuario tentant = usuarioService.findById(usuarioId);
                 Cargo cargo = cargoRespository.findById(usuarioDTO.getCargoId()).get();
 
@@ -74,7 +79,7 @@ public class UsuarioController {
                 usuarioService.update(result.getUsuarioId(), result);
             }
 
-            if (PerfilEnum.ADMIN.equals(result.getPerfil()) || !PerfilEnum.ADMIN_CHECKIN.equals(result.getPerfil())) {
+            if (usuarioId == null) {
                 Assinatura assinatura = Assinatura.getInstance(result);
                 Assinatura assinaturaResult = assinaturaService.save(assinatura);
 

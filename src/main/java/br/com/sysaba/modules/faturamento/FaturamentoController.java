@@ -1,5 +1,6 @@
 package br.com.sysaba.modules.faturamento;
 
+import br.com.sysaba.core.security.config.TenantAuthenticationToken;
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizController;
@@ -54,6 +55,9 @@ public class FaturamentoController {
             Usuario usuario = usuarioService.getByEmail(email);
             UUID usuarioId = usuario.getUsuarioId();
 
+            if(usuario.getCargo() == null)
+                return ResponseEntity.internalServerError().body("Usuário esta sem cargo.");
+
             Cargo cargo = cargoRespository.findById(usuario.getCargo().getCargoId()).get();
 
             Aprendiz aprendiz = aprendizRespository.findById(faturamentoDTO.getAprendizId()).get();
@@ -91,6 +95,8 @@ public class FaturamentoController {
             faturamento.setMes(LocalDate.now().getMonthValue());
             faturamento.setAno(LocalDate.now().getYear());
 
+            faturamento.setTenantId(usuario.getTenantId());
+
             faturamentoRepository.save(faturamento);
 
             return ResponseEntity.ok().build();
@@ -109,20 +115,26 @@ public class FaturamentoController {
 
     @GetMapping("/buscar")
     public ResponseEntity<List<FaturamentoBuscarDTO>> buscar(
-            @RequestParam(required = false) String nomeAprendiz
+            @RequestParam(required = false) UUID aprendizId
     ) {
 
-        Specification<FaturamentoGeral> spec = Specification.where(null);
+        Specification<FaturamentoGeral> spec = Specification.where(
+                (root, query, cb) -> cb.equal(root.get("ativo"), true)
+        );
 
-        if (nomeAprendiz != null) {
-            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("nomeAprendiz")), "%" + nomeAprendiz.toLowerCase() + "%"));
+        UUID x = ((TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getTenantId();
+
+        List<FaturamentoGeral> faturamentoListx = faturamentoRepository.findAll();
+
+        if (aprendizId != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("aprendizId"), aprendizId));
         }
-
-        List<FaturamentoGeral> todosRegistros = faturamentoRepository.findAllByAtivoIsTrue();
 
         List<FaturamentoGeral> faturamentoList = faturamentoRepository.findAll(spec);
 
-        List<FaturamentoBuscarDTO> response = faturamentoList.stream().map(i -> FaturamentoBuscarDTO.of(i, 10, 2, 3, "R$ 5.000,00")).toList();
+        List<FaturamentoBuscarDTO> response = faturamentoList.stream()
+                .map(i -> FaturamentoBuscarDTO.of(i, 10, 2, 3, "R$ 5.000,00"))
+                .toList();
 
         return ResponseEntity.ok(response);
     }
