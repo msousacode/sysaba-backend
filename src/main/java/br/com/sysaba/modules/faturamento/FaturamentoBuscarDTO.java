@@ -15,7 +15,7 @@ public class FaturamentoBuscarDTO {
     private PagamentoEnum situacao;
 
     // Construtores
-    public FaturamentoBuscarDTO() {
+    public FaturamentoBuscarDTO(Object[] result) {
     }
 
     public FaturamentoBuscarDTO(UUID aprendizId, String nomeAprendiz, Integer mesReferencia,

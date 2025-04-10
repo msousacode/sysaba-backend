@@ -19,9 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/faturamento")
@@ -108,9 +109,13 @@ public class FaturamentoController {
 
     @GetMapping("/all")
     public ResponseEntity<List<FaturamentoDTO>> getAll() {
-        List<FaturamentoGeral> faturamentos = faturamentoRepository.findAllByAtivoIsTrue();
-        List<FaturamentoDTO> dtoList = faturamentos.stream().map(i -> MapperUtil.converte(i, FaturamentoDTO.class)).toList();
-        return ResponseEntity.status(HttpStatus.OK).body(dtoList);
+        List<Object[]> faturamentos = faturamentoRepository.findSomatorioPrecosPorAprendiz();
+
+        List<FaturamentoDTO> x = faturamentos.stream()
+                .map(result -> FaturamentoDTO.of(result))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK).body(x);
     }
 
     @GetMapping("/buscar")

@@ -8,20 +8,33 @@ public class FaturamentoDTO {
     private UUID profissionalId;
     private String nomeProfissional;
     private String cargoProfissional;
-    private String preco;
+    private String valorTotal;
     private UUID aprendizId;
     private String nomeAprendiz;
     private Boolean ausenciaJustificada;
     private String descricaoJustificativa;
     private Boolean presente;
     private Integer dia;
-    private Integer mes;
-    private Integer ano;
-    private PagamentoEnum situacao;
+    private String mes;
+    private String ano;
+    private String situacao;
 
     // Campos auxiliares para apresentação ou filtros
     private String dataPorExtenso;
     private String valorFormatado;
+
+
+    public static FaturamentoDTO of(Object[] object) {
+        FaturamentoDTO dto = new FaturamentoDTO();
+        dto.setAprendizId((UUID) object[0]);
+        dto.setNomeAprendiz(String.valueOf(object[1]));
+        dto.setValorTotal("R$ " + object[2]);
+        dto.setSituacao(String.valueOf(object[3]));
+        dto.setMes(String.valueOf(object[4]));
+        dto.setAno(String.valueOf(object[5]));
+
+        return dto;
+     }
 
     /**
      * Método para obter a data no formato DD/MM/AAAA
@@ -85,12 +98,12 @@ public class FaturamentoDTO {
         this.cargoProfissional = cargoProfissional;
     }
 
-    public String getPreco() {
-        return preco;
+    public String getValorTotal() {
+        return valorTotal;
     }
 
-    public void setPreco(String preco) {
-        this.preco = preco;
+    public void setValorTotal(String valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
     public UUID getAprendizId() {
@@ -141,27 +154,27 @@ public class FaturamentoDTO {
         this.dia = dia;
     }
 
-    public Integer getMes() {
+    public String getMes() {
         return mes;
     }
 
-    public void setMes(Integer mes) {
+    public void setMes(String mes) {
         this.mes = mes;
     }
 
-    public Integer getAno() {
+    public String getAno() {
         return ano;
     }
 
-    public void setAno(Integer ano) {
+    public void setAno(String ano) {
         this.ano = ano;
     }
 
-    public PagamentoEnum getSituacao() {
+    public String getSituacao() {
         return situacao;
     }
 
-    public void setSituacao(PagamentoEnum situacao) {
+    public void setSituacao(String situacao) {
         this.situacao = situacao;
     }
 
