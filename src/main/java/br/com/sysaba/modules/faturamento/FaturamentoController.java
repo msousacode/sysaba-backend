@@ -123,6 +123,7 @@ public class FaturamentoController {
             dto.setSessoesTotal(totalSessoesRealizadas);
             dto.setAusenciasJustificadasTotal(totalAusenciasJustificadas);
             dto.setAusenciasNaoJustificadasTotal(totalAuenciasNaoJustificadas);
+            dto.setValorTotal(dto.getValorTotal());
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(faturamentoDTOS);

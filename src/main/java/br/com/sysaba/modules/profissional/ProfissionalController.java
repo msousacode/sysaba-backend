@@ -59,7 +59,7 @@ public class ProfissionalController {
 
             Cargo cargo = cargoRespository.findById(profissionalDTO.getCargo()).get();
 
-            usuario.setPerfil(PerfilEnum.getEnum(profissionalDTO.getPerfil()));
+            //usuario.setPerfil(PerfilEnum.getEnum(profissionalDTO.getPerfil()));
             usuario.setFullName(profissionalDTO.getFullName());
             usuario.setEmail(profissionalDTO.getEmail());
             usuario.setCargo(cargo);
