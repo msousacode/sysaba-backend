@@ -56,7 +56,7 @@ public class FaturamentoController {
             Usuario usuario = usuarioService.getByEmail(email);
             UUID usuarioId = usuario.getUsuarioId();
 
-            if(usuario.getCargo() == null)
+            if (usuario.getCargo() == null)
                 return ResponseEntity.internalServerError().body("Usuário esta sem cargo.");
 
             Cargo cargo = cargoRespository.findById(usuario.getCargo().getCargoId()).get();
@@ -111,11 +111,21 @@ public class FaturamentoController {
     public ResponseEntity<List<FaturamentoDTO>> getAll() {
         List<Object[]> faturamentos = faturamentoRepository.findSomatorioPrecosPorAprendiz();
 
-        List<FaturamentoDTO> x = faturamentos.stream()
+        List<FaturamentoDTO> faturamentoDTOS = faturamentos.stream()
                 .map(result -> FaturamentoDTO.of(result))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(x);
+        for (FaturamentoDTO dto : faturamentoDTOS) {
+            Integer totalSessoesRealizadas = faturamentoRepository.findCountSessoesRealizadasPorAprendizId(dto.getAprendizId(), Integer.valueOf(dto.getMes()), Integer.valueOf(dto.getAno()));
+            Integer totalAusenciasJustificadas = faturamentoRepository.findCountAusenciasJustificadasPorAprendizId(dto.getAprendizId(), Integer.valueOf(dto.getMes()), Integer.valueOf(dto.getAno()));
+            Integer totalAuenciasNaoJustificadas = faturamentoRepository.findCountAuenciasNaoJustificadasPorAprendizId(dto.getAprendizId(), Integer.valueOf(dto.getMes()), Integer.valueOf(dto.getAno()));
+
+            dto.setSessoesTotal(totalSessoesRealizadas);
+            dto.setAusenciasJustificadasTotal(totalAusenciasJustificadas);
+            dto.setAusenciasNaoJustificadasTotal(totalAuenciasNaoJustificadas);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(faturamentoDTOS);
     }
 
     @GetMapping("/buscar")

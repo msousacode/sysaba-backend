@@ -9,6 +9,9 @@ public class FaturamentoDTO {
     private String nomeProfissional;
     private String cargoProfissional;
     private String valorTotal;
+    private Integer sessoesTotal;
+    private Integer ausenciasJustificadasTotal;
+    private Integer ausenciasNaoJustificadasTotal;
     private UUID aprendizId;
     private String nomeAprendiz;
     private Boolean ausenciaJustificada;
@@ -34,7 +37,7 @@ public class FaturamentoDTO {
         dto.setAno(String.valueOf(object[5]));
 
         return dto;
-     }
+    }
 
     /**
      * Método para obter a data no formato DD/MM/AAAA
@@ -192,5 +195,29 @@ public class FaturamentoDTO {
 
     public void setValorFormatado(String valorFormatado) {
         this.valorFormatado = valorFormatado;
+    }
+
+    public Integer getSessoesTotal() {
+        return sessoesTotal;
+    }
+
+    public void setSessoesTotal(Integer sessoesTotal) {
+        this.sessoesTotal = sessoesTotal;
+    }
+
+    public Integer getAusenciasJustificadasTotal() {
+        return ausenciasJustificadasTotal;
+    }
+
+    public void setAusenciasJustificadasTotal(Integer ausenciasJustificadasTotal) {
+        this.ausenciasJustificadasTotal = ausenciasJustificadasTotal;
+    }
+
+    public Integer getAusenciasNaoJustificadasTotal() {
+        return ausenciasNaoJustificadasTotal;
+    }
+
+    public void setAusenciasNaoJustificadasTotal(Integer ausenciasNaoJustificadasTotal) {
+        this.ausenciasNaoJustificadasTotal = ausenciasNaoJustificadasTotal;
     }
 }
