@@ -21,15 +21,18 @@ public class UsuarioDTO {
     @JsonProperty("cargo")
     private UUID cargoId;
 
+    private String cargoDescricao;
+
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(String fullName, String email, String senha, String perfil, UUID cargoId) {
+    public UsuarioDTO(String fullName, String email, String senha, String perfil, UUID cargoId, String cargoDescricao) {
         this.fullName = fullName;
         this.email = email;
         this.senha = senha;
         this.perfil = perfil;
         this.cargoId = cargoId;
+        this.cargoDescricao = cargoDescricao;
     }
 
     public String getFullName() {
@@ -70,5 +73,13 @@ public class UsuarioDTO {
 
     public void setCargoId(UUID cargoId) {
         this.cargoId = cargoId;
+    }
+
+    public String getCargoDescricao() {
+        return cargoDescricao;
+    }
+
+    public void setCargoDescricao(String cargoDescricao) {
+        this.cargoDescricao = cargoDescricao;
     }
 }

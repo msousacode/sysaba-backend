@@ -18,4 +18,7 @@ public interface AprendizRespository extends TenantableRepository<Aprendiz> {
     void inativar(@Param("id") UUID id);
 
     Page<Aprendiz> findAllByAtivoIsTrue(Pageable pageable);
+
+    @Query(value = "select count(1) from Aprendiz a where a.ativo = true")
+    Integer findTotalAprendizes();
 }

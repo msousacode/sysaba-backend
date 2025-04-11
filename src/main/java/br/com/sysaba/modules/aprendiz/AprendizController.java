@@ -129,7 +129,21 @@ public class AprendizController {
     @GetMapping("/{id}/profissionais")
     public ResponseEntity<List<UsuarioDTO>> getProfissionais(@PathVariable("id") UUID id) {
         List<AprendizProfissional> aprendizProfissionals = aprendizProfissionalRespository.findAllByAprendiz_aprendizId(id);
-        List<UsuarioDTO> profissionaisVinculados = aprendizProfissionals.stream().map(i -> MapperUtil.converte(i.getProfissional(), UsuarioDTO.class)).toList();
+
+        List<UsuarioDTO> profissionaisVinculados = new ArrayList<>();
+        for (AprendizProfissional ap : aprendizProfissionals) {
+            profissionaisVinculados.add(
+                    new UsuarioDTO(
+                            ap.getProfissional().getFullName(),
+                            ap.getProfissional().getEmail(),
+                            null,
+                            ap.getProfissional().getPerfil().name(),
+                            ap.getProfissional().getCargo().getCargoId(),
+                            ap.getProfissional().getCargo().getDescricao())
+            );
+        }
+
+
         return ResponseEntity.status(HttpStatus.OK).body(profissionaisVinculados);
     }
 

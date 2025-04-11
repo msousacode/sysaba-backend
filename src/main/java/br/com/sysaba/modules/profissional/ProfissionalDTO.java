@@ -16,14 +16,17 @@ public class ProfissionalDTO {
 
     private UUID cargo;
 
+    private String cargoDescricao;
+
     public ProfissionalDTO() {
     }
 
-    public ProfissionalDTO(String fullName, String email, String perfil, UUID cargo) {
+    public ProfissionalDTO(String fullName, String email, String perfil, UUID cargo, String cargoDescricao) {
         this.fullName = fullName;
         this.email = email;
         this.perfil = perfil;
         this.cargo = cargo;
+        this.cargoDescricao = cargoDescricao;
     }
 
     public String getFullName() {
@@ -56,5 +59,13 @@ public class ProfissionalDTO {
 
     public void setCargo(UUID cargo) {
         this.cargo = cargo;
+    }
+
+    public String getCargoDescricao() {
+        return cargoDescricao;
+    }
+
+    public void setCargoDescricao(String cargoDescricao) {
+        this.cargoDescricao = cargoDescricao;
     }
 }

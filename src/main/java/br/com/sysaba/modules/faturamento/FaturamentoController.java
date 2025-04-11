@@ -20,8 +20,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -109,7 +113,7 @@ public class FaturamentoController {
 
     @GetMapping("/all")
     public ResponseEntity<List<FaturamentoDTO>> getAll() {
-        List<Object[]> faturamentos = faturamentoRepository.findSomatorioPrecosPorAprendiz();
+        List<Object[]> faturamentos = faturamentoRepository.findSomatorioPrecosGeral();
 
         List<FaturamentoDTO> faturamentoDTOS = faturamentos.stream()
                 .map(result -> FaturamentoDTO.of(result))
@@ -138,10 +142,6 @@ public class FaturamentoController {
                 (root, query, cb) -> cb.equal(root.get("ativo"), true)
         );
 
-        UUID x = ((TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getTenantId();
-
-        List<FaturamentoGeral> faturamentoListx = faturamentoRepository.findAll();
-
         if (aprendizId != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("aprendizId"), aprendizId));
         }
@@ -153,5 +153,39 @@ public class FaturamentoController {
                 .toList();
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/dash")
+    public FaturamentoSumarioDTO findInfoDash() {
+
+        Integer mes = LocalDate.now().getMonthValue();
+        Integer ano = LocalDate.now().getYear();
+
+        List<Object[]> totalAReceber = faturamentoRepository.findSomatorioTotalAReceber(mes, ano);
+        List<Object[]> totalPago = faturamentoRepository.findSomatorioTotalPago(mes, ano);
+        Integer totalSessoesRealizadas = faturamentoRepository.findSomatorioSessoesRealizadas(mes, ano);
+        Integer totalAusenciasJustificadas = faturamentoRepository.findSomatorioAusenciasJustificadas(mes, ano);
+        Integer totalAusenciasNaoJustificadas = faturamentoRepository.findSomatorioAusenciasNaoJustificadas(mes, ano);
+        Integer totalAprendizes = aprendizRespository.findTotalAprendizes();
+
+        Double valorAReceber = !totalAReceber.isEmpty() ? (Double) totalAReceber.get(0)[0] : 0;
+        Double valorPago = !totalPago.isEmpty() ? (Double) totalPago.get(0)[0] : 0;
+
+        Locale localeBR = new Locale("pt", "BR");
+        NumberFormat formatadorMoeda = NumberFormat.getCurrencyInstance(localeBR);
+
+        BigDecimal valorTotalAReceber = new BigDecimal(valorAReceber).subtract(new BigDecimal(valorPago));
+
+        FaturamentoSumarioDTO dto = new FaturamentoSumarioDTO();
+
+        dto.setFaturamentoTotalMes(formatadorMoeda.format(valorAReceber));
+        dto.setValorTotalPagos(formatadorMoeda.format(valorPago));
+        dto.setValorTotalPendentes(formatadorMoeda.format(valorTotalAReceber));
+        dto.setTotalAprendizes(totalAprendizes);
+        dto.setTotalSessoesRealizadas(totalSessoesRealizadas);
+        dto.setTotalAusenciasJustificadas(totalAusenciasJustificadas);
+        dto.setTotalAusenciasNaoJustificadas(totalAusenciasNaoJustificadas);
+
+        return dto;
     }
 }

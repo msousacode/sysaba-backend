@@ -2,16 +2,19 @@ package br.com.sysaba.modules.profissional;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.acesso.PerfilEnum;
+import br.com.sysaba.modules.aprendiz.AprendizProfissional;
 import br.com.sysaba.modules.cargo.Cargo;
 import br.com.sysaba.modules.cargo.CargoRespository;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioService;
+import br.com.sysaba.modules.usuario.dtos.UsuarioDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,7 +37,21 @@ public class ProfissionalController {
     public ResponseEntity<List<ProfissionalDTO>> buscar(@PathVariable("tenantId") UUID tenantId) {
         try {
             List<Usuario> usuarioList = usuarioService.findAllByTenantId(tenantId).stream().filter(i -> i.getPerfil() != PerfilEnum.ADMIN).toList();
-            return ResponseEntity.status(HttpStatus.OK).body(usuarioList.stream().map(i -> MapperUtil.converte(i, ProfissionalDTO.class)).toList());
+
+
+            List<ProfissionalDTO> profissionaisVinculados = new ArrayList<>();
+            for (Usuario ap : usuarioList) {
+                profissionaisVinculados.add(
+                        new ProfissionalDTO(
+                                ap.getFullName(),
+                                ap.getEmail(),
+                                ap.getPerfil().name(),
+                                ap.getCargo().getCargoId(),
+                                ap.getCargo().getDescricao())
+                );
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body(profissionaisVinculados);
         } catch (Exception ex) {
             logger.error("erro ao carregar lista de profissionais", ex);
             return ResponseEntity.internalServerError().build();
