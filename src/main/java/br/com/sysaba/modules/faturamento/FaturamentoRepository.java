@@ -3,7 +3,6 @@ package br.com.sysaba.modules.faturamento;
 import br.com.sysaba.core.repository.TenantableRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,11 +25,14 @@ public interface FaturamentoRepository extends TenantableRepository<FaturamentoG
     @Query(value = """
             SELECT SUM(CAST(REPLACE(f.preco, ',', '.') AS double)), f.mes, f.ano
             FROM FaturamentoGeral f
-            WHERE f.ativo = true AND f.situacao = 'PENDENTE' AND (f.ausenciaJustificada = false OR f.ausenciaJustificada is null)
+            WHERE f.ativo = true 
+            AND f.situacao = 'PENDENTE' 
+            and f.presente = true
+            or f.ausenciaJustificada = false
             and f.mes = :mes and f.ano = :ano
             GROUP BY f.situacao, f.mes, f.ano            
             """)
-    List<Object[]> findSomatorioTotalAReceber(Integer mes, Integer ano);
+    List<Object[]> findSomatorioTotalValorPrevisto(Integer mes, Integer ano);
 
     @Query(value = """
             SELECT SUM(CAST(REPLACE(f.preco, ',', '.') AS double)), f.mes, f.ano
@@ -57,6 +59,7 @@ public interface FaturamentoRepository extends TenantableRepository<FaturamentoG
             SELECT count(1)
             FROM FaturamentoGeral f
             WHERE f.ativo = true
+            and f.presente = false
             and f.ausenciaJustificada = true                        
             and f.mes = :mes 
             and f.ano = :ano                        
@@ -68,7 +71,7 @@ public interface FaturamentoRepository extends TenantableRepository<FaturamentoG
             FROM FaturamentoGeral f
             WHERE f.ativo = true
             and f.ausenciaJustificada = false
-            and f.presente <> true                        
+            and f.presente = false                        
             and f.mes = :mes 
             and f.ano = :ano                        
             """)

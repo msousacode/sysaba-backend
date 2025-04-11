@@ -1,6 +1,5 @@
 package br.com.sysaba.modules.faturamento;
 
-import br.com.sysaba.core.security.config.TenantAuthenticationToken;
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizController;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -161,14 +159,21 @@ public class FaturamentoController {
         Integer mes = LocalDate.now().getMonthValue();
         Integer ano = LocalDate.now().getYear();
 
-        List<Object[]> totalAReceber = faturamentoRepository.findSomatorioTotalAReceber(mes, ano);
+        List<Object[]> totalValorPrevisto = faturamentoRepository.findSomatorioTotalValorPrevisto(mes, ano);
         List<Object[]> totalPago = faturamentoRepository.findSomatorioTotalPago(mes, ano);
         Integer totalSessoesRealizadas = faturamentoRepository.findSomatorioSessoesRealizadas(mes, ano);
         Integer totalAusenciasJustificadas = faturamentoRepository.findSomatorioAusenciasJustificadas(mes, ano);
         Integer totalAusenciasNaoJustificadas = faturamentoRepository.findSomatorioAusenciasNaoJustificadas(mes, ano);
         Integer totalAprendizes = aprendizRespository.findTotalAprendizes();
 
-        Double valorAReceber = !totalAReceber.isEmpty() ? (Double) totalAReceber.get(0)[0] : 0;
+        Double valorAReceber = 0.0;
+
+        if(!totalValorPrevisto.isEmpty()) {
+            for(int i =0 ; i < totalValorPrevisto.size(); i++) {
+                valorAReceber +=  (Double) totalValorPrevisto.get(i)[0];
+            }
+        }
+
         Double valorPago = !totalPago.isEmpty() ? (Double) totalPago.get(0)[0] : 0;
 
         Locale localeBR = new Locale("pt", "BR");
