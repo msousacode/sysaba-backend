@@ -9,6 +9,10 @@ import br.com.sysaba.modules.treinamento.TreinamentoService;
 import br.com.sysaba.modules.treinamento.dto.TreinamentoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +50,32 @@ public class AlvoController {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @Transactional
+    @PostMapping("/v2/salvar")
+    public ResponseEntity<AlvoDTO> salvarAlvoV2(@RequestBody AlvoDTO alvoDTO) {
+        try {
+            Alvo alvo = MapperUtil.converte(alvoDTO, Alvo.class);            
+            Alvo saved = alvoService.save(alvo);
+            br.com.sysaba.modules.alvo.dto.AlvoDTO dto = MapperUtil.converte(saved, AlvoDTO.class);
+            return ResponseEntity.ok().body(dto);
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/v2/all")
+    public ResponseEntity<List<AlvoDTO>> getAlvosAllV2(
+         @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size,
+            @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
+            @RequestParam(value = "direction", defaultValue = "DESC") String direction
+    ) {
+        Page<Alvo> resultList = alvoService.findAll(PageRequest.of(page, size, org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.valueOf(direction), sort)));
+        List<AlvoDTO> dtoList = resultList.stream().map(i -> MapperUtil.converte(i, AlvoDTO.class)).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
 
     @Transactional

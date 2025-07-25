@@ -60,7 +60,7 @@ public class Usuario {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cargo_id")
     private Cargo cargo;
-
+    
     public Usuario(UUID usuarioId, String documento, String email, String fullName, String avatarUrl, Boolean primeiroAcessoRealizado, String senha, LocalDateTime createdAt, Boolean ativo, UUID criadoPor, UUID tenantId, Cargo cargo) {
         this.cargo = cargo;
         this.usuarioId = usuarioId;

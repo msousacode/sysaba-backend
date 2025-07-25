@@ -17,20 +17,20 @@ public class Alvo extends Tenantable {
     @Column(name = "alvo_id")
     private UUID alvoId;
 
-    @Column(name = "nome_alvo")
+    @Column(name = "nome_alvo", nullable = false)
     private String nomeAlvo;
 
-    @Column(name = "pergunta")
+    @Column(name = "pergunta", nullable = true)
     private String pergunta;
 
-    @Column(name = "descricao_alvo")
+    @Column(name = "descricao_alvo", nullable = true)
     private String descricaoAlvo;
 
-    @Column(name = "treinamento_uuid_fk")
+    @Column(name = "treinamento_uuid_fk", nullable = true)
     private String treinamentoUuidFk;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "treinamento_id", nullable = false)
+    @JoinColumn(name = "treinamento_id", nullable = true)
     private Treinamento treinamento;
 
 

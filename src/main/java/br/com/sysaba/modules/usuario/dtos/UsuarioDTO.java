@@ -1,6 +1,5 @@
 package br.com.sysaba.modules.usuario.dtos;
 
-import br.com.sysaba.modules.cargo.CargoDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.UUID;
@@ -22,6 +21,8 @@ public class UsuarioDTO {
     private UUID cargoId;
 
     private String cargoDescricao;
+
+    private String cargoPreco;
 
     public UsuarioDTO() {
     }
@@ -81,5 +82,13 @@ public class UsuarioDTO {
 
     public void setCargoDescricao(String cargoDescricao) {
         this.cargoDescricao = cargoDescricao;
+    }
+
+      public String getCargoPreco() {
+        return cargoPreco;
+    }
+
+    public void setCargoPreco(String cargoPreco) {
+        this.cargoPreco = cargoPreco;
     }
 }

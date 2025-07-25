@@ -97,7 +97,7 @@ public class AprendizController {
 
         PerfilEnum perfilEnum = getPerfil();
 
-        if (PerfilEnum.ADMIN.equals(perfilEnum) || PerfilEnum.ADMIN_CHECKIN.equals(perfilEnum)) {
+        if (PerfilEnum.ADMIN.equals(perfilEnum) || PerfilEnum.CONVIDADO.equals(perfilEnum)) {
             Page<Aprendiz> aprendizList = aprendizService.findAllIsTrue(PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
             Page<AprendizDTO> dtoList = aprendizList.map(i -> MapperUtil.converte(i, AprendizDTO.class));
             return ResponseEntity.status(HttpStatus.OK).body(dtoList);

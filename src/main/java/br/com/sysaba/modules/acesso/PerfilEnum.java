@@ -9,6 +9,7 @@ public enum PerfilEnum {
     AT("AT"),
     CHECKIN("CHECKIN"),
     ADMIN_CHECKIN("ADMIN_CHECKIN"),
+    CONVIDADO("Convidado"),
     ;
 
     private String perfil;

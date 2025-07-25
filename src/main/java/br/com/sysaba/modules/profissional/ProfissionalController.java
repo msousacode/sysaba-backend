@@ -2,12 +2,10 @@ package br.com.sysaba.modules.profissional;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.acesso.PerfilEnum;
-import br.com.sysaba.modules.aprendiz.AprendizProfissional;
 import br.com.sysaba.modules.cargo.Cargo;
 import br.com.sysaba.modules.cargo.CargoRespository;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioService;
-import br.com.sysaba.modules.usuario.dtos.UsuarioDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -36,7 +34,7 @@ public class ProfissionalController {
     @GetMapping("/tenant/{tenantId}")
     public ResponseEntity<List<ProfissionalDTO>> buscar(@PathVariable("tenantId") UUID tenantId) {
         try {
-            List<Usuario> usuarioList = usuarioService.findAllByTenantId(tenantId).stream().filter(i -> i.getPerfil() != PerfilEnum.ADMIN).toList();
+            List<Usuario> usuarioList = usuarioService.findAllByTenantId(tenantId);
 
 
             List<ProfissionalDTO> profissionaisVinculados = new ArrayList<>();
