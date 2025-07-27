@@ -60,4 +60,8 @@ public class AlvoService implements GenericService<Alvo, UUID> {
     public List<Alvo> getAlvosByTreinamento(UUID treinamentoId) {
         return treinamentoService.findById(treinamentoId).getAlvos();
     }
+
+    public void deleteByAlvoId(UUID alvoId) {
+        alvoRespository.deleteByAlvoId(alvoId);
+    }
 }

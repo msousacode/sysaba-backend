@@ -104,9 +104,11 @@ public class AlvoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TreinamentoDTO> getAlvo(@PathVariable("id") UUID id) {
-        var saved = treinamentoService.findById(id);
-        TreinamentoDTO dto = MapperUtil.converte(saved, TreinamentoDTO.class);
+    public ResponseEntity<AlvoDTO> getAlvo(@PathVariable("id") UUID id) {
+        //var saved = treinamentoService.findById(id);
+        //TreinamentoDTO dto = MapperUtil.converte(saved, TreinamentoDTO.class);
+        Alvo alvo = alvoService.findById(id);
+        AlvoDTO dto = MapperUtil.converte(alvo, AlvoDTO.class);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
@@ -115,5 +117,17 @@ public class AlvoController {
         List<Alvo> list = alvoService.getAlvosByTreinamento(id);
         List<AlvoDTO> dtoList = list.stream().map(i -> MapperUtil.converte(i, AlvoDTO.class)).toList();
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
+    }
+
+    @Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAlvosByTreinamento(@PathVariable UUID id) {
+        try{
+            alvoService.deleteByAlvoId(id);
+        } catch(RuntimeException e) {
+            logger.error("Erro ocorrido: {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 }
