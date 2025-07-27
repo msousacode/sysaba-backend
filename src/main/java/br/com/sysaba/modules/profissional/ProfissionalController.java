@@ -39,14 +39,19 @@ public class ProfissionalController {
 
             List<ProfissionalDTO> profissionaisVinculados = new ArrayList<>();
             for (Usuario ap : usuarioList) {
+                if(ap.getCargo() == null) {
+                    ap.setCargo(new Cargo());
+                }
                 profissionaisVinculados.add(
+
+
                         new ProfissionalDTO(
                                 ap.getFullName(),
                                 ap.getEmail(),
                                 ap.getPerfil().name(),
-                                ap.getCargo().getCargoId(),
-                                ap.getCargo().getDescricao())
-                );
+                                ap.getCargo().getCargoId()  == null ? UUID.randomUUID() : ap.getCargo().getCargoId(),
+                                ap.getCargo().getDescricao() == null ? "Admin" : ap.getCargo().getDescricao()
+                ));
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(profissionaisVinculados);
