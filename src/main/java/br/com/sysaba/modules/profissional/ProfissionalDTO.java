@@ -18,6 +18,8 @@ public class ProfissionalDTO {
 
     private String cargoDescricao;
 
+    private String senha;
+
     public ProfissionalDTO() {
     }
 
@@ -26,7 +28,7 @@ public class ProfissionalDTO {
         this.email = email;
         this.perfil = perfil;
         this.cargo = cargo;
-        this.cargoDescricao = cargoDescricao;
+        this.cargoDescricao = cargoDescricao;    
     }
 
     public String getFullName() {
@@ -68,4 +70,13 @@ public class ProfissionalDTO {
     public void setCargoDescricao(String cargoDescricao) {
         this.cargoDescricao = cargoDescricao;
     }
+    
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
 }

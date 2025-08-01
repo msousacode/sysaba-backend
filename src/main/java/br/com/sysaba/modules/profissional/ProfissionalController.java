@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -42,16 +43,16 @@ public class ProfissionalController {
                 if(ap.getCargo() == null) {
                     ap.setCargo(new Cargo());
                 }
-                profissionaisVinculados.add(
 
-
-                        new ProfissionalDTO(
+                ProfissionalDTO profisional = new ProfissionalDTO(
                                 ap.getFullName(),
                                 ap.getEmail(),
                                 ap.getPerfil().name(),
                                 ap.getCargo().getCargoId()  == null ? UUID.randomUUID() : ap.getCargo().getCargoId(),
-                                ap.getCargo().getDescricao() == null ? "Admin" : ap.getCargo().getDescricao()
-                ));
+                                ap.getCargo().getDescricao() == null ? "Admin" : ap.getCargo().getDescricao());
+                profisional.setSenha("123456");
+
+                profissionaisVinculados.add(profisional);
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(profissionaisVinculados);
