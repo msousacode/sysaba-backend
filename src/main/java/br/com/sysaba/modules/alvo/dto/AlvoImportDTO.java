@@ -11,6 +11,8 @@ public class AlvoImportDTO {
     private String tag;
     private boolean concluido;
     private boolean encerrado;
+    private Integer totalEstrelaPositiva;
+    private Integer totalEstrelaNegativa;
 
     private List<UUID> objetivos;
 
@@ -68,6 +70,22 @@ public class AlvoImportDTO {
 
     public void setEncerrado(boolean encerrado) {
         this.encerrado = encerrado;
+    }
+
+    public Integer getTotalEstrelaPositiva() {
+        return totalEstrelaPositiva;
+    }
+
+    public void setTotalEstrelaPositiva(Integer totalEstrelaPositiva) {
+        this.totalEstrelaPositiva = totalEstrelaPositiva;
+    }
+
+    public Integer getTotalEstrelaNegativa() {
+        return totalEstrelaNegativa;
+    }
+
+    public void setTotalEstrelaNegativa(Integer totalEstrelaNegativa) {
+        this.totalEstrelaNegativa = totalEstrelaNegativa;
     }
 
     

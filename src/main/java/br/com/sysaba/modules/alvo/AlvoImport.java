@@ -26,11 +26,17 @@ public class AlvoImport extends Tenantable {
     @Column(name = "tag")
     private String tag;
 
-    @Column(name = "concluido", nullable = true)
+    @Column(name = "concluido")
     private boolean concluido;
 
-    @Column(name = "encerrado", nullable = true)
+    @Column(name = "encerrado")
     private boolean encerrado;
+
+    @Column(name = "total_estrela_positiva")
+    private Integer totalEstrelaPositiva;
+
+    @Column(name = "total_estrela_negativa")
+    private Integer totalEstrelaNegativa;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aprendiz_id", nullable = true)
@@ -92,6 +98,22 @@ public class AlvoImport extends Tenantable {
 
     public void setEncerrado(boolean encerrado) {
         this.encerrado = encerrado;
+    }
+
+    public Integer getTotalEstrelaPositiva() {
+        return totalEstrelaPositiva;
+    }
+
+    public void setTotalEstrelaPositiva(Integer totalEstrelaPositiva) {
+        this.totalEstrelaPositiva = totalEstrelaPositiva;
+    }
+
+    public Integer getTotalEstrelaNegativa() {
+        return totalEstrelaNegativa;
+    }
+
+    public void setTotalEstrelaNegativa(Integer totalEstrelaNegativa) {
+        this.totalEstrelaNegativa = totalEstrelaNegativa;
     }        
 
     

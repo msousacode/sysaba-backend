@@ -94,13 +94,15 @@ public class AlvoService implements GenericService<Alvo, UUID> {
             alvosImport.add(alvoImport);
             alvoImport.setConcluido(false);
             alvoImport.setEncerrado(false);
+            alvoImport.setTotalEstrelaPositiva(0);
+            alvoImport.setTotalEstrelaNegativa(0);
         }
 
         alvoImportRespository.saveAll(alvosImport);
     }
 
-    public Page<AlvoImportDTO> findImportadosAll(Pageable pageable) {
-        return alvoImportRespository.findAllAndIsEncerradoFalse(pageable)
+    public Page<AlvoImportDTO> findImportadosAll(Pageable pageable, UUID aprendizId) {
+        return alvoImportRespository.findAllAndIsEncerradoFalse(pageable, aprendizId)
                 .map(i -> {
                     AlvoImportDTO dto = new AlvoImportDTO();
                     dto.setAlvoId(i.getAlvoId());
@@ -109,6 +111,8 @@ public class AlvoService implements GenericService<Alvo, UUID> {
                     dto.setTag(i.getTag());
                     dto.setConcluido(i.isConcluido());
                     dto.setEncerrado(i.isEncerrado());
+                    dto.setTotalEstrelaPositiva(i.getTotalEstrelaPositiva());
+                    dto.setTotalEstrelaNegativa(i.getTotalEstrelaNegativa());
                     return dto;
                 });
     }
