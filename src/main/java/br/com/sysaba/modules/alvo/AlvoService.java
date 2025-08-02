@@ -1,25 +1,36 @@
 package br.com.sysaba.modules.alvo;
 
 import br.com.sysaba.core.commons.service.GenericService;
+import br.com.sysaba.modules.alvo.dto.AlvoDTO;
+import br.com.sysaba.modules.alvo.dto.AlvoImportDTO;
+import br.com.sysaba.modules.aprendiz.Aprendiz;
+import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.treinamento.TreinamentoService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class AlvoService implements GenericService<Alvo, UUID> {
 
+    private final AprendizService aprendizService;
+
     private final TreinamentoService treinamentoService;
 
     private final AlvoRespository alvoRespository;
 
-    public AlvoService(AlvoRespository alvoRespository, TreinamentoService treinamentoService) {
+    private final AlvoImportRespository alvoImportRespository;
+
+    public AlvoService(AlvoRespository alvoRespository, TreinamentoService treinamentoService, AprendizService aprendizService, AlvoImportRespository alvoImportRespository) {
         this.alvoRespository = alvoRespository;
         this.treinamentoService = treinamentoService;
+        this.aprendizService = aprendizService;
+        this.alvoImportRespository = alvoImportRespository;
     }
 
     @Override
@@ -63,5 +74,42 @@ public class AlvoService implements GenericService<Alvo, UUID> {
 
     public void deleteByAlvoId(UUID alvoId) {
         alvoRespository.deleteByAlvoId(alvoId);
+    }
+
+    public void importarObjetivos(AlvoImportDTO dto) {        
+        UUID aprendizId = dto.getAprendizId();
+        List<UUID> objetivos = dto.getObjetivos();
+
+        Aprendiz aprendiz = aprendizService.findById(aprendizId);
+
+        List<Alvo> alvos = alvoRespository.findAllByIds(objetivos);
+
+        List<AlvoImport> alvosImport = new ArrayList<>();
+        
+        for (Alvo alvo : alvos) {
+            AlvoImport alvoImport = new AlvoImport();
+            alvoImport.setAprendiz(aprendiz);
+            alvoImport.setNomeAlvo(alvo.getNomeAlvo());
+            alvoImport.setTag(alvo.getTag());
+            alvosImport.add(alvoImport);
+            alvoImport.setConcluido(false);
+            alvoImport.setEncerrado(false);
+        }
+
+        alvoImportRespository.saveAll(alvosImport);
+    }
+
+    public Page<AlvoImportDTO> findImportadosAll(Pageable pageable) {
+        return alvoImportRespository.findAllAndIsEncerradoFalse(pageable)
+                .map(i -> {
+                    AlvoImportDTO dto = new AlvoImportDTO();
+                    dto.setAlvoId(i.getAlvoId());
+                    dto.setAprendizId(i.getAprendiz().getAprendizId());
+                    dto.setNomeAlvo(i.getNomeAlvo());
+                    dto.setTag(i.getTag());
+                    dto.setConcluido(i.isConcluido());
+                    dto.setEncerrado(i.isEncerrado());
+                    return dto;
+                });
     }
 }

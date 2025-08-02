@@ -2,17 +2,14 @@ package br.com.sysaba.modules.alvo;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.alvo.dto.AlvoDTO;
+import br.com.sysaba.modules.alvo.dto.AlvoImportDTO;
 import br.com.sysaba.modules.aprendiz.AprendizController;
-import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import br.com.sysaba.modules.treinamento.TreinamentoService;
-import br.com.sysaba.modules.treinamento.dto.TreinamentoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping(path = "/api/alvos")
@@ -66,6 +66,12 @@ public class AlvoController {
         }
     }
 
+    @PostMapping("/v2/importar")
+    public ResponseEntity<Void> importarObjetivos(@RequestBody AlvoImportDTO dto) {        
+        alvoService.importarObjetivos(dto);
+        return ResponseEntity.ok().build();
+    }
+    
     @GetMapping("/v2/all")
     public ResponseEntity<List<AlvoDTO>> getAlvosAllV2(
          @RequestParam(defaultValue = "0") int page,
@@ -74,6 +80,18 @@ public class AlvoController {
             @RequestParam(value = "direction", defaultValue = "DESC") String direction
     ) {
         Page<Alvo> resultList = alvoService.findAll(PageRequest.of(page, size, org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.valueOf(direction), sort)));
+        List<AlvoDTO> dtoList = resultList.stream().map(i -> MapperUtil.converte(i, AlvoDTO.class)).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(dtoList);
+    }
+
+    @GetMapping("/v2/importados/all")
+    public ResponseEntity<List<AlvoDTO>> getAlvosImportadosAllV2(
+         @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size,
+            @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
+            @RequestParam(value = "direction", defaultValue = "DESC") String direction
+    ) {
+        Page<AlvoImportDTO> resultList = alvoService.findImportadosAll(PageRequest.of(page, size, org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.valueOf(direction), sort)));
         List<AlvoDTO> dtoList = resultList.stream().map(i -> MapperUtil.converte(i, AlvoDTO.class)).toList();
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }

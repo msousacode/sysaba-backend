@@ -29,6 +29,9 @@ public class Alvo extends Tenantable {
     @Column(name = "treinamento_uuid_fk", nullable = true)
     private String treinamentoUuidFk;
 
+    @Column(name = "tag")
+    private String tag;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "treinamento_id", nullable = true)
     private Treinamento treinamento;
@@ -104,4 +107,14 @@ public class Alvo extends Tenantable {
     public void setTreinamento(Treinamento treinamento) {
         this.treinamento = treinamento;
     }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    
 }
