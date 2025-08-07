@@ -25,6 +25,8 @@ public class AlvoDTO {
     @JsonProperty("identificador")
     private UUID identificador = UUID.randomUUID();
 
+    private String tag;
+
     // Construtor padrão
     public AlvoDTO() {
     }
@@ -84,4 +86,14 @@ public class AlvoDTO {
     public void setIdentificador(UUID identificador) {
         this.identificador = identificador;
     }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    
 }

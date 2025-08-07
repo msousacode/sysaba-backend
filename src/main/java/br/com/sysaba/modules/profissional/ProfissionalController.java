@@ -50,7 +50,7 @@ public class ProfissionalController {
                                 ap.getPerfil().name(),
                                 ap.getCargo().getCargoId()  == null ? UUID.randomUUID() : ap.getCargo().getCargoId(),
                                 ap.getCargo().getDescricao() == null ? "Admin" : ap.getCargo().getDescricao());
-                profisional.setSenha("123456");
+                profisional.setSenha(ap.getCode() != null ? ap.getCode().toString() : "");
 
                 profissionaisVinculados.add(profisional);
             }

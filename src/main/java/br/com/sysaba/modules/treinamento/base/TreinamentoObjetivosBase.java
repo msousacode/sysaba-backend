@@ -22,6 +22,9 @@ public class TreinamentoObjetivosBase {
     @Column(name = "pergunta", length = 500)
     private String pergunta;
 
+    @Column(name = "tag", length = 50)
+    private String tag;
+
     @JoinColumn(name = "treinamento_base_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private TreinamentoBase treinamentoBase;

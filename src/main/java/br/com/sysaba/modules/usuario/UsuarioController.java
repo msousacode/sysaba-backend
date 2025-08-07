@@ -59,7 +59,8 @@ public class UsuarioController {
             Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
 
             String senha = Integer.toString(new Random().nextInt(999999));
-            usuario.setSenha(passwordEncoder.encode(senha));            
+            usuario.setSenha(passwordEncoder.encode(senha));
+            usuario.setCode(Integer.valueOf(senha));
             usuario.setPerfil(PerfilEnum.CONVIDADO);
             
             Usuario result = usuarioService.save(usuario);

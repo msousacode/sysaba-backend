@@ -35,6 +35,9 @@ public class Usuario {
     @Column(name = "senha")
     private String senha;
 
+    @Column(name = "code")
+    private Integer code;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -206,4 +209,12 @@ public class Usuario {
     public void setCargo(Cargo cargo) {
         this.cargo = cargo;
     }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }    
 }
