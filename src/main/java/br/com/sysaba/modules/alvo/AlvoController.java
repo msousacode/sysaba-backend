@@ -105,10 +105,22 @@ public class AlvoController {
             saved.setNomeAlvo(alvoDTO.getNomeAlvo());
             saved.setPergunta(alvoDTO.getPergunta());
             saved.setDescricaoAlvo(alvoDTO.getDescricaoAlvo());
+            saved.setTag(alvoDTO.getTag());
 
             Alvo updated = alvoService.update(saved.getAlvoId(), saved);
             AlvoDTO dto = MapperUtil.converte(updated, AlvoDTO.class);
             return ResponseEntity.ok().body(dto);
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PutMapping("/v2/concluir/{id}")
+    public ResponseEntity<Void> concluir(@PathVariable("id") UUID id) {
+        try {
+            alvoService.concluir(id);
+            return ResponseEntity.ok().build();
         } catch (RuntimeException ex) {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.internalServerError().build();

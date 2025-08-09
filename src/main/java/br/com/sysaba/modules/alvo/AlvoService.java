@@ -116,4 +116,13 @@ public class AlvoService implements GenericService<Alvo, UUID> {
                     return dto;
                 });
     }
+
+    public void concluir(UUID id) {
+        AlvoImport alvoImport = alvoImportRespository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Alvo Import not found with id: " + id));
+
+        boolean isConcluido = !alvoImport.isConcluido();
+        alvoImport.setConcluido(isConcluido);
+        alvoImportRespository.save(alvoImport);
+    }
 }
