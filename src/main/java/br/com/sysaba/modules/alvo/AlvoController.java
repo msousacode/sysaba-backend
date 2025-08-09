@@ -2,6 +2,7 @@ package br.com.sysaba.modules.alvo;
 
 import br.com.sysaba.core.util.MapperUtil;
 import br.com.sysaba.modules.alvo.dto.AlvoDTO;
+import br.com.sysaba.modules.alvo.dto.AlvoEstrelasDTO;
 import br.com.sysaba.modules.alvo.dto.AlvoImportDTO;
 import br.com.sysaba.modules.aprendiz.AprendizController;
 import br.com.sysaba.modules.treinamento.Treinamento;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -116,6 +115,7 @@ public class AlvoController {
         }
     }
 
+    @Transactional
     @PutMapping("/v2/concluir/{id}")
     public ResponseEntity<Void> concluir(@PathVariable("id") UUID id) {
         try {
@@ -127,6 +127,19 @@ public class AlvoController {
         }
     }
 
+    
+    @Transactional
+    @PutMapping("/v2/atualizar-estrelas")
+    public ResponseEntity<Void> atualizarEstrelas(@RequestBody AlvoEstrelasDTO estrelas) {
+        try {            
+            alvoService.atualizarEstrelas(estrelas);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+    
     @GetMapping("/all/{id}")
     public ResponseEntity<List<AlvoDTO>> getAlvosAll(@PathVariable("id") UUID id) {
         Treinamento treinamento = treinamentoService.findById(id);

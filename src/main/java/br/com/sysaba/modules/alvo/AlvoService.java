@@ -2,7 +2,9 @@ package br.com.sysaba.modules.alvo;
 
 import br.com.sysaba.core.commons.service.GenericService;
 import br.com.sysaba.modules.alvo.dto.AlvoDTO;
+import br.com.sysaba.modules.alvo.dto.AlvoEstrelasDTO;
 import br.com.sysaba.modules.alvo.dto.AlvoImportDTO;
+import br.com.sysaba.modules.alvo.enums.Estrela;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.treinamento.TreinamentoService;
@@ -26,7 +28,8 @@ public class AlvoService implements GenericService<Alvo, UUID> {
 
     private final AlvoImportRespository alvoImportRespository;
 
-    public AlvoService(AlvoRespository alvoRespository, TreinamentoService treinamentoService, AprendizService aprendizService, AlvoImportRespository alvoImportRespository) {
+    public AlvoService(AlvoRespository alvoRespository, TreinamentoService treinamentoService,
+            AprendizService aprendizService, AlvoImportRespository alvoImportRespository) {
         this.alvoRespository = alvoRespository;
         this.treinamentoService = treinamentoService;
         this.aprendizService = aprendizService;
@@ -76,7 +79,7 @@ public class AlvoService implements GenericService<Alvo, UUID> {
         alvoRespository.deleteByAlvoId(alvoId);
     }
 
-    public void importarObjetivos(AlvoImportDTO dto) {        
+    public void importarObjetivos(AlvoImportDTO dto) {
         UUID aprendizId = dto.getAprendizId();
         List<UUID> objetivos = dto.getObjetivos();
 
@@ -85,7 +88,7 @@ public class AlvoService implements GenericService<Alvo, UUID> {
         List<Alvo> alvos = alvoRespository.findAllByIds(objetivos);
 
         List<AlvoImport> alvosImport = new ArrayList<>();
-        
+
         for (Alvo alvo : alvos) {
             AlvoImport alvoImport = new AlvoImport();
             alvoImport.setAprendiz(aprendiz);
@@ -124,5 +127,17 @@ public class AlvoService implements GenericService<Alvo, UUID> {
         boolean isConcluido = !alvoImport.isConcluido();
         alvoImport.setConcluido(isConcluido);
         alvoImportRespository.save(alvoImport);
+    }
+
+    public void atualizarEstrelas(AlvoEstrelasDTO dto) {
+        dto.getMudancas().forEach(i -> {
+            if (Estrela.POSITIVA.getTipo().equals(i.getTipo())) {                                
+                alvoImportRespository.updateEstrelaPositiva(i.alvoId, i.quantidade);
+            }
+
+            if (Estrela.NEGATIVA.getTipo().equals(i.getTipo())) {
+                alvoImportRespository.updateEstrelaNegativa(i.alvoId, i.quantidade);
+            }
+        });
     }
 }
