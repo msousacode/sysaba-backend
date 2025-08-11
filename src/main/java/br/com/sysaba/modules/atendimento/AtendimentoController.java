@@ -195,7 +195,7 @@ public class AtendimentoController {
 
         atendimento.setAtendimentoId(atendimentoResult.getAtendimentoId());
         atendimento.setDataInicio(atendimentoResult.getDataInicio());
-        atendimento.setAnotacoes(atendimentoResult.getAnotacoes());
+        //atendimento.setAnotacoes(atendimentoResult.getAnotacoes());
         atendimento.setTreinamentoAtendimentos(atendimentoResult.getTreinamentoAtendimentos());
 
         return atendimento;

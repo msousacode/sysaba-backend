@@ -144,15 +144,5 @@ public class AnotacaoDTO {
 
     public void setAprendizId(UUID aprendizId) {
         this.aprendizId = aprendizId;
-    }
-
-    public static UsuarioService getUsuarioService() {
-        return usuarioService;
-    }
-
-    public static void setUsuarioService(UsuarioService usuarioService) {
-        AnotacaoDTO.usuarioService = usuarioService;
-    }    
-
-    
+    } 
 }

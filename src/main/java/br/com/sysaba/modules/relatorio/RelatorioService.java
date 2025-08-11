@@ -170,7 +170,7 @@ public class RelatorioService {
                     alvoColetadoDTO.setColetadoPor(coleta.getCriadoNome());
 
                     List<AnotacaoDTO> anotacoes = new ArrayList<>();
-
+/*
                     coleta.getAnotacoes().stream().filter(anotacao -> anotacao.getImprimirRelatorio() != false).forEach(anotacao -> {
                         AnotacaoDTO anotacaoDTO = new AnotacaoDTO();
                         anotacaoDTO.setAnotacaoId(anotacao.getAnotacaoId());
@@ -179,7 +179,7 @@ public class RelatorioService {
                         anotacaoDTO.setAnotadoPor(anotacao.getCriadoNome());
                         anotacoes.add(anotacaoDTO);
                     });
-
+ */
                     alvoColetadoDTO.setAnotacoes(anotacoes);
 
                     alvos.add(alvoColetadoDTO);
