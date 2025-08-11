@@ -1,12 +1,12 @@
 package br.com.sysaba.modules.aprendiz;
 
 import br.com.sysaba.core.models.Tenantable;
-import br.com.sysaba.modules.assinatura.Assinatura;
-import br.com.sysaba.modules.avaliacoes.vbmapp.VbMappBarreira;
+import br.com.sysaba.modules.anotacao.Anotacao;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -35,6 +35,9 @@ public class Aprendiz extends Tenantable {
 
     @Column(name = "observacao")
     private String observacao;
+
+    @OneToMany(mappedBy = "aprendiz")
+    private List<Anotacao> anotacao;
 
     public Aprendiz(LocalDateTime createdAt, UUID aprendizId, String nomeAprendiz, LocalDate nascAprendiz, String nomeMae, String nomePai, String nomeResponsavel, String observacao) {
         super(createdAt);
@@ -106,4 +109,12 @@ public class Aprendiz extends Tenantable {
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
+
+    public List<Anotacao> getAnotacao() {
+        return anotacao;
+    }
+
+    public void setAnotacao(List<Anotacao> anotacao) {
+        this.anotacao = anotacao;
+    }    
 }

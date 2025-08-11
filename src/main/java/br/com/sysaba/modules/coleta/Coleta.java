@@ -68,14 +68,11 @@ public class Coleta extends Tenantable {
     @JoinColumn(name = "treinamento_id", nullable = false)
     private Treinamento treinamento;
 
-    @OneToMany(mappedBy = "coleta")
-    private List<Anotacao> anotacoes;
-
     public Coleta() {
         super(LocalDateTime.now());
     }
 
-    public Coleta(LocalDateTime createdAt, UUID coletaId, LocalDateTime dataColeta, String resposta, boolean foiRespondido, Alvo alvo, LocalDateTime dataFinalColeta, boolean seg, boolean ter, boolean qua, boolean qui, boolean sex, boolean sab, int semana, Aprendiz aprendiz, Treinamento treinamento, List<Anotacao> anotacoes) {
+    public Coleta(LocalDateTime createdAt, UUID coletaId, LocalDateTime dataColeta, String resposta, boolean foiRespondido, Alvo alvo, LocalDateTime dataFinalColeta, boolean seg, boolean ter, boolean qua, boolean qui, boolean sex, boolean sab, int semana, Aprendiz aprendiz, Treinamento treinamento) {
         super(createdAt);
         this.coletaId = coletaId;
         this.dataColeta = dataColeta;
@@ -91,8 +88,7 @@ public class Coleta extends Tenantable {
         this.sab = sab;
         this.semana = semana;
         this.aprendiz = aprendiz;
-        this.treinamento = treinamento;
-        this.anotacoes = anotacoes;
+        this.treinamento = treinamento;        
     }
 
     public UUID getColetaId() {
@@ -213,14 +209,6 @@ public class Coleta extends Tenantable {
 
     public void setSemana(int semana) {
         this.semana = semana;
-    }
-
-    public List<Anotacao> getAnotacoes() {
-        return anotacoes;
-    }
-
-    public void setAnotacoes(List<Anotacao> anotacoes) {
-        this.anotacoes = anotacoes;
     }
 
     public String getCriadoNome() {

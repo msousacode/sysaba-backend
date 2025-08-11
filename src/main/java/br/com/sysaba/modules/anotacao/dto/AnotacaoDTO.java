@@ -1,6 +1,9 @@
 package br.com.sysaba.modules.anotacao.dto;
 
 import br.com.sysaba.modules.anotacao.Anotacao;
+
+import br.com.sysaba.modules.usuario.UsuarioService;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
@@ -8,19 +11,18 @@ import jakarta.persistence.Column;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class AnotacaoDTO {
 
     @JsonProperty("uuid")
     private UUID anotacaoId;
 
+    @JsonProperty("aprendizId")
+    private UUID aprendizId;
+
     @JsonProperty("coletaId")
     private UUID coletaId;
-
-    @JsonProperty("atendimentoId")
-    private UUID atendimentoId;
-
-    @JsonProperty("treinamentoId")
-    private UUID treinamentoId;
 
     @JsonProperty("data_anotacao")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
@@ -38,15 +40,17 @@ public class AnotacaoDTO {
     @Column(name = "criado_por_nome")
     private String criadoNome;
 
+    @Column(name = "read_online")
+    private Boolean isReadonline;
+
     public AnotacaoDTO() {
         this.ativo = true;
         this.dataAnotacao = LocalDate.now();
     }
 
-    public AnotacaoDTO(UUID anotacaoId, UUID coletaId, UUID treinamentoId, LocalDate dataAnotacao, String anotacao, boolean ativo, boolean imprimirRelatorio) {
+    public AnotacaoDTO(UUID anotacaoId, UUID coletaId, LocalDate dataAnotacao, String anotacao, boolean ativo, boolean imprimirRelatorio) {
         this.anotacaoId = anotacaoId;
-        this.coletaId = coletaId;
-        this.atendimentoId = treinamentoId;
+        this.coletaId = coletaId;        
         this.dataAnotacao = dataAnotacao;
         this.anotacao = anotacao;
         this.ativo = ativo;
@@ -67,14 +71,6 @@ public class AnotacaoDTO {
 
     public void setColetaId(UUID coletaId) {
         this.coletaId = coletaId;
-    }
-
-    public UUID getAtendimentoId() {
-        return atendimentoId;
-    }
-
-    public void setAtendimentoId(UUID atendimentoId) {
-        this.atendimentoId = atendimentoId;
     }
 
     public LocalDate getDataAnotacao() {
@@ -101,25 +97,21 @@ public class AnotacaoDTO {
         this.ativo = ativo;
     }
 
-    public static AnotacaoDTO fromAnotacaoDTO(Anotacao anotacao) {
+    public static AnotacaoDTO fromAnotacaoDTO(Anotacao anotacao, UUID criadoPor) {
         AnotacaoDTO anotacaoDTO = new AnotacaoDTO();
         anotacaoDTO.setDataAnotacao(anotacao.getDataAnotacao());
-        anotacaoDTO.setAnotacao(anotacao.getAnotacao());
-        anotacaoDTO.setAtendimentoId(anotacao.getAtendimento().getAtendimentoId());
+        anotacaoDTO.setAnotacao(anotacao.getAnotacao());        
         anotacaoDTO.setAnotacaoId(anotacao.getAnotacaoId());
-        anotacaoDTO.setAtivo(anotacao.getAtivo());
-        anotacaoDTO.setColetaId(anotacao.getColeta().getColetaId());
+        anotacaoDTO.setAtivo(anotacao.getAtivo());        
         anotacaoDTO.setCriadoNome(anotacao.getCriadoNome());
 
+        if(criadoPor.equals(anotacao.getCriadoPor())) {
+            anotacaoDTO.setIsReadonline(false);
+        } else {
+            anotacaoDTO.setIsReadonline(true);
+        }
+
         return anotacaoDTO;
-    }
-
-    public UUID getTreinamentoId() {
-        return treinamentoId;
-    }
-
-    public void setTreinamentoId(UUID treinamentoId) {
-        this.treinamentoId = treinamentoId;
     }
 
     public boolean isImprimirRelatorio() {
@@ -137,4 +129,30 @@ public class AnotacaoDTO {
     public void setCriadoNome(String criadoNome) {
         this.criadoNome = criadoNome;
     }
+
+    public Boolean getIsReadonline() {
+        return isReadonline;
+    }
+
+    public void setIsReadonline(Boolean isReadonline) {
+        this.isReadonline = isReadonline;
+    }
+
+    public UUID getAprendizId() {
+        return aprendizId;
+    }
+
+    public void setAprendizId(UUID aprendizId) {
+        this.aprendizId = aprendizId;
+    }
+
+    public static UsuarioService getUsuarioService() {
+        return usuarioService;
+    }
+
+    public static void setUsuarioService(UsuarioService usuarioService) {
+        AnotacaoDTO.usuarioService = usuarioService;
+    }    
+
+    
 }

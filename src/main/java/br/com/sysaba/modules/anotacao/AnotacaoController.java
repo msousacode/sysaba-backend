@@ -1,7 +1,13 @@
 package br.com.sysaba.modules.anotacao;
 
 import br.com.sysaba.core.util.MapperUtil;
+import br.com.sysaba.modules.alvo.Alvo;
+import br.com.sysaba.modules.alvo.AlvoImport;
+import br.com.sysaba.modules.alvo.AlvoImportRespository;
+import br.com.sysaba.modules.alvo.AlvoService;
 import br.com.sysaba.modules.anotacao.dto.AnotacaoDTO;
+import br.com.sysaba.modules.aprendiz.Aprendiz;
+import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.atendimento.Atendimento;
 import br.com.sysaba.modules.atendimento.AtendimentoService;
 import br.com.sysaba.modules.coleta.Coleta;
@@ -31,38 +37,36 @@ public class AnotacaoController {
 
     private final AnotacaoService anotacaoService;
 
-    private final AtendimentoService atendimentoService;
-
-    private final TreinamentoService treinamentoService;
-
-    private final ColetaService coletaService;
-
     private final UsuarioService usuarioService;
 
-    public AnotacaoController(AnotacaoService anotacaoService, ColetaService coletaService, AtendimentoService atendimentoService, TreinamentoService treinamentoService, UsuarioService usuarioService) {
-        this.anotacaoService = anotacaoService;
-        this.coletaService = coletaService;
-        this.atendimentoService = atendimentoService;
-        this.treinamentoService = treinamentoService;
+    private final AlvoImportRespository alvoImportRespository;
+
+    private final AprendizService aprendizService;
+
+    public AnotacaoController(AnotacaoService anotacaoService, UsuarioService usuarioService, AlvoImportRespository alvoImportRespository, AprendizService aprendizService) {
+        this.anotacaoService = anotacaoService;        
         this.usuarioService = usuarioService;
+        this.alvoImportRespository = alvoImportRespository;
+        this.aprendizService = aprendizService;
     }
 
     @Transactional
     @PostMapping
     public ResponseEntity<?> salvar(@RequestBody AnotacaoDTO anotacaoDTO) {
         try {
-            Anotacao anotacao = MapperUtil.converte(anotacaoDTO, Anotacao.class);
-            Atendimento atendimento = atendimentoService.findById(anotacaoDTO.getAtendimentoId());
-            Treinamento treinamento = treinamentoService.findById(anotacaoDTO.getTreinamentoId());
-            Coleta coleta = coletaService.findColetaId(anotacaoDTO.getColetaId());
+
+            Aprendiz aprendiz = aprendizService.findById(anotacaoDTO.getAprendizId());
+
+            Anotacao anotacao = MapperUtil.converte(anotacaoDTO, Anotacao.class);            
+            AlvoImport alvoImport = alvoImportRespository.findById(anotacaoDTO.getColetaId()).get();
 
             String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             Usuario usuario = usuarioService.getByEmail(email);
 
-            anotacao.setAtendimento(atendimento);
-            anotacao.setTreinamento(treinamento);
             anotacao.setCriadoNome(usuario.getFullName());
-            anotacao.setColeta(coleta);
+            anotacao.setCriadoPor(usuario.getUsuarioId());
+            anotacao.setAlvoImport(alvoImport);
+            anotacao.setAprendiz(aprendiz);
 
             anotacaoService.save(anotacao);
         } catch (RuntimeException ex) {
@@ -89,18 +93,21 @@ public class AnotacaoController {
             logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
             return ResponseEntity.internalServerError().build();
         }
-    }
+    }  
 
-    @GetMapping("/atendimento/{atendimentoId}/treinamento/{treinamentoId}")
-    public ResponseEntity<Page<AnotacaoDTO>> buscar(
+    @GetMapping("/v2/aprendiz/{aprendizId}")
+    public ResponseEntity<Page<AnotacaoDTO>> buscarAnotacaoPorAprendiz(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "100") int size,
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction,
-            @PathVariable("atendimentoId") UUID atendimentoId,
-            @PathVariable("treinamentoId") UUID treinamentoId) {
-        Page<Anotacao> anotacoes = anotacaoService.findByAtendimento_atendimentoId(atendimentoId, treinamentoId, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
-        Page<AnotacaoDTO> dtoList = anotacoes.map(AnotacaoDTO::fromAnotacaoDTO);
+            @PathVariable("aprendizId") UUID aprendizId) {
+        Page<Anotacao> anotacoes = anotacaoService.findByAprendiz_aprendizId(aprendizId, PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sort)));
+
+        String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Usuario usuario = usuarioService.getByEmail(email);
+
+        Page<AnotacaoDTO> dtoList = anotacoes.map( i -> AnotacaoDTO.fromAnotacaoDTO(i, usuario.getUsuarioId()));
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
 

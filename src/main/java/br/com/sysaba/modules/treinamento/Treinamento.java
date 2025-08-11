@@ -45,9 +45,6 @@ public class Treinamento extends Tenantable {
     @OneToMany(mappedBy = "treinamento")
     private List<Coleta> coletas;
 
-    @OneToMany(mappedBy = "treinamento")
-    private List<Anotacao> anotacoes;
-
     public Treinamento() {
         super(LocalDateTime.now());
     }
@@ -108,14 +105,6 @@ public class Treinamento extends Tenantable {
 
     public void setColetas(List<Coleta> coletas) {
         this.coletas = coletas;
-    }
-
-    public List<Anotacao> getAnotacoes() {
-        return anotacoes;
-    }
-
-    public void setAnotacoes(List<Anotacao> anotacoes) {
-        this.anotacoes = anotacoes;
     }
 
     public List<TreinamentoAtendimento> getTreinamentoAtendimentos() {

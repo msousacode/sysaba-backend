@@ -1,9 +1,8 @@
 package br.com.sysaba.modules.anotacao;
 
 import br.com.sysaba.core.models.Tenantable;
-import br.com.sysaba.modules.atendimento.Atendimento;
-import br.com.sysaba.modules.coleta.Coleta;
-import br.com.sysaba.modules.treinamento.Treinamento;
+import br.com.sysaba.modules.alvo.AlvoImport;
+import br.com.sysaba.modules.aprendiz.Aprendiz;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -22,20 +21,16 @@ public class Anotacao extends Tenantable {
     @Column(name = "data_anotacao", nullable = false)
     private LocalDate dataAnotacao;
 
-    @Column(name = "anotacao", nullable = false, length = 500)
+    @Column(name = "anotacao", nullable = false, length = 1000)
     private String anotacao;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coleta_id", nullable = false)
-    private Coleta coleta;
+    @JoinColumn(name = "alvo_import_id", nullable = false)
+    private AlvoImport alvoImport;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "atendimento_id", nullable = false)
-    private Atendimento atendimento;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "treinamento_id", nullable = false)
-    private Treinamento treinamento;
+    @JoinColumn(name = "aprendiz_id", nullable = false)
+    private Aprendiz aprendiz;
 
     @Column(name = "imprimir_relatorio")
     private Boolean imprimirRelatorio;
@@ -48,14 +43,11 @@ public class Anotacao extends Tenantable {
         this.imprimirRelatorio = true;
     }
 
-    public Anotacao(LocalDateTime createdAt, UUID anotacaoId, LocalDate dataAnotacao, String anotacao, Coleta coleta, Atendimento atendimento, Treinamento treinamento, Boolean imprimirRelatorio) {
+    public Anotacao(LocalDateTime createdAt, UUID anotacaoId, LocalDate dataAnotacao, String anotacao, Boolean imprimirRelatorio) {
         super(createdAt);
         this.anotacaoId = anotacaoId;
         this.dataAnotacao = dataAnotacao;
-        this.anotacao = anotacao;
-        this.coleta = coleta;
-        this.atendimento = atendimento;
-        this.treinamento = treinamento;
+        this.anotacao = anotacao;    
         this.imprimirRelatorio = imprimirRelatorio;
     }
 
@@ -83,29 +75,6 @@ public class Anotacao extends Tenantable {
         this.anotacao = anotacao;
     }
 
-    public Coleta getColeta() {
-        return coleta;
-    }
-
-    public void setColeta(Coleta coleta) {
-        this.coleta = coleta;
-    }
-
-    public Atendimento getAtendimento() {
-        return atendimento;
-    }
-
-    public void setAtendimento(Atendimento atendimento) {
-        this.atendimento = atendimento;
-    }
-
-    public Treinamento getTreinamento() {
-        return treinamento;
-    }
-
-    public void setTreinamento(Treinamento treinamento) {
-        this.treinamento = treinamento;
-    }
 
     public Boolean getImprimirRelatorio() {
         return imprimirRelatorio;
@@ -122,4 +91,20 @@ public class Anotacao extends Tenantable {
     public void setCriadoNome(String criadoNome) {
         this.criadoNome = criadoNome;
     }
+
+    public AlvoImport getAlvoImport() {
+        return alvoImport;
+    }
+
+    public void setAlvoImport(AlvoImport alvoImport) {
+        this.alvoImport = alvoImport;
+    }
+
+    public Aprendiz getAprendiz() {
+        return aprendiz;
+    }
+
+    public void setAprendiz(Aprendiz aprendiz) {
+        this.aprendiz = aprendiz;
+    }   
 }
