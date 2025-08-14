@@ -123,7 +123,7 @@ public class UsuarioController {
             Usuario usuario = MapperUtil.converte(usuarioDTO, Usuario.class);
             usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha() == null ? String.valueOf(UUID.randomUUID()) : usuario.getSenha()));
             PerfilEnum perfil = PerfilEnum.getEnum(usuarioDTO.getPerfil());
-            usuario.setPerfil(perfil == null && usuarioId == null ? PerfilEnum.ADMIN_CHECKIN : perfil);
+            usuario.setPerfil(perfil == null && usuarioId == null ? PerfilEnum.ADMIN : perfil);
             Usuario result = usuarioService.save(usuario);
 
             if(result == null) {

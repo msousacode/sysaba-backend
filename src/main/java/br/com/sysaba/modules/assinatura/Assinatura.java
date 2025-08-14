@@ -172,7 +172,7 @@ public class Assinatura {
         //@formatter:off
         return new Assinatura(
                 null,
-                TipoAssinaturaEnum.NAO_ASSINANTE,
+                TipoAssinaturaEnum.TESTE,
                 null,
                 null,
                 LocalDateTime.now(),

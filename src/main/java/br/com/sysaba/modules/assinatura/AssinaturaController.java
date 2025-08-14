@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequestMapping("/api/auth/assinatura")
@@ -50,6 +53,16 @@ public class AssinaturaController {
             return ResponseEntity.notFound().build();
 
         Assinatura assinatura = usuario.get().getAssinatura();
+
+        //Verifica se assinatura é do tipo TESTE
+        if(TipoAssinaturaEnum.TESTE.equals(assinatura.getTipoAssinatura())) {
+            //Contabiliza a quantidade de dias para o fim do teste.
+            Duration duration = Duration.between(assinatura.getCreatedAt(), LocalDateTime.now());
+            //Retorna para o frontend a quantidade de dias que falta para o final do teste.
+            long diasRestantesTeste = duration.toDays();
+
+            return ResponseEntity.ok().body(diasRestantesTeste);
+        }
 
         if (TipoAssinaturaEnum.ASSINANTE.equals(assinatura.getTipoAssinatura()))
             return ResponseEntity.ok().build();
