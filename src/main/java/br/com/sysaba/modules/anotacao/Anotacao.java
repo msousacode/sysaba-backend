@@ -38,6 +38,9 @@ public class Anotacao extends Tenantable {
     @Column(name = "criado_por_nome")
     private String criadoNome;
 
+    @Column(name = "encerrado")
+    private boolean encerrado;
+
     public Anotacao() {
         super(LocalDateTime.now());
         this.imprimirRelatorio = true;
@@ -106,5 +109,15 @@ public class Anotacao extends Tenantable {
 
     public void setAprendiz(Aprendiz aprendiz) {
         this.aprendiz = aprendiz;
+    }
+
+    public boolean isEncerrado() {
+        return encerrado;
+    }
+
+    public void setEncerrado(boolean encerrado) {
+        this.encerrado = encerrado;
     }   
+
+    
 }

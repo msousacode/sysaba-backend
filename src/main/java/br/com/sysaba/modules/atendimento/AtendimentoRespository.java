@@ -1,6 +1,7 @@
 package br.com.sysaba.modules.atendimento;
 
 import br.com.sysaba.core.repository.TenantableRepository;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

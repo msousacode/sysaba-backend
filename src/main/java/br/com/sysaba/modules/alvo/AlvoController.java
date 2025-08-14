@@ -5,6 +5,7 @@ import br.com.sysaba.modules.alvo.dto.AlvoDTO;
 import br.com.sysaba.modules.alvo.dto.AlvoEstrelasDTO;
 import br.com.sysaba.modules.alvo.dto.AlvoImportDTO;
 import br.com.sysaba.modules.aprendiz.AprendizController;
+import br.com.sysaba.modules.aprendiz.dto.AprendizDTO;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import br.com.sysaba.modules.treinamento.TreinamentoService;
 import org.slf4j.Logger;
@@ -139,7 +140,20 @@ public class AlvoController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
     
+    @Transactional
+    @PutMapping("/encerrar/aprendiz/{id}")
+    public ResponseEntity<AprendizDTO> encerrar(@PathVariable UUID id) {
+        try {            
+            alvoService.encerrar(id);            
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException ex) {
+            logger.error("Erro ocorrido: {}", ex.getMessage(), ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @GetMapping("/all/{id}")
     public ResponseEntity<List<AlvoDTO>> getAlvosAll(@PathVariable("id") UUID id) {
         Treinamento treinamento = treinamentoService.findById(id);

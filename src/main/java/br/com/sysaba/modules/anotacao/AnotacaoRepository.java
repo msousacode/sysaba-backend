@@ -15,5 +15,9 @@ public interface AnotacaoRepository extends TenantableRepository<Anotacao> {
     @Query("delete from Anotacao a where a.anotacaoId = :id")
     void deleteByAnotacaoId(UUID id);
 
-    Page<Anotacao> findByAprendiz_aprendizId(UUID aprendizId, PageRequest of);
+    Page<Anotacao> findByAprendiz_aprendizIdAndEncerradoIsFalse(UUID aprendizId, PageRequest of);
+
+    @Modifying
+    @Query("update Anotacao a set a.encerrado = true where a.aprendiz.aprendizId = :id")
+    void encerrarAnotacoes(UUID id);
 }

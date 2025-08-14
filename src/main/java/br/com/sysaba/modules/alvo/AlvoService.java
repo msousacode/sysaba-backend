@@ -5,6 +5,7 @@ import br.com.sysaba.modules.alvo.dto.AlvoDTO;
 import br.com.sysaba.modules.alvo.dto.AlvoEstrelasDTO;
 import br.com.sysaba.modules.alvo.dto.AlvoImportDTO;
 import br.com.sysaba.modules.alvo.enums.Estrela;
+import br.com.sysaba.modules.anotacao.AnotacaoService;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.treinamento.TreinamentoService;
@@ -28,12 +29,15 @@ public class AlvoService implements GenericService<Alvo, UUID> {
 
     private final AlvoImportRespository alvoImportRespository;
 
+    private final AnotacaoService anotacaoService;
+
     public AlvoService(AlvoRespository alvoRespository, TreinamentoService treinamentoService,
-            AprendizService aprendizService, AlvoImportRespository alvoImportRespository) {
+            AprendizService aprendizService, AlvoImportRespository alvoImportRespository, AnotacaoService anotacaoService) {
         this.alvoRespository = alvoRespository;
         this.treinamentoService = treinamentoService;
         this.aprendizService = aprendizService;
         this.alvoImportRespository = alvoImportRespository;
+        this.anotacaoService = anotacaoService;
     }
 
     @Override
@@ -139,5 +143,10 @@ public class AlvoService implements GenericService<Alvo, UUID> {
                 alvoImportRespository.updateEstrelaNegativa(i.alvoId, i.quantidade);
             }
         });
+    }
+
+    public void encerrar(UUID id) {
+        alvoImportRespository.encerrar(id);
+        anotacaoService.encerrarAnotacoes(id);
     }
 }

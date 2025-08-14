@@ -1,7 +1,6 @@
 package br.com.sysaba.modules.atendimento;
 
 import br.com.sysaba.core.models.Tenantable;
-import br.com.sysaba.modules.anotacao.Anotacao;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.treinamento.TreinamentoAtendimento;
 import jakarta.persistence.*;

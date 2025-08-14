@@ -23,4 +23,8 @@ public interface AlvoImportRespository extends TenantableRepository<AlvoImport> 
     @Modifying
     @Query("update AlvoImport a set a.totalEstrelaNegativa = a.totalEstrelaNegativa + :quantidade where a.alvoId = :alvoId")
     void updateEstrelaNegativa(UUID alvoId, Integer quantidade);
+
+    @Modifying
+    @Query("update AlvoImport a set a.encerrado = true where a.aprendiz.aprendizId = :id")
+    void encerrar(UUID id);
 }

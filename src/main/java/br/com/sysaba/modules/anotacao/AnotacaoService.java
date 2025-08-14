@@ -63,6 +63,10 @@ public class AnotacaoService implements GenericService<Anotacao, UUID> {
     }
 
     public Page<Anotacao> findByAprendiz_aprendizId(UUID aprendizId, PageRequest of) {
-        return anotacaoRepository.findByAprendiz_aprendizId(aprendizId, of);        
+        return anotacaoRepository.findByAprendiz_aprendizIdAndEncerradoIsFalse(aprendizId, of);        
+    }
+
+    public void encerrarAnotacoes(UUID id) {        
+        anotacaoRepository.encerrarAnotacoes(id);
     }
 }
