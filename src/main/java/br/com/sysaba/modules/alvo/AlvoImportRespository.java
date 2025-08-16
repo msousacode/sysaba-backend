@@ -2,6 +2,7 @@ package br.com.sysaba.modules.alvo;
 
 import br.com.sysaba.core.repository.TenantableRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -27,4 +28,6 @@ public interface AlvoImportRespository extends TenantableRepository<AlvoImport> 
     @Modifying
     @Query("update AlvoImport a set a.encerrado = true where a.aprendiz.aprendizId = :id")
     void encerrar(UUID id);
+
+    List<AlvoImport> findByAprendiz_aprendizId(UUID aprendizId);
 }

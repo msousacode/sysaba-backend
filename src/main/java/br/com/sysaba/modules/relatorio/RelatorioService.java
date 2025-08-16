@@ -2,6 +2,9 @@ package br.com.sysaba.modules.relatorio;
 
 import br.com.sysaba.core.exception.RegistroNaoEncontradoException;
 import br.com.sysaba.modules.alvo.Alvo;
+import br.com.sysaba.modules.alvo.AlvoImport;
+import br.com.sysaba.modules.alvo.AlvoImportRespository;
+import br.com.sysaba.modules.anotacao.Anotacao;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import br.com.sysaba.modules.aprendiz.AprendizService;
 import br.com.sysaba.modules.atendimento.Atendimento;
@@ -34,6 +37,8 @@ import br.com.sysaba.modules.relatorio.dto.portage.CabecalhoDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.DadosDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.PortageRelatorioDTO;
 import br.com.sysaba.modules.relatorio.dto.portage.TabelaDTO;
+import br.com.sysaba.modules.relatorio.v2.AlvoImportDTO;
+import br.com.sysaba.modules.relatorio.v2.RelatorioV2DTO;
 import br.com.sysaba.modules.treinamento.Treinamento;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioService;
@@ -88,7 +93,9 @@ public class RelatorioService {
 
     private final UsuarioService usuarioService;
 
-    public RelatorioService(AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService, PortageService portageService, PortageColetaRepository portageColetaRepository, VBMappColetaRepository vbMappColetaRepository, VBMappBarreiraRepository vbMappBarreiraRepository, AbllsColetaRepository abllsColetaRepository, UsuarioService usuarioService) {
+    private final AlvoImportRespository alvoImportRespository;
+
+    public RelatorioService(AlvoImportRespository alvoImportRespository, AprendizService aprendizService, AtendimentoService atendimentoService, RelatorioApiService relatorioApiService, PortageService portageService, PortageColetaRepository portageColetaRepository, VBMappColetaRepository vbMappColetaRepository, VBMappBarreiraRepository vbMappBarreiraRepository, AbllsColetaRepository abllsColetaRepository, UsuarioService usuarioService) {
         this.aprendizService = aprendizService;
         this.atendimentoService = atendimentoService;
         this.relatorioApiService = relatorioApiService;
@@ -98,6 +105,7 @@ public class RelatorioService {
         this.vbMappBarreiraRepository = vbMappBarreiraRepository;
         this.abllsColetaRepository = abllsColetaRepository;
         this.usuarioService = usuarioService;
+        this.alvoImportRespository = alvoImportRespository;
     }
 
     public LinkDowloadResponseDTO gerarRelatorio(UUID aprendizId, String dataInicio, String dataFinal) {
@@ -115,6 +123,50 @@ public class RelatorioService {
 
 
             return relatorioApiService.postRelatorioTreinamentos(relatorioDTO);
+        } catch (RuntimeException ex) {
+            throw new RuntimeException(RelatorioService.class.getName(), ex);
+        }
+    }
+
+    public RelatorioV2DTO gerarRelatorioV2(UUID aprendizId) {
+        
+        try {
+            AprendizDTO aprendiz = getAprendizDTO(aprendizId);
+            List<AlvoImport> alvos = alvoImportRespository.findByAprendiz_aprendizId(aprendizId);
+
+
+
+            RelatorioV2DTO relatorio = new RelatorioV2DTO();
+            List<AlvoImportDTO> list = new ArrayList<>();
+
+            for(AlvoImport i : alvos) {
+                AlvoImportDTO alvo = new AlvoImportDTO();
+                alvo.setAlvoId(i.getAlvoId());
+                alvo.setConcluido(i.isConcluido());
+                alvo.setEncerrado(i.isEncerrado());
+                alvo.setNomeAlvo(i.getNomeAlvo());
+                alvo.setTag(i.getTag());
+                alvo.setTotalEstrelaPositiva(i.getTotalEstrelaPositiva());
+                alvo.setTotalEstrelaNegativa(i.getTotalEstrelaNegativa());
+                list.add(alvo);
+
+                List<AnotacaoDTO> anotacoes = new ArrayList<>();
+                for(Anotacao a : i.getAnotacao()) {
+                    AnotacaoDTO dto = new AnotacaoDTO();
+                    dto.setAnotacaoId(a.getAnotacaoId());
+                    dto.setAnotadoPor(a.getCriadoNome());
+                    dto.setData(a.getDataAnotacao().toString());
+                    dto.setDescricao(a.getAnotacao());
+                    anotacoes.add(dto);
+                }
+                alvo.setAnotacoes(anotacoes);
+            }
+
+            relatorio.setAlvos(list);
+
+            //CabecalhoDTO cabecalho = new CabecalhoDTO(aprendiz.getNome(), aprendiz.getNascimento());
+            
+            return relatorio;
         } catch (RuntimeException ex) {
             throw new RuntimeException(RelatorioService.class.getName(), ex);
         }

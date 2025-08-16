@@ -116,5 +116,5 @@ public class Aprendiz extends Tenantable {
 
     public void setAnotacao(List<Anotacao> anotacao) {
         this.anotacao = anotacao;
-    }    
+    }
 }

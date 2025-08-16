@@ -1,6 +1,9 @@
 package br.com.sysaba.modules.relatorio;
 
 import br.com.sysaba.modules.relatorio.dto.LinkDowloadResponseDTO;
+import br.com.sysaba.modules.relatorio.dto.RelatorioDTO;
+import br.com.sysaba.modules.relatorio.v2.RelatorioV2DTO;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +20,16 @@ public class RelatorioController {
 
     public RelatorioController(RelatorioService relatorioService) {
         this.relatorioService = relatorioService;
+    }
+
+    @GetMapping("/v2/aprendiz/{aprendizId}")
+    public ResponseEntity<RelatorioV2DTO> getRelatorioV2(@PathVariable UUID aprendizId) {
+        RelatorioV2DTO linkDowloadResponseDTO = relatorioService.gerarRelatorioV2(aprendizId);
+
+        if (linkDowloadResponseDTO == null)
+            return ResponseEntity.internalServerError().build();
+
+        return ResponseEntity.ok(linkDowloadResponseDTO);
     }
 
     @GetMapping("/aprendiz/{aprendizId}/dataInicio/{dataInicio}/dataFinal/{dataFinal}")

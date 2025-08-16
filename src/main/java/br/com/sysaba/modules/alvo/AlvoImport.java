@@ -1,10 +1,12 @@
 package br.com.sysaba.modules.alvo;
 
 import br.com.sysaba.core.models.Tenantable;
+import br.com.sysaba.modules.anotacao.Anotacao;
 import br.com.sysaba.modules.aprendiz.Aprendiz;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -41,6 +43,17 @@ public class AlvoImport extends Tenantable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aprendiz_id", nullable = true)
     private Aprendiz aprendiz;
+
+    @OneToMany(mappedBy = "alvoImport")
+    private List<Anotacao> anotacao;
+
+    public List<Anotacao> getAnotacao() {
+        return anotacao;
+    }
+
+    public void setAnotacao(List<Anotacao> anotacao) {
+        this.anotacao = anotacao;
+    }
 
     public static AlvoImport convert(String nomeAlvo, String tag, Aprendiz aprendiz) {
         AlvoImport alvo = new AlvoImport();
@@ -114,7 +127,6 @@ public class AlvoImport extends Tenantable {
 
     public void setTotalEstrelaNegativa(Integer totalEstrelaNegativa) {
         this.totalEstrelaNegativa = totalEstrelaNegativa;
-    }        
-
-    
+    }
+        
 }

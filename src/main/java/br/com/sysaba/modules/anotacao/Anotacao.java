@@ -39,7 +39,7 @@ public class Anotacao extends Tenantable {
     private String criadoNome;
 
     @Column(name = "encerrado")
-    private boolean encerrado;
+    private boolean encerrado;        
 
     public Anotacao() {
         super(LocalDateTime.now());
