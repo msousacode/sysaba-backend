@@ -1,0 +1,86 @@
+databaseChangeLog:
+  - changeSet:
+      id: v006-create-table-usuarios
+      author: system
+      changes:
+        - createTable:
+            tableName: usuarios
+            columns:
+              - column:
+                  name: usuario_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: documento
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: full_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: avatar_url
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: primeiro_acesso_realizado
+                  type: BOOLEAN
+                  defaultValue: false
+                  constraints:
+                    nullable: true
+              - column:
+                  name: senha
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: code
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ativo
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: criado_por
+                  type: UUID
+                  constraints:
+                    nullable: true
+              - column:
+                  name: tentant_id
+                  type: UUID
+                  constraints:
+                    nullable: true
+              - column:
+                  name: perfil
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: redefinir_senha_key
+                  type: UUID
+                  constraints:
+                    nullable: true
+              - column:
+                  name: cargo_id
+                  type: UUID
+                  constraints:
+                    nullable: true

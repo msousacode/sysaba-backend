@@ -26,12 +26,14 @@ public class Alvo extends Tenantable {
     @Column(name = "descricao_alvo", nullable = true)
     private String descricaoAlvo;
 
+    @Transient
     @Column(name = "treinamento_uuid_fk", nullable = true)
     private String treinamentoUuidFk;
 
     @Column(name = "tag")
     private String tag;
 
+    @Transient
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "treinamento_id", nullable = true)
     private Treinamento treinamento;

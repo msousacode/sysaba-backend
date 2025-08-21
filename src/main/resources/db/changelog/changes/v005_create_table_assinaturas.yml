@@ -1,0 +1,69 @@
+databaseChangeLog:
+  - changeSet:
+      id: v005-create-table-assinaturas
+      author: system
+      changes:
+        - createTable:
+            tableName: assinaturas
+            columns:
+              - column:
+                  name: assinatura_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: motivo_cancelamento
+                  type: TEXT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: tipo_assinatura
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: data_cancelamento
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: data_contratacao
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: data_inicio_assinatura
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ativo
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: criado_por
+                  type: UUID
+                  constraints:
+                    nullable: true
+              - column:
+                  name: tentant_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: usuario_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: invoice_stripe_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true

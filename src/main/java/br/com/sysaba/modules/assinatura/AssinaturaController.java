@@ -21,15 +21,18 @@ import java.util.Optional;
 @RestController
 public class AssinaturaController {
 
+    private final AssinaturaRepository assinaturaRepository;
+
     private static final Logger logger = LoggerFactory.getLogger(AssinaturaController.class);
 
     private final AssinaturaService assinaturaService;
 
     private final UsuarioRepository usuarioRepository;
 
-    public AssinaturaController(AssinaturaService assinaturaService, UsuarioRepository usuarioRepository) {
+    public AssinaturaController(AssinaturaService assinaturaService, UsuarioRepository usuarioRepository, AssinaturaRepository assinaturaRepository) {
         this.assinaturaService = assinaturaService;
         this.usuarioRepository = usuarioRepository;
+        this.assinaturaRepository = assinaturaRepository;
     }
 
     @Transactional
@@ -53,6 +56,10 @@ public class AssinaturaController {
             return ResponseEntity.notFound().build();
 
         Assinatura assinatura = usuario.get().getAssinatura();
+
+        if(assinatura == null) {
+            return ResponseEntity.accepted().build();
+        }
 
         //Verifica se assinatura é do tipo TESTE
         if(TipoAssinaturaEnum.TESTE.equals(assinatura.getTipoAssinatura())) {

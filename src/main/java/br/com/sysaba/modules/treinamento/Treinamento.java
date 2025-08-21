@@ -36,12 +36,15 @@ public class Treinamento extends Tenantable {
     @Column(name = "habilidade", nullable = false)
     private HabilidadeBaseEnum habilidade;
 
+    @Transient
     @OneToMany(mappedBy = "treinamento", cascade = CascadeType.PERSIST)
     private List<Alvo> alvos;
 
+    @Transient
     @OneToMany(mappedBy = "treinamento")
     private List<TreinamentoAtendimento> treinamentoAtendimentos;
 
+    @Transient
     @OneToMany(mappedBy = "treinamento")
     private List<Coleta> coletas;
 

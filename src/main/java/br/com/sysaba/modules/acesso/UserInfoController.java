@@ -59,14 +59,6 @@ public class UserInfoController {
 
             UsuarioInfoDTO dto = MapperUtil.converte(usuario, UsuarioInfoDTO.class);
 
-            Optional<Termo> termo = termoRepository.findByUsuario_usuarioId(usuario.get().getUsuarioId());
-
-            if (termo.isPresent()) {
-                dto.setTermoAceite(termo.get().isAceite());
-            } else {
-                dto.setTermoAceite(false);
-            }
-
             return ResponseEntity.ok(dto);
 
         } catch (Exception e) {

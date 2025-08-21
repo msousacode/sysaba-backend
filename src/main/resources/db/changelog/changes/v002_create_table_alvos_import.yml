@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - changeSet:
+      id: v002-create-table-alvos-import
+      author: system
+      changes:
+        - sql:
+              sql: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; #Enable uuid-ossp module to use the function uuid_generate_v4()
+      changes:
+        - createTable:
+            tableName: alvos_import
+            columns:
+              - column:
+                  name: alvo_import_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nome_alvo
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tag
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: concluido
+                  type: BOOLEAN
+                  defaultValue: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: encerrado
+                  type: BOOLEAN
+                  defaultValue: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_estrela_positiva
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+              - column:
+                  name: total_estrela_negativa
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+              - column:
+                  name: aprendiz_id
+                  type: UUID
+                  constraints:
+                    nullable: true
+              - column:
+                  name: tenant_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: ativo
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: criado_por
+                  type: UUID
+                  constraints:
+                    nullable: true

@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: v001-create-table-alvos
+      author: system
+      changes:
+        - createTable:
+            tableName: alvos
+            columns:
+              - column:
+                  name: alvo_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nome_alvo
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: pergunta
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: descricao_alvo
+                  type: TEXT
+                  constraints:
+                    nullable: true              
+              - column:
+                  name: tag
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true              
+              - column:
+                  name: tenant_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: ativo
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: criado_por
+                  type: UUID
+                  constraints:
+                    nullable: true

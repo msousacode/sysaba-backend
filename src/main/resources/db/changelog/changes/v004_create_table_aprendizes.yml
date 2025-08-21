@@ -1,0 +1,69 @@
+databaseChangeLog:
+  - changeSet:
+      id: v004-create-table-aprendizes
+      author: system
+      changes:
+        - createTable:
+            tableName: aprendizes
+            columns:
+              - column:
+                  name: aprendiz_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nome_aprendiz
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: data_anotacao
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nome_mae
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: nome_pai
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: nome_responsavel
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: observacao
+                  type: TEXT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: tenant_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: ativo
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: criado_por
+                  type: UUID
+                  constraints:
+                    nullable: true
