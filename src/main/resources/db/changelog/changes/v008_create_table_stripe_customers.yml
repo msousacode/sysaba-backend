@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: v008-create-table-stripe-customers
+      author: system
+      changes:
+        - createTable:
+            tableName: stripe_customers
+            columns:
+              - column:
+                  name: stripe_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: stripe_customer_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: stripe_subscription_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: stripe_subscription_status
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: stripe_price_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true

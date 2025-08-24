@@ -71,12 +71,14 @@ public class AssinaturaController {
             return ResponseEntity.ok().body(diasRestantesTeste);
         }
 
-        if (TipoAssinaturaEnum.ASSINANTE.equals(assinatura.getTipoAssinatura()))
+        if (TipoAssinaturaEnum.ASSINANTE.equals(assinatura.getTipoAssinatura())) {
             return ResponseEntity.ok().build();
-        else if (TipoAssinaturaEnum.NAO_ASSINANTE.equals(assinatura.getTipoAssinatura()))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        else {
-            return ResponseEntity.notFound().build();
         }
+        
+        if (TipoAssinaturaEnum.NAO_ASSINANTE.equals(assinatura.getTipoAssinatura())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        
+        return ResponseEntity.notFound().build();        
     }
 }
