@@ -51,6 +51,9 @@ public class Assinatura {
     @Column(name = "invoice_stripe_id")
     private String invoiceStripeId;
 
+    @Column(name = "stripe_subscription_id")
+    private String stripeSubscriptionId;
+
     public Assinatura(){}
 
     public Assinatura(String motivoCancelamento, TipoAssinaturaEnum tipoAssinatura, LocalDateTime dataCancelamento, LocalDateTime dataContratacao, LocalDateTime dataInicioAssinatura, LocalDateTime createdAt, Boolean ativo, UUID criadoPor, UUID tenantId, Usuario usuario) {
@@ -166,6 +169,14 @@ public class Assinatura {
 
     public void setInvoiceStripeId(String invoiceStripeId) {
         this.invoiceStripeId = invoiceStripeId;
+    }
+
+    public String getStripeSubscriptionId() {
+        return stripeSubscriptionId;
+    }
+
+    public void setStripeSubscriptionId(String stripeSubscriptionId) {
+        this.stripeSubscriptionId = stripeSubscriptionId;
     }
 
     public static Assinatura getInstance(Usuario usuario) {

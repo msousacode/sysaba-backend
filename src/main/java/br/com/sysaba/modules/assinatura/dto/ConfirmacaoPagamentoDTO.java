@@ -7,13 +7,22 @@ public class ConfirmacaoPagamentoDTO {
     private String email;
     private String invoiceId;
     private String customerId;
-
+    private String stripeSubscriptionId;
+    
     public ConfirmacaoPagamentoDTO(String email, String invoiceId, String customerId) {
         this.email = email;
         Objects.requireNonNull(invoiceId, "invoicedId não deve ser null");
         Objects.requireNonNull(customerId, "customerId não deve ser null");
         this.invoiceId = invoiceId;
         this.customerId = customerId;
+    }
+    
+    public String getStripeSubscriptionId() {
+        return stripeSubscriptionId;
+    }
+
+    public void setStripeSubscriptionId(String stripeSubscriptionId) {
+        this.stripeSubscriptionId = stripeSubscriptionId;
     }
 
     public String getInvoiceId() {

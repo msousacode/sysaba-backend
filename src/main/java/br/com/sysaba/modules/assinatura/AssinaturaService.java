@@ -64,6 +64,7 @@ public class AssinaturaService implements GenericService<Assinatura, UUID> {
         assinatura.setTipoAssinatura(TipoAssinaturaEnum.ASSINANTE);
         assinatura.setDataContratacao(LocalDateTime.now());
         assinatura.setInvoiceStripeId(pagamentoDTO.getInvoiceId());
+        assinatura.setStripeSubscriptionId(pagamentoDTO.getStripeSubscriptionId());
 
         assinaturaRepository.save(assinatura);
     }
