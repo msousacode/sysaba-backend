@@ -2,6 +2,7 @@ package br.com.sysaba.modules.assinatura;
 
 import br.com.sysaba.core.enums.TipoAssinaturaEnum;
 import br.com.sysaba.core.exception.RegistroNaoEncontradoException;
+import br.com.sysaba.modules.assinatura.dto.AssinaturaVerifyDTO;
 import br.com.sysaba.modules.assinatura.dto.ConfirmacaoPagamentoDTO;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioRepository;
@@ -49,7 +50,7 @@ public class AssinaturaController {
     }
 
     @GetMapping("/verify/{email}")
-    public ResponseEntity<?> verificarCheckoutInterrompido(@PathVariable("email") String email) {
+    public ResponseEntity<AssinaturaVerifyDTO> verify(@PathVariable("email") String email) {
         Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
 
         if (usuario.isEmpty())
@@ -61,22 +62,26 @@ public class AssinaturaController {
             return ResponseEntity.accepted().build();
         }
 
-        //Verifica se assinatura é do tipo TESTE
+        AssinaturaVerifyDTO assinaturaDTO = new AssinaturaVerifyDTO();
+        assinaturaDTO.setTipoAssinaturaEnum(assinatura.getTipoAssinatura());
+
+        //Verifica se assinatura é do tipo TESTE     
         if(TipoAssinaturaEnum.TESTE.equals(assinatura.getTipoAssinatura())) {
             //Contabiliza a quantidade de dias para o fim do teste.
             Duration duration = Duration.between(assinatura.getCreatedAt(), LocalDateTime.now());
             //Retorna para o frontend a quantidade de dias que falta para o final do teste.
             long diasRestantesTeste = duration.toDays();
+            assinaturaDTO.setDiasRestantesTeste(diasRestantesTeste);
 
-            return ResponseEntity.ok().body(diasRestantesTeste);
+            return ResponseEntity.ok().body(assinaturaDTO);
         }
 
         if (TipoAssinaturaEnum.ASSINANTE.equals(assinatura.getTipoAssinatura())) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(assinaturaDTO);
         }
         
         if (TipoAssinaturaEnum.NAO_ASSINANTE.equals(assinatura.getTipoAssinatura())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(assinaturaDTO);
         }
         
         return ResponseEntity.notFound().build();        
