@@ -64,6 +64,7 @@ public class AssinaturaController {
 
         AssinaturaVerifyDTO assinaturaDTO = new AssinaturaVerifyDTO();
         assinaturaDTO.setTipoAssinaturaEnum(assinatura.getTipoAssinatura());
+        assinaturaDTO.setStripeSubscriptionId(assinatura.getStripeSubscriptionId());
 
         //Verifica se assinatura é do tipo TESTE     
         if(TipoAssinaturaEnum.TESTE.equals(assinatura.getTipoAssinatura())) {

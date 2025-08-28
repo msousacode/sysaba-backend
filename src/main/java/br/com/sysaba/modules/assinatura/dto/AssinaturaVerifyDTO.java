@@ -7,6 +7,8 @@ public class AssinaturaVerifyDTO {
     private long diasRestantesTeste;
     
     private TipoAssinaturaEnum tipoAssinaturaEnum;
+
+    private String stripeSubscriptionId;
     
     public long getDiasRestantesTeste() {
         return diasRestantesTeste;
@@ -20,4 +22,10 @@ public class AssinaturaVerifyDTO {
     public void setTipoAssinaturaEnum(TipoAssinaturaEnum tipoAssinaturaEnum) {
         this.tipoAssinaturaEnum = tipoAssinaturaEnum;
     }
+    public String getStripeSubscriptionId() {
+        return stripeSubscriptionId;
+    }
+    public void setStripeSubscriptionId(String stripeSubscriptionId) {
+        this.stripeSubscriptionId = stripeSubscriptionId;
+    }    
 }
