@@ -68,4 +68,8 @@ public class AssinaturaService implements GenericService<Assinatura, UUID> {
 
         assinaturaRepository.save(assinatura);
     }
+
+    public Assinatura findByUserId(UUID userId) {
+        return assinaturaRepository.findByUsuario_usuarioId(userId).get();
+    }
 }

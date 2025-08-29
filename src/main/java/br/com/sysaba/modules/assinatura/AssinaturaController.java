@@ -3,6 +3,7 @@ package br.com.sysaba.modules.assinatura;
 import br.com.sysaba.core.enums.TipoAssinaturaEnum;
 import br.com.sysaba.core.exception.RegistroNaoEncontradoException;
 import br.com.sysaba.modules.assinatura.dto.AssinaturaVerifyDTO;
+import br.com.sysaba.modules.assinatura.dto.CancelamentoDTO;
 import br.com.sysaba.modules.assinatura.dto.ConfirmacaoPagamentoDTO;
 import br.com.sysaba.modules.usuario.Usuario;
 import br.com.sysaba.modules.usuario.UsuarioRepository;
@@ -17,6 +18,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
+
 
 @RequestMapping("/api/auth/assinatura")
 @RestController
@@ -87,4 +90,19 @@ public class AssinaturaController {
         
         return ResponseEntity.notFound().build();        
     }
+
+    @Transactional
+    @PutMapping("/userId/{userId}/cancel")
+    public void confirmarCancelamento(@PathVariable UUID userId) {
+        try {
+            Assinatura assinatura = assinaturaService.findByUserId(userId);
+            assinatura.setDataCancelamento(LocalDateTime.now());
+            assinatura.setTipoAssinatura(TipoAssinaturaEnum.CANCELADA);
+    
+            assinaturaService.save(assinatura);        
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }    
 }
