@@ -58,6 +58,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: alvo_pai_id
+                  type: UUID
+                  constraints:
+                    nullable: false      
+              - column:
                   name: created_at
                   type: TIMESTAMP
                   constraints:

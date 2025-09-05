@@ -103,6 +103,7 @@ public class AlvoService implements GenericService<Alvo, UUID> {
             alvoImport.setEncerrado(false);
             alvoImport.setTotalEstrelaPositiva(0);
             alvoImport.setTotalEstrelaNegativa(0);
+            alvoImport.setAlvoPai(alvo.getAlvoId());
         }
 
         alvoImportRespository.saveAll(alvosImport);
@@ -120,6 +121,7 @@ public class AlvoService implements GenericService<Alvo, UUID> {
                     dto.setEncerrado(i.isEncerrado());
                     dto.setTotalEstrelaPositiva(i.getTotalEstrelaPositiva());
                     dto.setTotalEstrelaNegativa(i.getTotalEstrelaNegativa());
+                    dto.setAlvoPaiId(i.getAlvoPai());
                     return dto;
                 });
     }

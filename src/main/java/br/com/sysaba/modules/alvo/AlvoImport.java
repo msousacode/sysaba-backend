@@ -39,7 +39,10 @@ public class AlvoImport extends Tenantable {
 
     @Column(name = "total_estrela_negativa")
     private Integer totalEstrelaNegativa;
-    
+
+    @Column(name = "alvo_pai_id", nullable = false)
+    private UUID alvoPai;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aprendiz_id", nullable = true)
     private Aprendiz aprendiz;
@@ -128,5 +131,12 @@ public class AlvoImport extends Tenantable {
     public void setTotalEstrelaNegativa(Integer totalEstrelaNegativa) {
         this.totalEstrelaNegativa = totalEstrelaNegativa;
     }
-        
+
+    public UUID getAlvoPai() {
+        return alvoPai;
+    }
+
+    public void setAlvoPai(UUID alvoPai) {
+        this.alvoPai = alvoPai;
+    }    
 }

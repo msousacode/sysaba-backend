@@ -13,6 +13,7 @@ public class AlvoImportDTO {
     private boolean encerrado;
     private Integer totalEstrelaPositiva;
     private Integer totalEstrelaNegativa;
+    private UUID alvoPaiId;
 
     private List<UUID> objetivos;
 
@@ -88,5 +89,11 @@ public class AlvoImportDTO {
         this.totalEstrelaNegativa = totalEstrelaNegativa;
     }
 
-    
+    public UUID getAlvoPaiId() {
+        return alvoPaiId;
+    }
+
+    public void setAlvoPaiId(UUID alvoPaiId) {
+        this.alvoPaiId = alvoPaiId;
+    }    
 }
