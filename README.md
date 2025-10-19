@@ -1,50 +1,19 @@
-<h3>Instruções para backend e frontend SysaABA</h3>
+## 🧩 Sobre o Projeto
 
-<h5>Deploy BACKEND</h5>
-Acessar EC2
-```
-ssh -i "sysaba-ec2.pem" ubuntu@ADICONE-IP-AQUI
-```
+Esse é um projeto profissional construído em **Java**, desenvolvido antes mesmo da era da IA... 😄  
 
-Enviar jar para EC2
-```
-scp -i sysaba-ec2.pem sysaba-1.0.0.jar ubuntu@ADICONE-IP-AQUI:/home/ubuntu
-```
+O objetivo deste projeto foi criar uma **plataforma SaaS para psicólogos clínicos**, onde os usuários poderiam registrar os atendimentos realizados de forma prática e segura.  
 
-Iniciar o processo
-```
-sudo systemctl start syaba-java.service
-```
+O **backend** foi totalmente desenvolvido em **Java**, e durante o processo tive a oportunidade de realizar um **deploy real na Amazon AWS**, utilizando uma arquitetura simples, porém poderosa, com recursos como **EC2**, **API Gateway**, **RDS (PostgreSQL)**, **certificado TLS** e **domínio personalizado**.  
 
-Parar o processo
-```
-sudo systemctl stop syaba-java.service
-```
+Foi um projeto completo e desafiador, no qual dediquei **cerca de um ano e meio** de muito estudo, esforço e aprendizado.  
 
-Habilitar o processo para subir no momento do boot da maquina
-```
-sudo systemctl enable syaba-java.service
-```
+Decidi tornar este projeto público — não fiquei rico como imaginei... 😅 — mas certamente adquiri uma enorme **riqueza de conhecimento** ao embarcar nessa jornada. Trabalhei **sozinho** no desenvolvimento de um sistema **complexo e funcional**, que chegou a ir para **produção real**, com **cinco usuários autênticos e pagantes**.  
 
-Verificar o status do processo
-```
-sudo systemctl status syaba-app.service
-```
+Eventualmente, decidi encerrar o projeto e seguir por outros caminhos, mas ele continua sendo uma das experiências mais valiosas da minha carreira.  
 
-Profile local. Configurar essa opção no InteliJ
-```
-spring.profiles.active=local
-```
-<br/>
+Deixo o sistema disponível para quem desejar conhecer o meu **estilo de código** e a forma como organizei a arquitetura.  
 
-<h5>Deploy FRONTEND</h5>
-
-Executar localmente antes de build no Netlify
-```
-quasar build --mode pwa
-```
-
-Executar a aplicação
-```
-quasar dev
-```
+O **frontend** deste projeto foi desenvolvido com **Vue 3**, utilizando a **Composition API** e o framework **Quasar**.  
+O repositório do frontend está disponível aqui:  
+🔗 [https://github.com/msousacode/teia](https://github.com/msousacode/teia)
